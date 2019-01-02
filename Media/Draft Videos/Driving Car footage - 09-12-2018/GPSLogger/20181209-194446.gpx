@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with BasicAirData GPS Logger for Android - ver. 2.1.12 -->
+<!-- Track 5 = 19 TrackPoints + 0 Placemarks -->
+<gpx version="1.0"
+     creator="BasicAirData GPS Logger 2.1.12"
+     xmlns="http://www.topografix.com/GPX/1/0"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
+<name>GPS Logger 20181209-194446</name>
+<time>2018-12-09T19:18:25Z</time>
+
+<trk>
+ <name>Track 20181209-194446</name>
+ <trkseg>
+  <trkpt lat="31.97988202" lon="34.75066554"><ele>33.000</ele><time>2018-12-09T17:44:46Z</time><speed>0.000</speed><sat>13</sat></trkpt>
+  <trkpt lat="31.97988201" lon="34.75066554"><ele>33.000</ele><time>2018-12-09T17:44:47Z</time><speed>0.000</speed><sat>13</sat></trkpt>
+  <trkpt lat="31.97988194" lon="34.75066557"><ele>33.000</ele><time>2018-12-09T17:44:48Z</time><speed>0.000</speed><sat>16</sat></trkpt>
+  <trkpt lat="31.97988194" lon="34.75066554"><ele>33.000</ele><time>2018-12-09T17:44:49Z</time><speed>0.000</speed><sat>16</sat></trkpt>
+  <trkpt lat="31.97988193" lon="34.75066556"><ele>33.000</ele><time>2018-12-09T17:44:50Z</time><speed>0.000</speed><sat>15</sat></trkpt>
+  <trkpt lat="31.97988191" lon="34.75066554"><ele>33.000</ele><time>2018-12-09T17:44:51Z</time><speed>0.000</speed><sat>16</sat></trkpt>
+  <trkpt lat="31.97988192" lon="34.75066556"><ele>33.000</ele><time>2018-12-09T17:44:52Z</time><speed>0.000</speed><sat>15</sat></trkpt>
+  <trkpt lat="31.97988190" lon="34.75066555"><ele>33.000</ele><time>2018-12-09T17:44:53Z</time><speed>0.000</speed><sat>16</sat></trkpt>
+  <trkpt lat="31.97988192" lon="34.75066555"><ele>33.000</ele><time>2018-12-09T17:44:54Z</time><speed>0.000</speed><sat>16</sat></trkpt>
+  <trkpt lat="31.97988194" lon="34.75066553"><ele>33.000</ele><time>2018-12-09T17:44:55Z</time><speed>0.000</speed><sat>15</sat></trkpt>
+  <trkpt lat="31.97988193" lon="34.75066556"><ele>33.000</ele><time>2018-12-09T17:44:56Z</time><speed>0.000</speed><sat>16</sat></trkpt>
+  <trkpt lat="31.97988196" lon="34.75066555"><ele>33.000</ele><time>2018-12-09T17:44:57Z</time><speed>0.000</speed><sat>12</sat></trkpt>
+  <trkpt lat="31.97988195" lon="34.75066554"><ele>33.000</ele><time>2018-12-09T17:44:58Z</time><speed>0.000</speed><sat>17</sat></trkpt>
+  <trkpt lat="31.97988188" lon="34.75066548"><ele>33.000</ele><time>2018-12-09T17:44:59Z</time><speed>0.000</speed><sat>14</sat></trkpt>
+  <trkpt lat="31.97988185" lon="34.75066549"><ele>33.000</ele><time>2018-12-09T17:45:00Z</time><speed>0.000</speed><sat>17</sat></trkpt>
+  <trkpt lat="31.97988181" lon="34.75066550"><ele>33.000</ele><time>2018-12-09T17:45:01Z</time><speed>0.000</speed><sat>15</sat></trkpt>
+  <trkpt lat="31.97988183" lon="34.75066549"><ele>33.000</ele><time>2018-12-09T17:45:02Z</time><speed>0.000</speed><sat>16</sat></trkpt>
+  <trkpt lat="31.97988868" lon="34.75065816"><ele>33.000</ele><time>2018-12-09T17:45:03Z</time><speed>0.810</speed><sat>17</sat></trkpt>
+  <trkpt lat="31.97989552" lon="34.75065523"><ele>33.000</ele><time>2018-12-09T17:45:04Z</time><speed>0.000</speed><sat>14</sat></trkpt>
+ </trkseg>
+</trk>
+
+</gpx>

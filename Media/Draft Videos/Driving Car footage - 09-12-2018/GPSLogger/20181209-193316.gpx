@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with BasicAirData GPS Logger for Android - ver. 2.1.12 -->
+<!-- Track 3 = 0 TrackPoints + 1 Placemarks -->
+<gpx version="1.0"
+     creator="BasicAirData GPS Logger 2.1.12"
+     xmlns="http://www.topografix.com/GPX/1/0"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
+<name>GPS Logger 20181209-193316</name>
+<time>2018-12-09T19:18:29Z</time>
+
+<wpt lat="31.97682675" lon="34.76218548"><ele>47.000</ele><time>2018-12-09T17:33:16Z</time><name>עצירה שנייה - מצלמות נפלו</name><sat>17</sat></wpt>
+
+</gpx>

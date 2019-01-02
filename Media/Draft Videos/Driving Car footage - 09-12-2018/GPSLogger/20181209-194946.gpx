@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with BasicAirData GPS Logger for Android - ver. 2.1.12 -->
+<!-- Track 7 = 0 TrackPoints + 1 Placemarks -->
+<gpx version="1.0"
+     creator="BasicAirData GPS Logger 2.1.12"
+     xmlns="http://www.topografix.com/GPX/1/0"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
+<name>GPS Logger 20181209-194946</name>
+<time>2018-12-09T19:18:21Z</time>
+
+<wpt lat="31.98050874" lon="34.75077286"><ele>30.000</ele><time>2018-12-09T17:49:46Z</time><name>סיום 3 סיבובים בחניון יס פלאנט</name><sat>16</sat></wpt>
+
+</gpx>
