@@ -109,7 +109,7 @@ def ReturningArrayOfPics(arrayofpicS):
     indexOfMax = findMaxInMatrix(matrix, threshold=0.05) #which 2 pics has thehigh score
     while indexOfMax: # while there is a score bigger then thrseold, else none
         arrayofpics[indexOfMax[0]].save("newYYY.jpg")
-        splitImg = Split("newYYY.jpg", 100)
+        splitImg = Split("newYYY.jpg", 9)
         merged = makeNewMergedIMG(splitImg, arrayofpics[indexOfMax[1]], threshold=0.05)
         if indexOfMax[0]>indexOfMax[1]: # to remove first the higher index from the array
             arrayofpics.remove(arrayofpics[indexOfMax[0]])
@@ -130,8 +130,9 @@ def ReturningArrayOfPics(arrayofpicS):
 
 
 #main:
-arraypics = buildingPicArray("dikanat",3)#string of the name of your basee image and the amount of images you have
+arraypics = buildingPicArray("",2)#string of the name of your basee image and the amount of images you have
 final_array = ReturningArrayOfPics(arraypics) #returning the final common image/images
+
 print(len(final_array)) # just to check how many pics should be shown
 for i in final_array:
     i.show()

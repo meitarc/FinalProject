@@ -1,7 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fb1273af-77d2-4ab2-9d36-2f2235a842a3" name="Default Changelist" comment="" />
+    <list default="true" id="fb1273af-77d2-4ab2-9d36-2f2235a842a3" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1cp.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TryAndDelete.py" beforeDir="false" afterPath="$PROJECT_DIR$/TryAndDelete.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_01_01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_01_02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_01_03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_01_04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_01_05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_01_06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_02_01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_02_02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_02_03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_02_04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_02_05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_02_06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_03_01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_03_02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_03_03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_03_04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_03_05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_03_06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_04_01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_04_02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_04_03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_04_04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_04_05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_04_06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_05_01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_05_02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_05_03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_05_04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_05_05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_05_06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_06_01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_06_02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_06_03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_06_04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_06_05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/YYY_06_06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/compare.py" beforeDir="false" afterPath="$PROJECT_DIR$/compare.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img1.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img3.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/img0.jpeg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/joined image.png" beforeDir="false" afterPath="$PROJECT_DIR$/joined image.png" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,33 +68,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TryAndDelete.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="-619">
+              <caret line="105" column="4" selection-start-line="105" selection-start-column="4" selection-end-line="105" selection-end-column="4" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1458">
-              <caret line="54" selection-start-line="54" selection-end-line="54" />
-              <folding>
-                <element signature="e#0#26#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/compare.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1404">
-              <caret line="55" column="37" selection-start-line="55" selection-start-column="37" selection-end-line="55" selection-end-column="37" />
-              <folding>
-                <element signature="e#61#109#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -62,8 +85,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/compare.py" />
         <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/compare.py" />
+        <option value="$PROJECT_DIR$/TryAndDelete.py" />
       </list>
     </option>
   </component>
@@ -109,7 +133,28 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python.TryAndDelete">
+    <configuration name="TryAndDelete" type="PythonConfigurationType" factoryName="Python">
+      <module name="Common_Image_Part_A" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TryAndDelete.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="compare" type="PythonConfigurationType" factoryName="Python">
       <module name="Common_Image_Part_A" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -168,14 +213,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-6" y="-6" width="1549" height="837" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24966975" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24966975" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.30551627" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.21074964" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -190,29 +234,10 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/img2.jpeg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/img3.jpeg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/img1.jpeg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/SURF.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="27">
           <caret line="78" selection-start-line="78" selection-end-line="78" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/compare.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1404">
-          <caret line="55" column="37" selection-start-line="55" selection-start-column="37" selection-end-line="55" selection-end-column="37" />
-          <folding>
-            <element signature="e#61#109#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -226,9 +251,47 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://C:/Program Files (x86)/Microsoft Visual Studio/Shared/Python36_64/Lib/site-packages/image_slicer/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/compare.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2025">
+          <caret line="75" column="23" selection-start-line="75" selection-start-column="23" selection-end-line="75" selection-end-column="23" />
+          <folding>
+            <element signature="e#61#109#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/1.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/img2.jpeg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/newYYY.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/joined image.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/img1.jpeg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/img0.jpeg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/img1.jpeg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/TryAndDelete.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="-619">
+          <caret line="105" column="4" selection-start-line="105" selection-start-column="4" selection-end-line="105" selection-end-column="4" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>

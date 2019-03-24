@@ -72,3 +72,5 @@ def main_compare(img1Path, img2Path):
 
 	# compare the images
 	compare_images(img1, img2, "Original vs. Contrast")
+
+main_compare("img0.jpeg","img1.jpeg")
