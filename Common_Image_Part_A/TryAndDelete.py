@@ -4,6 +4,7 @@ from PIL import Image
 import image_slicer
 from image_slicer import join
 import numpy as np
+import compare
 
 def buildingPicArray(string,num):
     AtoC = []
@@ -15,6 +16,7 @@ def buildingPicArray(string,num):
     arraytoReturn = []  # load array of pics
     for image in AtoC:
         arraytoReturn.append(image)
+        print(arraytoReturn)
     return arraytoReturn
 
 def CALC(img1, img2):  # that calc the % of similarity(Get 2 pics)
@@ -88,14 +90,22 @@ def splitIMG(img1,slices):
     ArrayIMG = Split('newBeforeSplit.jpg', slices)
     return ArrayIMG
 
-def makeNewMergedIMG(arrayofImg,img2,threshold):
+def makeNewMergedIMG(arrayofImg,arrayofImg2, img2,threshold):
     ArrayIMG2 = []
-    for k in arrayofImg:
+    for k,l in zip(arrayofImg,arrayofImg2):
             tempo=CALC(k.image, img2)
+
             if tempo > threshold:
                 ArrayIMG2.append(k)
             else:
-                print(tempo)
+                if(FetureCount(k.image)<100):
+                    l.image.save("hello1.jpg")
+                    k.image.save("hello2.jpg")
+                    tempo2 = compare.main_compare("hello1.jpg", "hello2.jpg")
+                    print("   tempo2: "+str(tempo2))
+                    if(tempo2>0.7):
+                        ArrayIMG2.append(k)
+                    print(tempo)
     if len(ArrayIMG2)>0:
         imageMerged = MakeIMG(ArrayIMG2)
         return imageMerged
@@ -109,8 +119,10 @@ def ReturningArrayOfPics(arrayofpicS):
     indexOfMax = findMaxInMatrix(matrix, threshold=0.05) #which 2 pics has thehigh score
     while indexOfMax: # while there is a score bigger then thrseold, else none
         arrayofpics[indexOfMax[0]].save("newYYY.jpg")
+        arrayofpics[indexOfMax[1]].save("newZZZ.jpg")
         splitImg = Split("newYYY.jpg", 9)
-        merged = makeNewMergedIMG(splitImg, arrayofpics[indexOfMax[1]], threshold=0.05)
+        splitImg2 = Split("newZZZ.jpg",9)
+        merged = makeNewMergedIMG(splitImg, splitImg2, arrayofpics[indexOfMax[1]], threshold=0.05)
         if indexOfMax[0]>indexOfMax[1]: # to remove first the higher index from the array
             arrayofpics.remove(arrayofpics[indexOfMax[0]])
             arrayofpics.remove(arrayofpics[indexOfMax[1]])

@@ -39,7 +39,9 @@ def compare_images(imageA, imageB, title):
 	plt.axis("off")
 
 	# show the images
-	plt.show()
+	#plt.show()
+
+	return s
 
 # load the images -- the original, the original + contrast,
 # and the original + photoshop
@@ -68,9 +70,9 @@ def main_compare(img1Path, img2Path):
 		plt.axis("off")
 
 	# show the figure
-	plt.show()
+	#plt.show()
 
 	# compare the images
-	compare_images(img1, img2, "Original vs. Contrast")
+	return compare_images(img1, img2, "Original vs. Contrast")
 
-main_compare("img0.jpeg","img1.jpeg")
+#main_compare("0.jpg","1.jpg")
