@@ -5,7 +5,7 @@ import image_slicer
 from image_slicer import join
 import numpy as np
 import cv2
-
+import compare
 def  CALC(img1,img2):#that calc the % of similarity(Get 2 pics)
         y=FetureCount(img1)
         print("number of img1 features: ",y)
@@ -51,18 +51,18 @@ num = 3 # number of images
     #str1 = "school"
     #str2 = str(k)
     #str1 = str1+str2+".jpeg"
-str0="omri1.jpg"
-str3="trash1.jpg"
+str0="1.jpg"
+#str3="img2.jpeg"
 #str1="school4.jpeg"
-str2="chair1.jpg"
-
+str2="2.jpg"
+compare.main_compare(str0,str2)
     #names.append(str1)
 ImTest0 = Image.open(str0)
-ImTestA = Image.open(str3)
+#ImTestA = Image.open(str3)
 ImTestB = Image.open(str2)
 
 
-AtoC.append(ImTestA)
+#AtoC.append(ImTestA)
 AtoC.append(ImTestB)
 AtoC.append(ImTest0)
 
@@ -119,7 +119,7 @@ while len(arrayofpics)>1:
             #names.remove(names[realcounterI])
             #names.remove(names[realcounterJ])
         print("creating")
-        IMAGE.save("C:\\Users\\omrisigal\\PythonProjects\\FeatureMatching\\folder\\XXe.jpg")
+        IMAGE.save("C:\\Users\\Meitar\\קבצי לימודים\\שנה ג\\פרויקט גמר\\FinalProject\\Common_Image_Part_A\output\\XXe.jpg")
             #names.append("XXX.jpg")
         arrayofpics.append(IMAGE)
         print(len(arrayofpics))
