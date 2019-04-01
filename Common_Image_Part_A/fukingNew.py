@@ -9,9 +9,9 @@ import pandas as pd
 
 def buildingPicArray(string,num):
     AtoC = []
-    for i in range(1,num+1):
+    for i in range(0,num):
         mystring = string
-        mystring=mystring+str(i)+".jpeg"
+        mystring=mystring+str(i)+".jpg"
         ImTestA = Image.open(mystring)
         AtoC.append(ImTestA)
         hashmap.update({mystring: ImTestA})
@@ -88,10 +88,11 @@ def findMaxInMatrixForSplit(matrix,threshold): #return tuple of index in matrix 
     max=0
     for col in list(matrix):
         print(threshold)
-        print(matrix[col].max()[0])
-        print("after")
-        if (matrix[col].max()[0]) > threshold:
-            if (matrix[col].max()[0]) > max:
+        opo=matrix[col].max()[0]
+
+        if opo > threshold:
+
+            if opo > max:
                 max = matrix[col].max()[0]
                 img = matrix[col].max()[1]
                 tuple1 = (max, img)
@@ -101,59 +102,65 @@ def findMaxInMatrixForSplit(matrix,threshold): #return tuple of index in matrix 
     return row,str,tuple1[0],tuple1[1]
 
 def addColumToMatrixToSplit(matrix,addedMerged,arrayofpictures,parts,counter): # not used at the moment, adding another row/colum to a matrix
-    print("adding")
-    #length = len(matrix)
     row=[]
     string="merged"
-    stringy=string+str(counter)+".jpeg"
+    stringy=string+str(counter)+".jpg"
     addedMerged.save(stringy)
-    dict = {string: addedMerged}
+    dict = {stringy: addedMerged}
     hashmap.update(dict)
     split1 = Split(stringy, parts)
     index = -1
-    print("size of img array",len(arrayofpictures))
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
     for i in arrayofpictures[:]:
-        index=index+1
-        i.save("i.jpg")
-        split2 = Split("i.jpg", parts)
-        img1,score1=makeNewMergedIMG(split1, i,threshold=0.05)
-        img2,score2=makeNewMergedIMG(split2,addedMerged,threshold=0.05)
-        if score1>score2:
-            tuple1 = (score1,img1)
+        if i!=addedMerged:
+            index=index+1
+            i.save("i.jpg")
+            split2 = Split("i.jpg", parts)
+            img1,score1=makeNewMergedIMG(split1, i,threshold=0.05)
+            img2,score2=makeNewMergedIMG(split2,addedMerged,threshold=0.05)
+            if score1>score2:
+                tuple1 = (score1,img1)
+            else:
+                tuple1 = (score2,img2)
+            row.append(tuple1)
         else:
-            tuple1 = (score2,img2)
-        row.append(tuple1)
-    print()
-    print(matrix)
-    print()
-    print()
-    print()
+            tuple1=(0,0)
+            row.append(tuple1)
+
     matrix[stringy]=row[:-1]
     matrix.append(row)
-    matrix.rename(index={None: stringy}, inplace=True)
-    #matrix[stringy].append(newtuple)
-    print(" THE MATRIX IS:")
-    print(matrix)
+    matrix.loc[stringy] = row
+
     return matrix
 
-def ReturningArrayOfPicsBySplit(arrayofpicS,parts,counters):
+def ReturningArrayOfPicsBySplit(arrayofpicS,parts,counters,hashmap):
     arrayofpics = arrayofpicS #in order to work with local variable
-    print(hashmap.keys())
     matrix = scoreOfSplits(arrayofpics, len(arrayofpics),parts) #build the matrix of scores
-    print(matrix)
     matrix = pd.DataFrame(data=matrix, columns=hashmap.keys(), index=hashmap.keys())
 
     row,col,maxScore,maxScoreMergedImg = findMaxInMatrixForSplit(matrix, threshold=0.05) #which 2 pics has thehigh score
     w=0
     while  maxScore!= -1: # while there is a score bigger then thrseold, else -1
         w=w+1
-        print("loop num: ",w)
         del1= hashmap.get(row)
         del2= hashmap.get(col)
-        print("delete1: ",del1)
-        print("size of pics array: ", len(arrayofpics))
-        if row!=col: # to remove first the higher index from the array
+        mat=matrix[row][col]#adding the merged image to the original array if the score is not 0
+        mat1=mat[1]
+        mat2=mat[0]
+        if mat2>0:
+            if not mat1 in arrayofpics:
+                arrayofpics.append(mat1)
+                print("size of pics array: ", len(arrayofpics))
+        else:
+            print("    score is 0  ")
+        if row!=col: # if they are the same we cant remove them twice
+            matrix = matrix.drop([col], axis=1)
+            matrix=matrix.drop([row], axis=1)
+            matrix=matrix.drop(index=[row])
+            matrix=matrix.drop(index=[col])
+        else:
+            matrix = matrix.drop([row], axis=1)
+            matrix = matrix.drop(index=[row])
+        if row!=col : # to remove first the higher index from the array
             arrayofpics.remove(del1)
             arrayofpics.remove(del2)
             hashmap.pop(row)
@@ -161,26 +168,11 @@ def ReturningArrayOfPicsBySplit(arrayofpicS,parts,counters):
         else:
             arrayofpics.remove(del1)
             hashmap.pop(row)
-        mat=matrix[row][col]#adding the merged image to the original array if the score is not 0
-        mat1=mat[1]
-        mat2=mat[0]
-        if mat2>0:
-            arrayofpics.append(mat1)
-            print("size of pics array: ", len(arrayofpics))
-        else:
-            print("    score is 0  ")
-
-        matrix=matrix.drop([row], axis=1)
-        matrix=matrix.drop([col], axis=1)
-        matrix=matrix.drop(index=[row])
-        matrix=matrix.drop(index=[col])
-
         if len(arrayofpics) > 1: # if just 1 we finished
             matrix = addColumToMatrixToSplit(matrix, arrayofpics[len(arrayofpics) - 1],arrayofpics,parts,counters)
             counters=counters+1
             row, col, maxScore, maxScoreMergedImg = findMaxInMatrixForSplit(matrix,threshold=0.05)  # which 2 pics has thehigh score
             print(" size of array before while: ",len(arraypics))
-            print(maxScore)
         else:
             return arrayofpics
 
@@ -192,9 +184,9 @@ def ReturningArrayOfPicsBySplit(arrayofpicS,parts,counters):
 hashmap={}
 partstosplit=4
 
-arraypics = buildingPicArray("dikanat",4 )#string of the name of your basee image and the amount of images you have
-counters=0
-final_array = ReturningArrayOfPicsBySplit(arraypics,partstosplit,counters)
+arraypics = buildingPicArray("try",4 )#string of the name of your basee image and the amount of images you have
+counters = 0
+final_array = ReturningArrayOfPicsBySplit(arraypics, partstosplit, counters, hashmap)
 
 print(len(final_array)) # just to check how many pics should be shown
 for i in final_array:
