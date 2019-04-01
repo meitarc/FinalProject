@@ -17,17 +17,17 @@ def buildingPicArray(string,num,typeimg):
         ImTestA = Image.open(mystring)
         AtoC.append(ImTestA)
         hashmap.update({mystring: ImTestA})
-    print(hashmap)
-    print(AtoC)
-
-    for i in range(len(AtoC) - 1):
-        if (AtoC[i].size != AtoC[i + 1].size):
-            AtoC[i + 1] = AtoC[i + 1].resize(AtoC[i].size, Image.ANTIALIAS)
-            b = BytesIO()
-            AtoC[i + 1].save(b, format="jpeg")
-            AtoC[i + 1] = Image.open(b)
-            hashmap.update({string+str(i+1)+"."+typeimg: AtoC[i+1]})
-    print(AtoC)
+    #print(hashmap)
+    #print(AtoC)
+#
+    #for i in range(len(AtoC) - 1):
+    #    if (AtoC[i].size != AtoC[i + 1].size):
+    #        AtoC[i + 1] = AtoC[i + 1].resize(AtoC[i].size, Image.ANTIALIAS)
+    #        b = BytesIO()
+    #        AtoC[i + 1].save(b, format="jpeg")
+    #        AtoC[i + 1] = Image.open(b)
+    #        hashmap.update({string+str(i+1)+"."+typeimg: AtoC[i+1]})
+    #print(AtoC)
 
     arraytoReturn = []  # load array of pics
     for image in AtoC:
@@ -142,6 +142,11 @@ def makeNewMergedIMG(arrayofImg,name1,img2,name2,parts,threshold): # need to add
                 countOfGood=countOfGood+1
             else:
                 print("tempo is: ",tempo)
+                if(l.image.size!=k.image.size):
+                    l.image=l.image.resize(k.image.size,Image.ANTIALIAS)
+                    b = BytesIO()
+                    l.image.save(b, format="jpeg")
+                    l.image = Image.open(b)
                 l.image.save("hello1.jpg")
                 k.image.save("hello2.jpg")
                 tempo2 = compare.main_compare("hello1.jpg", "hello2.jpg")
@@ -149,6 +154,8 @@ def makeNewMergedIMG(arrayofImg,name1,img2,name2,parts,threshold): # need to add
                     ArrayIMG2.append(k)
                     countOfGood = countOfGood + 1
                     #print("tempo2: ",tempo2)
+
+
     if len(ArrayIMG2)>0:
         imageMerged = MakeIMG(ArrayIMG2)
         return imageMerged,countOfGood,name
@@ -317,7 +324,7 @@ def ReturningArrayOfPicsBySplit(matrix,arrayofpicS,parts,counters,hashmap):
 hashmap={}
 partstosplit=4
 arraypics = buildingPicArray("try",4 ,"jpg")#string of the name of your basee image and the amount of images you have
-
+print(arraypics)
 matrix = scoreOfSplits(arraypics,len(arraypics),partstosplit,hashmap)
 matrix = pd.DataFrame(data=matrix, columns=hashmap.keys(), index=hashmap.keys())
 
