@@ -22,13 +22,10 @@ def buildingPicArray(string,num,typeimg):
 
     for i in range(len(AtoC) - 1):
         if (AtoC[i].size != AtoC[i + 1].size):
-            #print(type(AtoC[i + 1]))
             AtoC[i + 1] = AtoC[i + 1].resize(AtoC[i].size, Image.ANTIALIAS)
             b = BytesIO()
             AtoC[i + 1].save(b, format="jpeg")
             AtoC[i + 1] = Image.open(b)
-            #AtoC[i + 1].show()
-
             hashmap.update({string+str(i+1)+"."+typeimg: AtoC[i+1]})
     print(AtoC)
 
@@ -320,26 +317,6 @@ def ReturningArrayOfPicsBySplit(matrix,arrayofpicS,parts,counters,hashmap):
 hashmap={}
 partstosplit=4
 arraypics = buildingPicArray("try",4 ,"jpg")#string of the name of your basee image and the amount of images you have
-#key_list = list(hashmap.keys())
-#val_list = list(hashmap.values())
-#j=arraypics[1]
-#print(val_list.index(arraypics[1]))
-#print(key_list[val_list.index(arraypics[1])])
-#print(key_list[val_list.index(arraypics[2])])
-#name = key_list.index(val_list.index(arraypics[1]))
-#print(name)
-#print(arraypics)
-
-#for i in range(len(arraypics)-1):
-#    if(arraypics[i].size!=arraypics[i+1].size):
-#        print(type(arraypics[i+1]))
-#        arraypics[i+1]=arraypics[i+1].resize(arraypics[i].size, Image.ANTIALIAS)
-#        b = BytesIO()
-#        arraypics[i+1].save(b, format="jpeg")
-#        arraypics[i+1] = Image.open(b)
-#        arraypics[i+1].show()
-
-#print(arraypics)
 
 matrix = scoreOfSplits(arraypics,len(arraypics),partstosplit,hashmap)
 matrix = pd.DataFrame(data=matrix, columns=hashmap.keys(), index=hashmap.keys())
