@@ -2,8 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fb1273af-77d2-4ab2-9d36-2f2235a842a3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/new(1).py" beforeDir="false" afterPath="$PROJECT_DIR$/new(1).py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hello1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/hello1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/joined image.png" beforeDir="false" afterPath="$PROJECT_DIR$/joined image.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/newSCORE.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/newSCORE.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newSCORE2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/newSCORE2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newSCORE2_01_01.png" beforeDir="false" afterPath="$PROJECT_DIR$/newSCORE2_01_01.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newSCORE2_01_02.png" beforeDir="false" afterPath="$PROJECT_DIR$/newSCORE2_01_02.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newSCORE2_02_01.png" beforeDir="false" afterPath="$PROJECT_DIR$/newSCORE2_02_01.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newSCORE2_02_02.png" beforeDir="false" afterPath="$PROJECT_DIR$/newSCORE2_02_02.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/newSCORE_01_01.png" beforeDir="false" afterPath="$PROJECT_DIR$/newSCORE_01_01.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/newSCORE_01_02.png" beforeDir="false" afterPath="$PROJECT_DIR$/newSCORE_01_02.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/newSCORE_02_01.png" beforeDir="false" afterPath="$PROJECT_DIR$/newSCORE_02_01.png" afterDir="false" />
@@ -32,8 +38,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/new(1).py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2">
-              <caret line="327" column="69" lean-forward="true" selection-start-line="327" selection-start-column="69" selection-end-line="327" selection-end-column="69" />
+            <state relative-caret-position="210">
+              <caret line="327" column="69" selection-start-line="327" selection-start-column="69" selection-end-line="327" selection-end-column="69" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -351,7 +357,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32956153" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4990099" visible="true" weight="0.8757062" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4990099" weight="0.21892655" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.21186441" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -532,8 +538,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/new(1).py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2">
-          <caret line="327" column="69" lean-forward="true" selection-start-line="327" selection-start-column="69" selection-end-line="327" selection-end-column="69" />
+        <state relative-caret-position="210">
+          <caret line="327" column="69" selection-start-line="327" selection-start-column="69" selection-end-line="327" selection-end-column="69" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>
