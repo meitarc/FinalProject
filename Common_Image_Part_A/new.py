@@ -29,6 +29,7 @@ def MakeIMG(arraypic):  # that get an array of images and size and return a comp
     image.save('joined image.png')
     return image
 
+
 def CALC(img1, img2):  # that calc the % of similarity(Get 2 pics)
     y = FetureCount(img1)
     open_cv_image = np.array(img1)
