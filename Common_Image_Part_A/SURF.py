@@ -1,94 +1,11 @@
 '''
 #source: https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_feature2d/py_surf_intro/py_surf_intro.html
-import cv2
-from matplotlib import pyplot as plt
-import numpy as np
-
-#img = cv2.imread('fly.png',0)
-img = cv2.imread('church.jpg',0)
-
-# Create SURF object. You can specify params here or later.
-# Here I set Hessian Threshold to 400
-#surf = cv2.SURF(400)
-surf = cv2.xfeatures2d.SURF_create(400)
-
-# Find keypoints and descriptors directly
-kp, des = surf.detectAndCompute(img,None)
-print(len(kp))
-
-###############################################
-# Check present Hessian threshold
-print(surf)
-
-
-# We set it to some 50000. Remember, it is just for representing in picture.
-# In actual cases, it is better to have a value 300-500
-# surf.hessianThreshold = 50000
-
-# Again compute keypoints and check its number.
-kp, des = surf.detectAndCompute(img,None)
-
-print(len(kp))
-
-###################################################
-
-img2 = cv2.drawKeypoints(img,kp,None,(255,0,0),4)
-
-
-
-
-plt.imshow(img2)
-plt.show()
-
-
-#######################################################
-# Check upright flag, if it False, set it to True
-#print(surf.upright)
-
-
-#surf.upright = True
-
-# Recompute the feature points and draw it
-kp = surf.detect(img,None)
-img2 = cv2.drawKeypoints(img,kp,None,(255,0,0),4)
-
-plt.imshow(img2)
-plt.show()
-
-######################################################
-# Find size of descriptor
-print(surf.descriptorSize())
-
-# That means flag, "extended" is False.
-#surf.extended
-
-
-# So we make it to True to get 128-dim descriptors.
-#surf.extended = True
-kp, des = surf.detectAndCompute(img,None)
-print(surf.descriptorSize())
-
-print(des.shape)
-##########################
-
-
-index_params= dict(algorithm = FLANN_INDEX_LSH,
-                   table_number = 6, # 12
-                   key_size = 12,     # 20
-                   multi_probe_level = 1) #2
-
-
-import numpy as np
-import cv2
 from matplotlib import pyplot as plt
 '''
 import numpy as np
 import pandas as pd
-
 from matplotlib import pyplot as plt
-
 import cv2
-
 
 def Save_Descripto(image1):
     path = 'dAndk.csv'
@@ -97,7 +14,6 @@ def Save_Descripto(image1):
     kp1, des1 = sift.detectAndCompute(img1, None)
     df = pd.DataFrame(des1)
     df.to_csv(path)
-
 
 def Save_Keypoint(imag1):
     path = 'dAndk.csv'
@@ -141,16 +57,19 @@ def load_Descripto(path):
         _descripto_array.append(desc)
     print(_descripto_array[0])
 
-
+#receives 2 cv2 images and return the number of similar feachers
 def funcCheck(image1, image2):
     # Initiate SIFT detector
-    # print("start func Check")
+    # First we have to construct a SIFT object and then continue with keypoint detection and draw them.
     sift = cv2.xfeatures2d.SIFT_create()
+
     # changing from PIL to nparray to work with "detectandCompute"
-    # find the keypoints and descriptors with SIFT
     img1 = np.array(image1)
     img2 = np.array(image2)
-    # print("after converting to np")
+
+    # find the keypoints and descriptors with SIFT
+    # descriptor-A line represents the boundary of an area or object
+    # Here kp will be a list of keypoints and des is a numpy array of shape Number_of_Keypoints×128
 
     kp1, des1 = sift.detectAndCompute(img1, None)
 
@@ -164,6 +83,8 @@ def funcCheck(image1, image2):
     # FLANN parameters
     FLANN_INDEX_KDTREE = 0
     index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+    # Search_params-It specifies the number of times the trees in the index should be recursively traversed.
+    # Higher values gives better precision, but also takes more time.
     search_params = dict(checks=50)  # or pass empty dictionary
     flann = cv2.FlannBasedMatcher(index_params, search_params)
     # print("after flann")
@@ -197,7 +118,6 @@ def funcCheck(image1, image2):
                        flags=0)
 
     # img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
-
     # plt.imshow(img3,),plt.show()
     return p
 
@@ -210,16 +130,17 @@ Save_Keypoint(img1)
 load_Descripto('dAndk.csv')
 Load_Keypoint('keysDF.csv')
 
-# print(x)
 
-from PIL import Image
-
-
+#count the number of feachers
 def FetureCount(image1):
+    # the array changes the picture to array of pixels and change to gray color
     images = np.array(image1)
     img1 = cv2.cvtColor(images, cv2.COLOR_BGR2GRAY)
+    # First we have to construct a SIFT object and then continue with keypoint detection and draw them.
     # Initiate SIFT detector
     sift = cv2.xfeatures2d.SIFT_create()
     # find the keypoints and descriptors with SIFT
+    # descriptor-A line represents the boundary of an area or object
+    # Here kp will be a list of keypoints and des is a numpy array of shape Number_of_Keypoints×128.
     kp1, des1 = sift.detectAndCompute(img1, None)
     return len(kp1)
