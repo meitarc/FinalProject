@@ -1,4 +1,4 @@
-from SURF import *
+#from SURF import *
 import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn import metrics
@@ -6,6 +6,7 @@ from sklearn import metrics
 # from sklearn.preprocessing import StandardScaler
 import cv2
 import pandas as pd
+
 
 
 def checkKeyptInDict(list, dict):
@@ -21,16 +22,41 @@ def checkKeyptInDict(list, dict):
     print(count1)
 
 
-# def extractKeyPt(kp1):
-#    array_Kp_pt = []
-#    for kp in kp1:
-#        array_Kp_pt.append(kp.pt)
-#    return array_Kp_pt
+def extractKeyPt(kp1):
+    array_Kp_pt = []
+    for kp in kp1:
+        array_Kp_pt.append(kp.pt)
+    return array_Kp_pt
 
 def extractKeyPt1(kp1, des):
     dict_Kp_pt = {}
+    counter=0
     for kp, ds in zip(kp1, des):
-        dict_Kp_pt[kp.pt] = kp.size, kp.angle, kp.response, kp.octave, kp.class_id, ds
+        if kp.pt in dict_Kp_pt.keys():
+            val=dict_Kp_pt.get(kp.pt)
+            importance=val[2]
+            if importance>kp.response:
+                dict_Kp_pt.update({kp.pt: (kp.size, kp.angle, kp.response, kp.octave, kp.class_id, ds)})
+            else:
+                continue
+            '''
+            if kp.pt in dict_Kp_pt.keys():
+                counter=counter+1
+                arr=[]
+                val=dict_Kp_pt.get(kp.pt)
+                val=tuple((val[1:]))
+                print("val " ,type(val))
+                arr.append(val)
+                tup=(kp.size, kp.angle, kp.response, kp.octave, kp.class_id, ds)
+                print("tup ",type(tup))
+                #print("tup is : ",tup)
+                arr.append(tup)
+                dict_Kp_pt.update({kp.pt:arr})
+            else:
+                dict_Kp_pt.update({kp.pt:(10000,kp.size, kp.angle, kp.response, kp.octave, kp.class_id, ds)})
+            '''
+        else:
+            dict_Kp_pt.update({kp.pt: (kp.size, kp.angle, kp.response, kp.octave, kp.class_id, ds)})
     return dict_Kp_pt
 
 
@@ -143,7 +169,7 @@ def funcCheck(image1, image2):
 
 
 def funcCheck2(one,two, image2):
-    print("my func 222")
+    print("my funcCheck 2:")
     # Initiate SIFT detector
     sift = cv2.xfeatures2d.SIFT_create()
     # changing from PIL to nparray to work with "detectandCompute"
@@ -165,6 +191,7 @@ def funcCheck2(one,two, image2):
     # ratio test as per Lowe's paper
     p = 0  # counter
     for i, (m, n) in enumerate(matches):
+
         if m.distance < 0.7 * n.distance:
             matchesMask[i] = [1, 0]
             ## Notice: How to get the index
@@ -190,8 +217,9 @@ def top_of_kp__from_clusters(image1):
     sift = cv2.xfeatures2d.SIFT_create()
     img1 = np.array(image1)
     kp, des = sift.detectAndCompute(img1, None)
-    print("kp len ",len(kp))
+    #print("kp len ",len(kp))
     dict_Kp_pt1 = extractKeyPt1(kp, des)
+    #print("length of dict: ",len(dict_Kp_pt1.keys()))
     cord_array = DB_SCAN(kp)
     clusters = pd.DataFrame(data=cord_array)
     clusters = clusters.transpose()
@@ -199,6 +227,7 @@ def top_of_kp__from_clusters(image1):
     dfcounter = 0
     list = []
     counter_else = 0
+    counter_yes=0
     for col in clusters:
         listnames = []
         string = "cluster" + str(dfcounter)
@@ -210,30 +239,64 @@ def top_of_kp__from_clusters(image1):
         arr = []
         arrImp = []
         arrDesc=[]
-
         for k in clusters[col]:
             # print(k)
-            if k in dict_Kp_pt1.keys():
-                val = dict_Kp_pt1.get(k)
-                importance = val[2]
-                descriptor= val[5]
-                tuple1 = (k[0], k[1], val[0], val[1], val[2], val[3], val[4])
-                arr.append(tuple1)
-                arrImp.append(importance)
-                arrDesc.append(descriptor)
-            else:
-                counter_else = counter_else+1
-            # tuple1 = -1
-            # importance=-1
-            # arr.append(tuple1)
-            # arrImp.append(importance)
+            if k is not None:
+                if k in dict_Kp_pt1.keys():
+                    values=dict_Kp_pt1.get(k)
+                    counter_yes = counter_yes + 1
+                    # val = dict_Kp_pt1.get(k)
+                    importance = values[2]
+                    descriptor = values[5]
+                    tuple1 = (k[0], k[1], values[0], values[1], values[2], values[3], values[4])
+                    arr.append(tuple1)
+                    arrImp.append(importance)
+                    arrDesc.append(descriptor)
+                    '''
+                    values = dict_Kp_pt1.get(k)
+                    if isinstance(values,tuple):
+                            #print("should be tuple : ",type(values))
+                            counter_yes=counter_yes+1
+                            #val = dict_Kp_pt1.get(k)
+                            importance = values[3]
+                            descriptor= values[6]
+                            tuple1 = (k[0], k[1], values[1], values[2], values[3], values[4], values[5])
+                            arr.append(tuple1)
+                            arrImp.append(importance)
+                            arrDesc.append(descriptor)
+                    else:
+                        #print(type(values))
+                        #print("should be list : ", type(values))
+                        counterbigi=0
+                        for value in values:
+                            #print(type(value), value)
+                            #print("should be tuple 2 : ",type(value))
+                            #print(counterbigi)
+                            counterbigi=counterbigi+1
+                            counter_yes = counter_yes + 1
+                            # val = dict_Kp_pt1.get(k)
+                            #print(value[2])
+                            importance = value[2]
+                            descriptor = value[5]
+                            tuple1 = (k[0], k[1], value[0], value[1], value[2], value[3], value[4])
+                            arr.append(tuple1)
+                            arrImp.append(importance)
+                            arrDesc.append(descriptor)
+                    '''
+                else:
+                    counter_else = counter_else+  1
+                # tuple1 = -1
+                # importance=-1
+                # arr.append(tuple1)
+                # arrImp.append(importance)
 
-        dataframe = df.DataFrame(data=[arr, arrImp,arrDesc])
+        dataframe = pd.DataFrame(data=[arr, arrImp,arrDesc])
         dataframe = dataframe.transpose()
         dataframe.columns = listnames
         list.append(dataframe)
         dfcounter = dfcounter + 1
-    print("else is ", counter_else)
+    #print("yes is ", counter_yes)
+    #print("else is ", counter_else)
     for i in range(0, len(list)):
         string = "cluster" + str(i) + "response"
         list[i].sort_values(string, inplace=True, ascending=False)
@@ -247,14 +310,14 @@ def top_of_kp__from_clusters(image1):
         #print("two ",len(i))
         list2.append(i)
 
-
-    return list2
+    return list2,list
 
 def tuple_to_kp(t):
     #tapleKP = (t[0], t[1], t[2], t[3], t[4], t[5], t[6])
     kp = cv2.KeyPoint(t[0], t[1], t[2], t[3], t[4], int(t[5]), int(t[6]))
     return kp
 
+#or list of DF's
 def prepareData(somelist):
     #desc_array = np.array([])
     desc_array = []
@@ -273,15 +336,163 @@ def prepareData(somelist):
         for j in i[string5]:
             kp_list.append(tuple_to_kp(j))
     return kp_list,desc_array
+
+#for one DF
+def prepareData2(somelist,counter):
+    #desc_array = np.array([])
+    desc_array = []
+    kp_list=[]
+    string1='cluster'
+    string2='descriptor'
+    string3=string1+str(counter)+string2
+    string5=string1+str(counter)
+    counter=counter+1
+    #desc_array = np.append(desc_array, i[string3])
+    for h in somelist[string3]:
+        desc_array.append(h)
+
+    for j in somelist[string5]:
+        kp_list.append(tuple_to_kp(j))
+    return kp_list,desc_array
+
+
 # main
+
 # regular func check getting 2 images
-image1 = cv2.imread('try0.jpg')
-image2 = cv2.imread('try1.jpg')
+image1 = cv2.imread('try1.jpg')
+image2 = cv2.imread('try0.jpg')
 x,kp=funcCheck(image1, image2)
-print(len(kp))
+print("len of kp original: ",len(kp))
 print("x is :",x)
-list = top_of_kp__from_clusters(image1)
-kpOne,desOne=prepareData(list)
-print(len(kpOne))
+print("percent % is ",x/len(kp))
+
+
+
+
+# func check of good clusters
+top_list,all_lists = top_of_kp__from_clusters(image1)
+# top list is best 20 % of each cluster
+#all list is just all of the lists combined
+
+kpOne,desOne=prepareData(top_list)# kps of to
+print("len of kp OURRRR: ",len(kpOne))
 x2,kp2=funcCheck2(kpOne,desOne,image2)
-print("x2 is :",x2)
+print("x2 is XXXXXX: ",x2)
+print("PERCENTEGAE $$$$$ is: ",x2/len(kpOne))
+
+
+
+
+
+
+counter=0
+sumX=0
+sumPer =0
+arr=[]
+#search for each in list if is a good cluster:
+for i in top_list:
+    kpOne, desOne = prepareData2(i,counter)
+    print("len of kp OUR: ", len(kpOne),counter)
+    x2, kp2 = funcCheck2(kpOne, desOne, image2)
+    sumX=sumX+x2
+    sumPer=sumPer+len(kpOne)
+    print("x2 is :", x2,counter)
+    if len(kpOne) != 0:
+        print("percentege is: ", x2 / len(kpOne),counter)
+    if len(kpOne)!=0:
+        if x2 / len(kpOne) < 0.3:
+            arr.append(counter)
+    counter=counter+1
+
+
+
+
+print()
+print("good clusters : ",arr)
+print("sum ",sumX)
+print("sum per ",sumPer)
+print("total ",sumX/sumPer)
+
+
+#show features on image 1 from ALL of clusters
+kpOne,desOne=prepareData(all_lists)
+
+from matplotlib import pyplot as plt
+
+image=cv2.imread('try1.jpg')
+img = np.array(image)
+for i in kpOne:
+    #print(type(i))
+    cv2.circle(img, (int(i.pt[0]), int(i.pt[1])), 10, (255, 0, 255), -1)
+
+plt.imshow(img,),plt.show()
+
+#show features on image 1 from top of good clusters
+kpOne,desOne=prepareData(top_list)
+
+from matplotlib import pyplot as plt
+
+image=cv2.imread('try1.jpg')
+img = np.array(image)
+for i in kpOne:
+    #print(type(i))
+    cv2.circle(img, (int(i.pt[0]), int(i.pt[1])), 10, (255, 0, 255), -1)
+
+plt.imshow(img,),plt.show()
+
+
+string='cluster'
+list3=[]
+print(arr)
+
+#SHOW and list3 will be kps of all the clusters in good clusters
+for j in arr:
+    string2=string+str(j)
+    for i in all_lists[j][string2]:
+        list3.append(i)
+print("good")
+
+array=[]
+for y in list3:
+    array.append(tuple_to_kp(y))
+
+
+from matplotlib import pyplot as plt
+
+image=cv2.imread('try1.jpg')
+img = np.array(image)
+for i in array:
+    #print(type(i))
+    cv2.circle(img, (int(i.pt[0]), int(i.pt[1])), 10, (255, 0, 255), -1)
+
+
+plt.imshow(img,),plt.show()
+
+#show list3 top of good
+list3=[]
+for j in arr:
+    string2=string+str(j)
+    for i in top_list[j][string2]:
+        list3.append(i)
+
+
+array=[]
+for y in list3:
+    array.append(tuple_to_kp(y))
+
+
+from matplotlib import pyplot as plt
+
+image=cv2.imread('try1.jpg')
+img = np.array(image)
+for i in array:
+    #print(type(i))
+    cv2.circle(img, (int(i.pt[0]), int(i.pt[1])), 10, (255, 0, 255), -1)
+
+
+plt.imshow(img,),plt.show()
+
+'all'
+'top of all'
+'all of good'
+'top of good'
