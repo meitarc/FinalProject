@@ -175,6 +175,7 @@ def funcCheck2(one,two, image2):
     # changing from PIL to nparray to work with "detectandCompute"
     # find the keypoints and descriptors with SIFT
     img2 = np.array(image2)
+
     kp1, des1 = one,two
 
     kp2, des2 = sift.detectAndCompute(img2, None)
@@ -373,6 +374,47 @@ print("percent % is ",x/len(kp))
 top_list,all_lists = top_of_kp__from_clusters(image1)
 # top list is best 20 % of each cluster
 #all list is just all of the lists combined
+#find size of cluster
+
+def clusterSize(clusterDF,clusterNumber):
+    string="cluster"
+    maxX=0
+    maxY=0
+    minX=clusterDF[string+str(clusterNumber)][0][0]
+    minY=clusterDF[string+str(clusterNumber)][0][1]
+    for x in clusterDF[string+str(clusterNumber)]:
+        if x[0]>maxX:
+            maxX=x[0]
+        if x[0]<minX:
+            minX=x[0]
+    for y in clusterDF[string+str(clusterNumber)]:
+        if y[1]>maxY:
+            maxY=y[1]
+        if y[1]<minY:
+            minY=y[1]
+    return minY,maxY,minX,maxX
+
+def SizeandCenter(minY,maxY,minX,maxX):
+    sizeX=maxX-minX
+    sizeY=maxY-minY
+    size=(sizeY,sizeX)
+    center=(int(sizeY/2)+minY,int(sizeX)/2+minX)
+    return size,center
+
+
+
+list_of_size=[]
+counter=0
+for i in all_lists:
+    minY, maxY, minX, maxX=clusterSize(i,counter)
+    #print(minY,maxY,minX,maxX)
+    size,center=SizeandCenter(minY,maxY,minX,maxX)
+    tuple_of_sizes=(minY,maxY,minX,maxX,size,center)
+    list_of_size.append(tuple_of_sizes)
+    counter=counter+1
+
+
+
 
 kpOne,desOne=prepareData(top_list)# kps of to
 print("len of kp OURRRR: ",len(kpOne))
@@ -393,7 +435,7 @@ arr=[]
 for i in top_list:
     kpOne, desOne = prepareData2(i,counter)
     print("len of kp OUR: ", len(kpOne),counter)
-    x2, kp2 = funcCheck2(kpOne, desOne, image2)
+    x2, kp1 = funcCheck2(kpOne, desOne, image2)
     sumX=sumX+x2
     sumPer=sumPer+len(kpOne)
     print("x2 is :", x2,counter)
@@ -402,10 +444,13 @@ for i in top_list:
     if len(kpOne)!=0:
         if x2 / len(kpOne) < 0.3:
             arr.append(counter)
+            size=list_of_size[counter][4]
+            center=list_of_size[counter][5]
+            #print( list_of_size[counter][0])
+            crop_img = image2[ int(list_of_size[counter][0]):int(list_of_size[counter][1]) , int(list_of_size[counter][2]):int(list_of_size[counter][3])]
+            cv2.imwrite('cropped'+str(counter)+'.png',crop_img)
+
     counter=counter+1
-
-
-
 
 print()
 print("good clusters : ",arr)
