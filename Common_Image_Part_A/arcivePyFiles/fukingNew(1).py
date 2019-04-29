@@ -1,11 +1,100 @@
-from SURF import funcCheck
-from SURF import FetureCount
+#from SURF import funcCheck
+#from SURF import FetureCount
 from PIL import Image
 import image_slicer
 from image_slicer import join
 import numpy as np
 import cv2
 import pandas as pd
+
+def find_max_in_column(matrix, col, max, threshold):
+    img = Image.open("Black_Image.jpg")
+    name = "no_max"
+    for e in matrix[col]:
+        print("tuple1 of col ", col, " is e: ", e, "and #0 is: ", e[0])
+        if e[0] > threshold:
+            if e[0] > max:
+                print("got new max is :", e[0])
+                max = e[0]
+                img = e[1]
+
+    return max, img
+
+
+def FetureCount(image1):
+    images = np.array(image1)
+    img1 = cv2.cvtColor(images, cv2.COLOR_BGR2GRAY)
+    # Initiate SIFT detector
+    sift = cv2.xfeatures2d.SIFT_create()
+    # find the keypoints and descriptors with SIFT
+    kp1, des1 = sift.detectAndCompute(img1, None)
+    return len(kp1)
+
+def funcCheck(image1, image2):
+    # Initiate SIFT detector
+    # print("start func Check")
+    sift = cv2.xfeatures2d.SIFT_create()
+    # changing from PIL to nparray to work with "detectandCompute"
+    # find the keypoints and descriptors with SIFT
+    img1 = np.array(image1)
+    img2 = np.array(image2)
+    # print("after converting to np")
+    kp1, des1 = sift.detectAndCompute(img1, None)
+    #kp1 = Load_Keypoint('keysDF.csv')
+    #des1 = load_Descripto('desCsv.csv')
+
+    kp2, des2 = sift.detectAndCompute(img2, None)
+
+    #print(des2[0])
+    #print(len(des2))
+
+    #print(des1[0])
+    #print(len(des1))
+
+    # FLANN parameters
+    FLANN_INDEX_KDTREE = 0
+    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+    search_params = dict(checks=50)  # or pass empty dictionary
+    flann = cv2.FlannBasedMatcher(index_params, search_params)
+    # print("after flann")
+    #http://answers.opencv.org/question/35327/opencv-and-python-problems-with-knnmatch-arguments/
+    matches = flann.knnMatch(np.asarray(des1, np.float32), np.asarray(des2, np.float32), k=2)
+
+    #matches = flann.knnMatch(des1, des2, k=2)
+    # print("after matches")
+    # Need to draw only good matches, so create a mask
+    matchesMask = [[0, 0] for i in range(len(matches))]
+    # print("after matchesMASK")
+
+    # ratio test as per Lowe's paper
+    p = 0  # counter
+    for i, (m, n) in enumerate(matches):
+        # print("not matched")
+        if m.distance < 0.7 * n.distance:
+            matchesMask[i] = [1, 0]
+            ## Notice: How to get the index
+            p = p + 1
+            # print("matched")
+            # print(p)
+            pt1 = kp1[m.queryIdx].pt
+            # print(pt1)
+            pt2 = kp2[m.trainIdx].pt
+            ## Draw pairs in purple, to make sure the result is ok
+            cv2.circle(img1, (int(pt1[0]), int(pt1[1])), 10, (255, 0, 255), -1)
+            cv2.circle(img2, (int(pt2[0]), int(pt2[1])), 10, (255, 0, 255), -1)
+
+    draw_params = dict(matchColor=(0, 255, 0),
+                       singlePointColor=(255, 0, 0),
+                       matchesMask=matchesMask,
+                       flags=0)
+
+    # img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
+
+    # plt.imshow(img3,),plt.show()
+    return p
+
+
+
 
 def buildingPicArray(string,num):
     AtoC = []
@@ -27,6 +116,11 @@ def MakeIMG(arraypic):  # that get an array of images and size and return a comp
     image = join(arraypic)
     image.save('joined image.png')
     return image
+
+
+
+
+
 
 def CALC(img1, img2):  # that calc the % of similarity(Get 2 pics)
     y = FetureCount(img1)
@@ -57,6 +151,8 @@ def makeNewMergedIMG(arrayofImg,img2,threshold):
     else:
         return img2,0
 
+
+
 def scoreOfSplits(array,sizeofarray,parts):
     length = sizeofarray
     matrix=[]
@@ -86,26 +182,31 @@ def scoreOfSplits(array,sizeofarray,parts):
 
 def findMaxInMatrixForSplit(matrix,threshold): #return tuple of index in matrix of highest score, the index of the 2 images in the array
     max=0
+    tuple1=(0,0)
     for col in list(matrix):
         print(threshold)
-        print(matrix[col].max()[0])
+        #print(matrix[col].max()[0])
         print("after")
-        if (matrix[col].max()[0]) > threshold:
-            if (matrix[col].max()[0]) > max:
-                max = matrix[col].max()[0]
-                img = matrix[col].max()[1]
+        max1,img1=find_max_in_column(matrix,col,max,threshold)
+        if (max1) > threshold:
+            if (max1) > max:
+                max = max1
+                img = img1
                 tuple1 = (max, img)
                 str = col
     print("after loop")
-    row = matrix.index[matrix[str] == tuple1][0]
-    return row,str,tuple1[0],tuple1[1]
+    if tuple1[0]==0:
+        return col, col, tuple1[0], tuple1[1]
+    else:
+        row = matrix.index[matrix[str] == tuple1][0]
+        return row,str,tuple1[0],tuple1[1]
 
 def addColumToMatrixToSplit(matrix,addedMerged,arrayofpictures,parts,counter): # not used at the moment, adding another row/colum to a matrix
     print("adding")
     #length = len(matrix)
     row=[]
     string="merged"
-    stringy=string+str(counter)+",jpg"
+    stringy=string+str(counter)+".jpg"
     addedMerged.save(stringy)
     dict = {string: addedMerged}
     hashmap.update(dict)
@@ -122,7 +223,9 @@ def addColumToMatrixToSplit(matrix,addedMerged,arrayofpictures,parts,counter): #
         else:
             tuple1 = (score2,img2)
         row.append(tuple1)
-    matrix['stringy']=row
+    tup=(0,0)
+    row.append(tup)
+    matrix[stringy]=row
     matrix.append(row)
     print(" THE MATRIX IS:")
     print(matrix)
@@ -165,7 +268,7 @@ def ReturningArrayOfPicsBySplit(arrayofpicS,parts):
             print("    score is 0  ")
 
         if len(arrayofpics) > 1: # if just 1 we finished
-            matrix = addColumToMatrixToSplit(matrix, arrayofpics[len(arrayofpics) - 1],arrayofpics,parts)
+            matrix = addColumToMatrixToSplit(matrix, arrayofpics[len(arrayofpics) - 1],arrayofpics,parts,w)
             row, col, maxScore, maxScoreMergedImg = findMaxInMatrixForSplit(matrix,threshold=0.05)  # which 2 pics has thehigh score
             print(" size of array before while: ",len(arraypics))
             print(maxScore)
@@ -178,9 +281,9 @@ def ReturningArrayOfPicsBySplit(arrayofpicS,parts):
 
 #main:
 hashmap={}
-partstosplit=4
+partstosplit=2
 
-arraypics = buildingPicArray("",2 )#string of the name of your basee image and the amount of images you have
+arraypics = buildingPicArray("omri",3 )#string of the name of your basee image and the amount of images you have
 final_array = ReturningArrayOfPicsBySplit(arraypics,partstosplit)
 
 print(len(final_array)) # just to check how many pics should be shown

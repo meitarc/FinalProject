@@ -39,22 +39,6 @@ def extractKeyPt1(kp1, des):
                 dict_Kp_pt.update({kp.pt: (kp.size, kp.angle, kp.response, kp.octave, kp.class_id, ds)})
             else:
                 continue
-            '''
-            if kp.pt in dict_Kp_pt.keys():
-                counter=counter+1
-                arr=[]
-                val=dict_Kp_pt.get(kp.pt)
-                val=tuple((val[1:]))
-                print("val " ,type(val))
-                arr.append(val)
-                tup=(kp.size, kp.angle, kp.response, kp.octave, kp.class_id, ds)
-                print("tup ",type(tup))
-                #print("tup is : ",tup)
-                arr.append(tup)
-                dict_Kp_pt.update({kp.pt:arr})
-            else:
-                dict_Kp_pt.update({kp.pt:(10000,kp.size, kp.angle, kp.response, kp.octave, kp.class_id, ds)})
-            '''
         else:
             dict_Kp_pt.update({kp.pt: (kp.size, kp.angle, kp.response, kp.octave, kp.class_id, ds)})
     return dict_Kp_pt
@@ -108,16 +92,16 @@ def DB_SCAN(keypointsArray):
                 y = cor[1]
                 t = (x, y)
                 new_list.append(t)
-        plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
-                 markeredgecolor='k', markersize=14)
+        #plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
+        #         markeredgecolor='k', markersize=14)
         xy = AKP[class_member_mask & ~core_samples_mask]
         counter = counter + (len(xy))
-        plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
-                 markeredgecolor='k', markersize=6)
+        #plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
+        #         markeredgecolor='k', markersize=6)
         if (k != -1):
             biglist.append(new_list)
-    plt.title('Estimated number of clusters: %d' % n_clusters_)
-    plt.show()
+    #plt.title('Estimated number of clusters: %d' % n_clusters_)
+    #plt.show()
     return biglist
 
 
@@ -168,7 +152,8 @@ def funcCheck(image1, image2):
     return p, kp1  # returns number of best matches,and all keypoints of first img
 
 
-def funcCheck2(one,two, image2):
+
+def clientFuncCheck(one, two, image2):
     print("my funcCheck 2:")
     # Initiate SIFT detector
     sift = cv2.xfeatures2d.SIFT_create()
@@ -319,7 +304,7 @@ def tuple_to_kp(t):
     return kp
 
 #or list of DF's
-def prepareData(somelist):
+def prepareDataforList(somelist):
     #desc_array = np.array([])
     desc_array = []
     kp_list=[]
@@ -339,7 +324,7 @@ def prepareData(somelist):
     return kp_list,desc_array
 
 #for one DF
-def prepareData2(somelist,counter):
+def prepareDataforDF(somelist,counter):
     #desc_array = np.array([])
     desc_array = []
     kp_list=[]
@@ -356,25 +341,6 @@ def prepareData2(somelist,counter):
         kp_list.append(tuple_to_kp(j))
     return kp_list,desc_array
 
-
-# main
-
-# regular func check getting 2 images
-image1 = cv2.imread('try1.jpg')
-image2 = cv2.imread('try0.jpg')
-x,kp=funcCheck(image1, image2)
-print("len of kp original: ",len(kp))
-print("x is :",x)
-print("percent % is ",x/len(kp))
-
-
-
-
-# func check of good clusters
-top_list,all_lists = top_of_kp__from_clusters(image1)
-# top list is best 20 % of each cluster
-#all list is just all of the lists combined
-#find size of cluster
 
 def clusterSize(clusterDF,clusterNumber):
     string="cluster"
@@ -403,6 +369,27 @@ def SizeandCenter(minY,maxY,minX,maxX):
 
 
 
+# main
+
+# regular func check getting 2 images
+
+imagefromserver = cv2.imread('try1.jpg')
+imagefromclient = cv2.imread('try0.jpg')
+
+'''
+in server:
+func check of good clusters, in server
+top list is best 20 % of each cluster
+all list is just all of the lists combined
+'''
+top_list,all_lists = top_of_kp__from_clusters(imagefromserver)
+kpOne,desOne=prepareDataforList(top_list)# kps of to
+
+'''
+in client:
+'''
+#x2,kp2=clientFuncCheck(kpOne, desOne, imagefromclient)
+
 list_of_size=[]
 counter=0
 for i in all_lists:
@@ -413,43 +400,27 @@ for i in all_lists:
     list_of_size.append(tuple_of_sizes)
     counter=counter+1
 
-
-
-
-kpOne,desOne=prepareData(top_list)# kps of to
-print("len of kp OURRRR: ",len(kpOne))
-x2,kp2=funcCheck2(kpOne,desOne,image2)
-print("x2 is XXXXXX: ",x2)
-print("PERCENTEGAE $$$$$ is: ",x2/len(kpOne))
-
-
-
-
-
-
 counter=0
 sumX=0
 sumPer =0
 arr=[]
 #search for each in list if is a good cluster:
 for i in top_list:
-    kpOne, desOne = prepareData2(i,counter)
-    print("len of kp OUR: ", len(kpOne),counter)
-    x2, kp1 = funcCheck2(kpOne, desOne, image2)
-    sumX=sumX+x2
+    kpOne, desOne = prepareDataforDF(i,counter)
+    matches, kp1 = clientFuncCheck(kpOne, desOne, imagefromclient)
+    sumX=sumX+matches
     sumPer=sumPer+len(kpOne)
-    print("x2 is :", x2,counter)
+    print("x2 is :", matches,counter)
     if len(kpOne) != 0:
-        print("percentege is: ", x2 / len(kpOne),counter)
+        print("percentege is: ", matches / len(kpOne),counter)
     if len(kpOne)!=0:
-        if x2 / len(kpOne) < 0.3:
+        if matches / len(kpOne) < 0.3:
             arr.append(counter)
             size=list_of_size[counter][4]
             center=list_of_size[counter][5]
             #print( list_of_size[counter][0])
-            crop_img = image2[ int(list_of_size[counter][0]):int(list_of_size[counter][1]) , int(list_of_size[counter][2]):int(list_of_size[counter][3])]
-            cv2.imwrite('cropped'+str(counter)+'.png',crop_img)
-
+            crop_img = imagefromclient[ int(list_of_size[counter][0]):int(list_of_size[counter][1]) , int(list_of_size[counter][2]):int(list_of_size[counter][3])]
+            cv2.imwrite('cropped'+str(counter)+'.jpg',crop_img)
     counter=counter+1
 
 print()
@@ -460,7 +431,7 @@ print("total ",sumX/sumPer)
 
 
 #show features on image 1 from ALL of clusters
-kpOne,desOne=prepareData(all_lists)
+kpOne,desOne=prepareDataforList(all_lists)
 
 from matplotlib import pyplot as plt
 
@@ -473,7 +444,7 @@ for i in kpOne:
 plt.imshow(img,),plt.show()
 
 #show features on image 1 from top of good clusters
-kpOne,desOne=prepareData(top_list)
+kpOne,desOne=prepareDataforList(top_list)
 
 from matplotlib import pyplot as plt
 
@@ -541,3 +512,5 @@ plt.imshow(img,),plt.show()
 'top of all'
 'all of good'
 'top of good'
+
+

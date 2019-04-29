@@ -156,7 +156,7 @@ def funcCheck(image1, image2):
     #kp1, des1 = sift.detectAndCompute(img1, None)
     kp1 = Load_Keypoint('keysDF.csv')
     des1 = load_Descripto('desCsv.csv')
-
+    kp1, des2 = sift.detectAndCompute(img2, None)
     kp2, des2 = sift.detectAndCompute(img2, None)
 
     #print(des2[0])
