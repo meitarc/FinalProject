@@ -2,7 +2,7 @@
 import cv2
 import numpy as np
 
-from DBSCAN import *
+from DBSCAN import function
 
 def extractKeyPt(kp1):
     array_Kp_pt = []
