@@ -4,14 +4,14 @@ from SURF2 import DB_SCAN
 
 def IntersectOfImages(arrayOfimages):
     x, arraykp, arraydes = funcCheck1(arrayOfimages[0], arrayOfimages[1])
-    for i in arrayOfimages[2:]:
+    for i in range (2,len(arrayOfimages)):
         x,arraykp,arraydes = funcCheck2(arraykp,arraydes,arrayOfimages[i])
     return(arraykp,arraydes)
 
 def CreateDict(kp,des):
     dict={}
-    for i,j in kp,des:
-        key=(i[0],i[1])
+    for i,j in zip(kp,des):
+        key=(i.pt[0],i.pt[1])
         val=(i,j)
         item = {key:val}
         dict.update(item)
@@ -20,13 +20,19 @@ def CreateDict(kp,des):
 def checkCluster(cluster,dictionary,image):
     arrayKP = []
     arrayDES = []
+    print("print dictionery: ")
+    print(dictionary)
     for cor in cluster:
-        key, val = dictionary.get(cor)
-        if key is not None:
+
+        values = dictionary.get(cor)
+
+        if values is not None:
+            key=values[0]
+            val=values[1]
             arrayKP.append(key)
             arrayDES.append(val)
     p1, p2 = clientFuncCheck(arrayKP, arrayDES, image)
-    return (p1 / p2)
+    return (p1 / len(p2))
 
 def corMinMax(cluster):
     maxX = 0

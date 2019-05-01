@@ -30,13 +30,19 @@ threshold=0.05
 # getting big image array, splitting to smaller arrays
 # and then, for each array do the following
 #function getting array of images, returning the kps and des of the intersect of all images
-arrayimg=[]
+img1=cv2.imread("try2.jpg")
+img2=cv2.imread("try1.jpg")
+img3=cv2.imread("try0.jpg")
+img4=cv2.imread("try2.jpg")
+img5=cv2.imread("try1.jpg")
+
+arrayimg=[img1,img2,img3,img4,img5]
 kp,des = IntersectOfImages(arrayimg)
 dictionary = CreateDict(kp,des)
-clusters = DB_SCAN(kp,des)
+clusters = DB_SCAN(kp)
 #given GPS send cluster to client
 #client side:
-image=CameraImage
+image=cv2.imread("try1.jpg")
 #for each cluster, if found in camera image, take it off from cameras image
 arrayOfGoodclusters=[]
 for cluster in clusters:
