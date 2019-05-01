@@ -2,17 +2,25 @@
 import cv2
 import numpy as np
 
+from DBSCAN import *
+
+def extractKeyPt(kp1):
+    array_Kp_pt = []
+    for kp in kp1:
+        array_Kp_pt.append(kp.pt)
+    return array_Kp_pt
 
 def funcCheck1(image1, image2):
     print("my func")
     # Initiate SIFT detector
-    sift = cv2.xfeatures2d.SIFT_create()
+    #sift = cv2.xfeatures2d.SIFT_create()
+    surf = cv2.xfeatures2d.SURF_create()
     # changing from PIL to nparray to work with "detectandCompute"
     # find the keypoints and descriptors with SIFT
     img1 = np.array(image1)
     img2 = np.array(image2)
-    kp1, des1 = sift.detectAndCompute(img1, None)
-    kp2, des2 = sift.detectAndCompute(img2, None)
+    kp1, des1 = surf.detectAndCompute(img1, None)
+    kp2, des2 = surf.detectAndCompute(img2, None)
     #print(kp1)
     #print()
     #print(des1)
@@ -71,14 +79,16 @@ def funcCheck1(image1, image2):
 def funcCheck2(kp,des, image2):
     print("my func")
     # Initiate SIFT detector
-    sift = cv2.xfeatures2d.SIFT_create()
+    #surf = cv2.SURF(400)
+    surf = cv2.xfeatures2d.SURF_create()
+    #sift = cv2.xfeatures2d.SIFT_create()
     # changing from PIL to nparray to work with "detectandCompute"
     # find the keypoints and descriptors with SIFT
     #img1 = np.array(image1)
     img2 = np.array(image2)
     kp1, des1 = kp,des
 
-    kp2, des2 = sift.detectAndCompute(img2, None)
+    kp2, des2 = surf.detectAndCompute(img2, None)
     #print(kp1)
     #print()
     #print(des1)
@@ -144,11 +154,13 @@ arrayodPics=[imageONE,imageTwo,imageThree,imageFour,imageSix]
 x,arraykp,arraydes=funcCheck1(arrayodPics[0],arrayodPics[1])
 print(len(arraykp))
 image1=arrayodPics[0]
-sift = cv2.xfeatures2d.SIFT_create()
+#sift = cv2.xfeatures2d.SIFT_create()
+#surf = cv2.SURF(400)
+surf = cv2.xfeatures2d.SURF_create()
 # changing from PIL to nparray to work with "detectandCompute"
 # find the keypoints and descriptors with SIFT
 img1 = np.array(image1)
-kp1, des1 = sift.detectAndCompute(img1, None)
+kp1, des1 = surf.detectAndCompute(img1, None)
 print("kp1: ",len(kp1))
 image3=arrayodPics[0]
 img3= np.array(image3)
@@ -190,7 +202,11 @@ for i in range(0,len(arrayodPics)):
 '''
 image = arrayodPics[4]
 img = np.array(image)
-for i in arraykp:
+
+arrayk=extractKeyPt(arraykp)
+print("show function dbscan result")
+function(arrayk)
+for i in arrayk:
     # print(type(i))
     cv2.circle(img, (int(i.pt[0]), int(i.pt[1])), 10, (255, 0, 255), -1)
 plt.imshow(img, ), plt.show()
