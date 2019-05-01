@@ -1,17 +1,79 @@
-
 import cv2
 import numpy as np
+from SURF2 import DB_SCAN
 
-from DBSCAN import *
+def IntersectOfImages(arrayOfimages):
+    x, arraykp, arraydes = funcCheck1(arrayOfimages[0], arrayOfimages[1])
+    for i in arrayOfimages[2:]:
+        x,arraykp,arraydes = funcCheck2(arraykp,arraydes,arrayOfimages[i])
+    return(arraykp,arraydes)
 
-def extractKeyPt(kp1):
-    array_Kp_pt = []
-    for kp in kp1:
-        array_Kp_pt.append(kp.pt)
-    return array_Kp_pt
+def CreateDict(kp,des):
+    dict={}
+    for i,j in kp,des:
+        key=(i[0],i[1])
+        val=(i,j)
+        item = {key:val}
+        dict.update(item)
+    return dict
+
+def checkCluster(cluster,dictionary,image):
+    arrayKP = []
+    arrayDES = []
+    for cor in cluster:
+        key, val = dictionary.get(cor)
+        if key is not None:
+            arrayKP.append(key)
+            arrayDES.append(val)
+    p1, p2 = clientFuncCheck(arrayKP, arrayDES, image)
+    return (p1 / p2)
+
+def corMinMax(cluster):
+    maxX = 0
+    maxY = 0
+    minX = cluster[0][0]
+    minY = cluster[0][1]
+    for cor in cluster:
+            if cor[0] > maxX:
+                maxX = cor[0]
+            if cor[0] < minX:
+                minX = cor[0]
+            if cor[1] > maxY:
+                maxY = cor[1]
+            if cor[1] < minY:
+                minY = cor[1]
+    return minY,maxY,minX,maxX
+
+def SizeandCenter(minY,maxY,minX,maxX):
+    sizeX=maxX-minX
+    sizeY=maxY-minY
+    size=(sizeY,sizeX)
+    center=(int(sizeY/2)+minY,int(sizeX)/2+minX)
+    return center[0],center[1],int(size[1]/2),int(size[0]/2)
+
+# imageDeleteParts
+# Arguments:
+#    Image - an image, as defined by cv2.imgread()
+#    partsList - a list of tuples, that describe:
+#                x, y, xradius, yradius values:
+#                  x,y - location of the middle pixel.
+#                  xradius, yradius - the radius around the x and y axis.
+#The function returns the original image, after deleting the surrounding area given around the x,y.
+def imageDeleteParts(Image, partsList):
+    test = Image.copy()
+    for range in partsList:
+        test[range[1] - range[3] : range[1] + range[3], range[0] - range[2] : range[0] + range[2] ] = 0
+    return test
+
+def clustersOfCroppedImage(image1):
+    sift = cv2.xfeatures2d.SIFT_create()
+    img1 = np.array(image1)
+    kp, des = sift.detectAndCompute(img1, None)
+    dictionary = CreateDict(kp, des)
+    clusters = DB_SCAN(kp, des)
+    return clusters,dictionary
 
 def funcCheck1(image1, image2):
-    print("my func")
     # Initiate SIFT detector
     #sift = cv2.xfeatures2d.SIFT_create()
     surf = cv2.xfeatures2d.SURF_create()
@@ -73,8 +135,6 @@ def funcCheck1(image1, image2):
     #print(okp)
     #print(odes)
     return p,okp,odes  # returns number of best matches,and all keypoints of first img
-
-
 
 def funcCheck2(kp,des, image2):
     print("my func")
@@ -138,123 +198,50 @@ def funcCheck2(kp,des, image2):
 
     # plt.imshow(img3,),plt.show()
     print(okp[0],okp2[0])
-    return p,okp,odes  # returns number of best matches,and all keypoints of first img
+    return p,okp,odes
 
+def clientFuncCheck(one, two, image2):
+    print("my funcCheck 2:")
+    # Initiate SIFT detector
+    sift = cv2.xfeatures2d.SIFT_create()
+    # changing from PIL to nparray to work with "detectandCompute"
+    # find the keypoints and descriptors with SIFT
+    img2 = np.array(image2)
 
+    kp1, des1 = one,two
 
-imageONE = cv2.imread('try2.jpg')
-imageTwo = cv2.imread('try0.jpg')
-imageThree = cv2.imread('try1.jpg')
-imageSix = cv2.imread('try2.jpg')
-imageFour = cv2.imread('try0.jpg')
-from matplotlib import pyplot as plt
+    kp2, des2 = sift.detectAndCompute(img2, None)
 
-def IntersectOfImages(arrayOfimages):
-    x, arraykp, arraydes = funcCheck1(arrayodPics[0], arrayodPics[1])
-    for i in arrayOfimages[2:]:
-        x,arraykp,arraydes = funcCheck2(arraykp,arraydes,arrayOfimages[i])
-    return(arraykp,arraydes)
+    # FLANN parameters
+    FLANN_INDEX_KDTREE = 0
+    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+    search_params = dict(checks=50)  # or pass empty dictionary
+    flann = cv2.FlannBasedMatcher(index_params, search_params)
+    # http://answers.opencv.org/question/35327/opencv-and-python-problems-with-knnmatch-arguments/
+    matches = flann.knnMatch(np.asarray(des1, np.float32), np.asarray(des2, np.float32), k=2)
+    # Need to draw only good matches, so create a mask
+    matchesMask = [[0, 0] for i in range(len(matches))]
+    # ratio test as per Lowe's paper
+    p = 0  # counter
+    for i, (m, n) in enumerate(matches):
 
+        if m.distance < 0.7 * n.distance:
+            matchesMask[i] = [1, 0]
+            ## Notice: How to get the index
+            p = p + 1
+            pt1 = kp1[m.queryIdx].pt
+            pt2 = kp2[m.trainIdx].pt
+            ## Draw pairs in purple, to make sure the result is ok
+            #cv2.circle(img1, (int(pt1[0]), int(pt1[1])), 10, (255, 0, 255), -1)
+            #cv2.circle(img2, (int(pt2[0]), int(pt2[1])), 10, (255, 0, 255), -1)
 
+    draw_params = dict(matchColor=(0, 255, 0),
+                       singlePointColor=(255, 0, 0),
+                       matchesMask=matchesMask,
+                       flags=0)
 
-arrayodPics=[imageONE,imageTwo,imageThree,imageFour,imageSix]
-#1
-x,arraykp,arraydes=funcCheck1(arrayodPics[0],arrayodPics[1])
-print(len(arraykp))
-image1=arrayodPics[0]
-#sift = cv2.xfeatures2d.SIFT_create()
-#surf = cv2.SURF(400)
-surf = cv2.xfeatures2d.SURF_create()
-# changing from PIL to nparray to work with "detectandCompute"
-# find the keypoints and descriptors with SIFT
-img1 = np.array(image1)
-kp1, des1 = surf.detectAndCompute(img1, None)
-print("kp1: ",len(kp1))
-image3=arrayodPics[0]
-img3= np.array(image3)
+    # img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
 
-for i in kp1:
-    # print(type(i))
-    cv2.circle(img1, (int(i.pt[0]), int(i.pt[1])), 10, (255, 0, 255), -1)
-plt.imshow(img1, ), plt.show()
+    # plt.imshow(img3,),plt.show()
+    return p, kp1  # returns number of best matches,and all keypoints of first img
 
-for i in arraykp:
-    # print(type(i))
-    cv2.circle(img3, (int(i.pt[0]), int(i.pt[1])), 10, (255, 0, 255), -1)
-plt.imshow(img3, ), plt.show()
-
-
-
-#2
-x,arraykp,arraydes=funcCheck2(arraykp,arraydes,arrayodPics[2])
-print(len(arraykp))
-
-x,arraykp,arraydes=funcCheck2(arraykp,arraydes,arrayodPics[3])
-print(len(arraykp))
-#3
-x,arraykp,arraydes=funcCheck2(arraykp,arraydes,arrayodPics[4])
-
-print(len(arraykp))
-
-'''
-for i in range(0,len(arrayodPics)):
-    x,arraykp,arraydes=funcCheck2(arraykp,arraydes,arrayodPics[i])
-    print(len(arraykp))
-    from matplotlib import pyplot as plt
-    image = arrayodPics[i]
-    img = np.array(image)
-    for i in arraykp:
-        # print(type(i))
-        cv2.circle(img, (int(i.pt[0]), int(i.pt[1])), 10, (255, 0, 255), -1)
-    plt.imshow(img, ), plt.show()
-'''
-image = arrayodPics[4]
-img = np.array(image)
-
-arrayk=extractKeyPt(arraykp)
-print("show function dbscan result")
-function(arrayk)
-for i in arrayk:
-    # print(type(i))
-    cv2.circle(img, (int(i.pt[0]), int(i.pt[1])), 10, (255, 0, 255), -1)
-plt.imshow(img, ), plt.show()
-
-#print(arraykp,arraydes)
-'''
-
-
-xy=funcCheck(imageONE,imageThree)
-z=funcCheck(imageTwo,imageThree)
-listx=[]
-for i in x:
-    listx.append(i[0])
-    listx.append(i[1])
-listy=[]
-for i in y:
-    listy.append(i[0])
-    listy.append(i[1])
-listz=[]
-for i in z:
-    listz.append(i[0])
-    listz.append(i[1])
-print(listx)
-print(listy)
-print(type(listx))
-print()
-u = set.intersection(set(listx),set(listy))
-print(u)
-
-#print(u)
-
-#u = set.intersection(set(w1), set(w2), set(w3))
-#print(u)
-
-res1 = kp1[m.queryIdx].response
-oct1 = kp1[m.queryIdx].octave
-angle1 = kp1[m.queryIdx].angle
-size1 = kp1[m.queryIdx].size
-id1 = kp1[m.queryIdx].class_id
-
-tup = (res1, oct1, angle1, size1, id1)
-arr.append(tup)
-'''
