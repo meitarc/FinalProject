@@ -366,7 +366,7 @@ def PrintBlackDictionary(blackD):
 # main:
 hashmap = {}
 partstosplit = 4
-arraypics = buildingPicArray("omri", 4, "jpg")  # string of the name of your basee image and the amount of images you have
+arraypics = buildingPicArray("", 4, "jpg")  # string of the name of your basee image and the amount of images you have
 print(arraypics)
 bBlocks = CreateBlackBlock(arraypics, partstosplit)
 matrix = scoreOfSplits(arraypics, len(arraypics), partstosplit, hashmap, bBlocks)

@@ -69,17 +69,17 @@ def scoreOfSplits(array,sizeofarray,parts,hashmap):
             #name2=hashmap.keys()[hashmap.values().index(array[j])]
             name3=name1+name2
             if i != j or array[i]!=array[j]:
-                new_width, new_height = array[i].size
-                name1 = key_list[val_list.index(array[j])]
-                array[j] = array[j].resize((new_width, new_height), Image.ANTIALIAS)
-                hashmap.pop(name1)
-                hashmap.update({name1:array[j]})
+                #new_width, new_height = array[i].size
+                #name1 = key_list[val_list.index(array[j])]
+                #array[j] = array[j].resize((new_width, new_height), Image.ANTIALIAS)
+                #hashmap.pop(name1)
+                #hashmap.update({name1:array[j]})
                 array[i].save("newSCORE.jpg")
                 splitImg = Split("newSCORE.jpg", parts)
-                merged, counter_of_good,name3 = makeNewMergedIMG(splitImg,name1, array[j],name2, parts, threshold=0.05)
+                merged, counter_of_good,name3 = makeNewMergedIMG(splitImg,name1, array[j],name2,  threshold=0.05)
                 array[j].save("newSCORE2.jpg")
                 splitImg2 = Split("newSCORE2.jpg", parts)
-                merged2, counter_of_good2,name3 = makeNewMergedIMG(splitImg2,name2, array[i],name1,parts, threshold=0.05)
+                merged2, counter_of_good2,name3 = makeNewMergedIMG(splitImg2,name2, array[i],name1, threshold=0.05)
                 if(counter_of_good>counter_of_good2):
                     tupletoadd =(counter_of_good,merged,name3)
                 else:
@@ -92,7 +92,7 @@ def scoreOfSplits(array,sizeofarray,parts,hashmap):
     return matrix
 
 
-'''
+
 
 def makeNewMergedIMG(arrayofImg,name1,img2,name2,threshold):
     ArrayIMG2 = []
@@ -141,6 +141,7 @@ def makeNewMergedIMG(arrayofImg,name1,img2,name2,parts,threshold): # need to add
         return imageMerged,countOfGood,name
     else:
         return black,0,name
+'''
 def find_max_in_column(matrix,col,max,threshold):
     img = Image.open("Black_Image.jpg")
     name="no_max"
@@ -207,13 +208,13 @@ def addColumToMatrixToSplit(matrix,addedMerged,arrayofpictures,parts,counter): #
 
     for i in arrayofpictures[:]:
         if i!=addedMerged:
-            new_width, new_height = addedMerged.size
-            key_list = list(hashmap.keys())
-            val_list = list(hashmap.values())
-            name1 = key_list[val_list.index(i)]
-            i = i.resize((new_width, new_height), Image.ANTIALIAS)
-            hashmap.pop(name1)
-            hashmap.update({name1: i})
+            #new_width, new_height = addedMerged.size
+            #key_list = list(hashmap.keys())
+            #val_list = list(hashmap.values())
+            #name1 = key_list[val_list.index(i)]
+            #i = i.resize((new_width, new_height), Image.ANTIALIAS)
+            #hashmap.pop(name1)
+            #hashmap.update({name1: i})
             index=index+1
             i.save("i.jpg")
             split2 = Split("i.jpg", parts)
@@ -302,8 +303,8 @@ def ReturningArrayOfPicsBySplit(matrix,arrayofpicS,parts,counters,hashmap):
 
 #main:
 hashmap={}
-partstosplit=4
-arraypics = buildingPicArray("omri",4 )#string of the name of your basee image and the amount of images you have
+partstosplit=16
+arraypics = buildingPicArray("try",4 )#string of the name of your basee image and the amount of images you have
 #key_list = list(hashmap.keys())
 #val_list = list(hashmap.values())
 #j=arraypics[1]
