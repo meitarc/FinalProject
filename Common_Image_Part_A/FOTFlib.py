@@ -35,6 +35,20 @@ img2=cv2.imread("try1.jpg")
 img3=cv2.imread("try0.jpg")
 img4=cv2.imread("try2.jpg")
 img5=cv2.imread("try1.jpg")
+###
+from matplotlib import pyplot as plt
+sift = cv2.xfeatures2d.SIFT_create()
+img1 = np.array(img2)
+kp, des = sift.detectAndCompute(img1, None)
+for i in kp:
+    #print(type(i))
+    cv2.circle(img1, (int(i.pt[0]), int(i.pt[1])), 10, (255, 0, 255), -1)
+plt.imshow(img1,),plt.show()
+print("show clusterts to boris:")
+clusters = DB_SCAN(kp,100)
+print("finish showing clusterts to boris")
+
+###
 
 arrayimg=[img1,img2,img3,img4,img5]
 kp,des = IntersectOfImages(arrayimg)

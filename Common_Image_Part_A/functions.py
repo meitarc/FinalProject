@@ -169,8 +169,8 @@ def funcCheck1(image1, image2):
     #print()
     # FLANN parameters
     FLANN_INDEX_KDTREE = 0
-    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
-    search_params = dict(checks=50)  # or pass empty dictionary
+    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=1)
+    search_params = dict(checks=10)  # or pass empty dictionary
     flann = cv2.FlannBasedMatcher(index_params, search_params)
     # http://answers.opencv.org/question/35327/opencv-and-python-problems-with-knnmatch-arguments/
     matches = flann.knnMatch(np.asarray(des1, np.float32), np.asarray(des2, np.float32), k=2)
@@ -235,8 +235,8 @@ def funcCheck2(kp,des, image2):
     #print()
     # FLANN parameters
     FLANN_INDEX_KDTREE = 0
-    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
-    search_params = dict(checks=50)  # or pass empty dictionary
+    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=1)
+    search_params = dict(checks=10)  # or pass empty dictionary
     flann = cv2.FlannBasedMatcher(index_params, search_params)
     # http://answers.opencv.org/question/35327/opencv-and-python-problems-with-knnmatch-arguments/
     matches = flann.knnMatch(np.asarray(des1, np.float32), np.asarray(des2, np.float32), k=2)
@@ -295,8 +295,8 @@ def clientFuncCheck(one, two, image2):
 
     # FLANN parameters
     FLANN_INDEX_KDTREE = 0
-    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
-    search_params = dict(checks=50)  # or pass empty dictionary
+    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=1)
+    search_params = dict(checks=10)  # or pass empty dictionary
     flann = cv2.FlannBasedMatcher(index_params, search_params)
     # http://answers.opencv.org/question/35327/opencv-and-python-problems-with-knnmatch-arguments/
     matches = flann.knnMatch(np.asarray(des1, np.float32), np.asarray(des2, np.float32), k=2)
