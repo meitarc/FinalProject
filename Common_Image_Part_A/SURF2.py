@@ -92,16 +92,16 @@ def DB_SCAN(keypointsArray):
                 y = cor[1]
                 t = (x, y)
                 new_list.append(t)
-        #plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
-        #         markeredgecolor='k', markersize=14)
+        plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
+                 markeredgecolor='k', markersize=14)
         xy = AKP[class_member_mask & ~core_samples_mask]
         counter = counter + (len(xy))
-        #plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
-        #         markeredgecolor='k', markersize=6)
+        plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
+                 markeredgecolor='k', markersize=6)
         if (k != -1):
             biglist.append(new_list)
-    #plt.title('Estimated number of clusters: %d' % n_clusters_)
-    #plt.show()
+    plt.title('Estimated number of clusters: %d' % n_clusters_)
+    plt.show()
     return biglist
 
 
