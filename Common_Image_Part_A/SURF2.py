@@ -86,7 +86,7 @@ def DB_SCAN(keypointsArray):
         counter = counter + (len(xy))
         new_list = []
         if (k != -1):
-            new_list.append(k)
+            #new_list.append(k)
             for cor in xy:
                 x = cor[0]
                 y = cor[1]

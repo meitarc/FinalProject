@@ -20,8 +20,6 @@ def CreateDict(kp,des):
 def checkCluster(cluster,dictionary,image):
     arrayKP = []
     arrayDES = []
-    print("print dictionery: ")
-    print(dictionary)
     for cor in cluster:
 
         values = dictionary.get(cor)
@@ -37,6 +35,7 @@ def checkCluster(cluster,dictionary,image):
 def corMinMax(cluster):
     maxX = 0
     maxY = 0
+    print(cluster)
     minX = cluster[0][0]
     minY = cluster[0][1]
     for cor in cluster:
@@ -68,15 +67,17 @@ def SizeandCenter(minY,maxY,minX,maxX):
 def imageDeleteParts(Image, partsList):
     test = Image.copy()
     for range in partsList:
-        test[range[1] - range[3] : range[1] + range[3], range[0] - range[2] : range[0] + range[2] ] = 0
+        print(range)
+        test[int(range[1] - range[3]) : int(range[1] + range[3]), int(range[0] - range[2]) : int(range[0] + range[2]) ] = 0
     return test
 
 def clustersOfCroppedImage(image1):
-    sift = cv2.xfeatures2d.SIFT_create()
+    #sift = cv2.xfeatures2d.SIFT_create()
+    surf = cv2.xfeatures2d.SURF_create()
     img1 = np.array(image1)
-    kp, des = sift.detectAndCompute(img1, None)
+    kp, des = surf.detectAndCompute(img1, None)
     dictionary = CreateDict(kp, des)
-    clusters = DB_SCAN(kp, des)
+    clusters = DB_SCAN(kp)
     return clusters,dictionary
 
 def funcCheck1(image1, image2):
@@ -209,14 +210,15 @@ def funcCheck2(kp,des, image2):
 def clientFuncCheck(one, two, image2):
     print("my funcCheck 2:")
     # Initiate SIFT detector
-    sift = cv2.xfeatures2d.SIFT_create()
+    #sift = cv2.xfeatures2d.SIFT_create()
+    surf = cv2.xfeatures2d.SURF_create()
     # changing from PIL to nparray to work with "detectandCompute"
     # find the keypoints and descriptors with SIFT
     img2 = np.array(image2)
 
     kp1, des1 = one,two
 
-    kp2, des2 = sift.detectAndCompute(img2, None)
+    kp2, des2 = surf.detectAndCompute(img2, None)
 
     # FLANN parameters
     FLANN_INDEX_KDTREE = 0
