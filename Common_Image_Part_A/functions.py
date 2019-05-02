@@ -146,11 +146,11 @@ def imageDeleteParts(Image, partsList):
 def clustersOfCroppedImage(image1):
     #sift = cv2.xfeatures2d.SIFT_create()
     cv2.imwrite('imagecheck.jpg', image1)
-    surf = cv2.xfeatures2d.SURF_create()
+    sift = cv2.xfeatures2d.SIFT_create()
     img1 = np.array(image1)
-    kp, des = surf.detectAndCompute(img1, None)
+    kp, des = sift.detectAndCompute(img1, None)
     dictionary = CreateDict(kp, des)
-    clusters = DB_SCAN(kp,40)
+    clusters = DB_SCAN(kp,100)
     return clusters,dictionary
 
 def funcCheck1(image1, image2):

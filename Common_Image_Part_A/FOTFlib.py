@@ -36,6 +36,7 @@ img3=cv2.imread("try0.jpg")
 img4=cv2.imread("try2.jpg")
 img5=cv2.imread("try1.jpg")
 ###
+'''
 from matplotlib import pyplot as plt
 sift = cv2.xfeatures2d.SIFT_create()
 img1 = np.array(img2)
@@ -47,7 +48,7 @@ plt.imshow(img1,),plt.show()
 print("show clusterts to boris:")
 clusters = DB_SCAN(kp,100)
 print("finish showing clusterts to boris")
-
+'''
 ###
 
 arrayimg=[img1,img2,img3,img4,img5]
@@ -67,9 +68,12 @@ croppedimage=makecroppedimage(arrayOfGoodclusters,image)
 cv2.imwrite('cropped.jpg', croppedimage)
 Newclusters,Newdictionary = clustersOfCroppedImage(croppedimage)
 
-
+#take out the new clusters in order to send
+#
+newimage=makecroppedimage(Newclusters,croppedimage)
+cv2.imwrite('clusters_of_cropped.jpg', newimage)
+cv2.imwrite('clusters_to_send.jpg', croppedimage-newimage)
 '''
-take out the new clusters in order to send
 counter=0
 for cluster in Newclusters:
     minY, maxY, minX, maxX = corMinMax(cluster)
@@ -78,11 +82,10 @@ for cluster in Newclusters:
     cv2.imwrite('newcropped' + str(counter) + '.jpg', crop_img)
     counter=counter+1
 '''
-
-
+'''
 #in new cameras image(after parts removed) do funccheck
 #cluster the featuers that returned.
 #crop the parts of clusters found in cameras image and return them.
 #to do - check for location of cropped parts in order to tell the server where they are located in server image.
-
+'''
 
