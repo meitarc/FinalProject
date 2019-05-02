@@ -10,12 +10,12 @@ def extractKeyPt(kp1):
         array_Kp_pt.append(kp.pt)
     return array_Kp_pt
 
-def DB_SCAN(keypointsArray):
+def DB_SCAN(keypointsArray,epsilon):
     Arraykeypoints = extractKeyPt(keypointsArray)
     # Generate sample data
     AKP = np.array(Arraykeypoints)
     # Compute DBSCAN
-    db = DBSCAN(eps=100, min_samples=10).fit(AKP)
+    db = DBSCAN(eps=epsilon, min_samples=10).fit(AKP)
     core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
     core_samples_mask[db.core_sample_indices_] = True
     labels = db.labels_
@@ -145,11 +145,12 @@ def imageDeleteParts(Image, partsList):
 
 def clustersOfCroppedImage(image1):
     #sift = cv2.xfeatures2d.SIFT_create()
+    cv2.imwrite('imagecheck.jpg', image1)
     surf = cv2.xfeatures2d.SURF_create()
     img1 = np.array(image1)
     kp, des = surf.detectAndCompute(img1, None)
     dictionary = CreateDict(kp, des)
-    clusters = DB_SCAN(kp)
+    clusters = DB_SCAN(kp,40)
     return clusters,dictionary
 
 def funcCheck1(image1, image2):
@@ -325,3 +326,20 @@ def clientFuncCheck(one, two, image2):
     # plt.imshow(img3,),plt.show()
     return p, kp1  # returns number of best matches,and all keypoints of first img
 
+
+def makegoodclusters(clusters,dictionary,image,threshold):
+    arrayOfGoodclusters=[]
+    for cluster in clusters:
+        if checkCluster(cluster,dictionary,image)>threshold:
+          arrayOfGoodclusters.append(cluster)
+    return arrayOfGoodclusters
+
+
+def makecroppedimage(arrayOfGoodclusters,image):
+    sizes=[]
+    for cluster in arrayOfGoodclusters:
+        minY, maxY, minX, maxX = corMinMax(cluster)
+        SizeCenter = SizeandCenter(minY, maxY, minX, maxX)
+        sizes.append(SizeCenter)
+    croppedimage= imageDeleteParts(image,sizes)
+    return  croppedimage

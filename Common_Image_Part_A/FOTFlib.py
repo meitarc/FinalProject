@@ -39,37 +39,31 @@ img5=cv2.imread("try1.jpg")
 arrayimg=[img1,img2,img3,img4,img5]
 kp,des = IntersectOfImages(arrayimg)
 dictionary = CreateDict(kp,des)
-clusters = DB_SCAN(kp)
+clusters = DB_SCAN(kp,100)
 print("Number of original clusters: ",len(clusters))
 #given GPS send cluster to client
 #client side:
 image=cv2.imread("try1.jpg")
 #for each cluster, if found in camera image, take it off from cameras image
-arrayOfGoodclusters=[]
-for cluster in clusters:
-    if checkCluster(cluster,dictionary,image)>threshold:
-        arrayOfGoodclusters.append(cluster)
 
-sizes=[]
-for cluster in arrayOfGoodclusters:
-    minY, maxY, minX, maxX = corMinMax(cluster)
-    SizeCenter = SizeandCenter(minY, maxY, minX, maxX)
-    sizes.append(SizeCenter)
+arrayOfGoodclusters=makegoodclusters(clusters,dictionary,image,threshold)
+print("Number of good clusters: ",len(arrayOfGoodclusters))
 
-croppedimage= imageDeleteParts(image,sizes)
+croppedimage=makecroppedimage(arrayOfGoodclusters,image)
 cv2.imwrite('cropped.jpg', croppedimage)
-
-
 Newclusters,Newdictionary = clustersOfCroppedImage(croppedimage)
 
+
+'''
+take out the new clusters in order to send
 counter=0
 for cluster in Newclusters:
     minY, maxY, minX, maxX = corMinMax(cluster)
     crop_img = croppedimage[int(minY):int(maxY),
                int(minX):int(maxX)]
-    cv2.imwrite('cropped' + str(counter) + '.jpg', crop_img)
+    cv2.imwrite('newcropped' + str(counter) + '.jpg', crop_img)
     counter=counter+1
-
+'''
 
 
 #in new cameras image(after parts removed) do funccheck
