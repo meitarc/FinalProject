@@ -77,6 +77,7 @@ def IntersectOfImages(arrayOfimages):
     x, arraykp, arraydes = funcCheck1(arrayOfimages[0], arrayOfimages[1])
     for i in range (2,len(arrayOfimages)):
         x,arraykp,arraydes = funcCheck2(arraykp,arraydes,arrayOfimages[i])
+    print("IntersectOfImages")
     return(arraykp,arraydes)
 
 def CreateDict(kp,des):
@@ -100,8 +101,8 @@ def checkCluster(cluster,dictionary,image):
             val=values[1]
             arrayKP.append(key)
             arrayDES.append(val)
-    p1, p2 = clientFuncCheck(arrayKP, arrayDES, image)
-    return (p1 / len(p2))
+    p1, p2 = clientFuncCheck(arrayKP, arrayDES, image,1)
+    return ((p1 / len(p2)))
 
 def corMinMax(cluster):
     maxX = 0
@@ -145,6 +146,7 @@ def imageDeleteParts(Image, partsList):
 
 def clustersOfCroppedImage(image1):
     #sift = cv2.xfeatures2d.SIFT_create()
+
     cv2.imwrite('imagecheck.jpg', image1)
     sift = cv2.xfeatures2d.SIFT_create()
     img1 = np.array(image1)
@@ -155,8 +157,9 @@ def clustersOfCroppedImage(image1):
 
 def funcCheck1(image1, image2):
     # Initiate SIFT detector
-    #sift = cv2.xfeatures2d.SIFT_create()
+    print("funcheck1")
     surf = cv2.xfeatures2d.SURF_create()
+    #surf = cv2.xfeatures2d.SURF_create()
     # changing from PIL to nparray to work with "detectandCompute"
     # find the keypoints and descriptors with SIFT
     img1 = np.array(image1)
@@ -214,14 +217,15 @@ def funcCheck1(image1, image2):
     # plt.imshow(img3,),plt.show()
     #print(okp)
     #print(odes)
+    print("funccheck1 ,matches,number of kp first image",p, " ",len(kp1))
     return p,okp,odes  # returns number of best matches,and all keypoints of first img
 
 def funcCheck2(kp,des, image2):
-    print("my func")
+    print("funccheck 2")
     # Initiate SIFT detector
     #surf = cv2.SURF(400)
+    #surf = cv2.xfeatures2d.SURF_create()
     surf = cv2.xfeatures2d.SURF_create()
-    #sift = cv2.xfeatures2d.SIFT_create()
     # changing from PIL to nparray to work with "detectandCompute"
     # find the keypoints and descriptors with SIFT
     #img1 = np.array(image1)
@@ -277,60 +281,107 @@ def funcCheck2(kp,des, image2):
     # img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
 
     # plt.imshow(img3,),plt.show()
-    print(okp[0],okp2[0])
+    print("funccheck2 results ",p,len(kp1))
     return p,okp,odes
 
-def clientFuncCheck(one, two, image2):
-    print("my funcCheck 2:")
-    # Initiate SIFT detector
-    #sift = cv2.xfeatures2d.SIFT_create()
-    surf = cv2.xfeatures2d.SURF_create()
-    # changing from PIL to nparray to work with "detectandCompute"
-    # find the keypoints and descriptors with SIFT
-    img2 = np.array(image2)
+def clientFuncCheck(one, two, image2,flag):
+    print("my funcCheck 2, for each cluster:")
+    if flag==1:
+        # Initiate SIFT detector
+        surf = cv2.xfeatures2d.SURF_create()
+        #surf = cv2.xfeatures2d.SURF_create()
+        # changing from PIL to nparray to work with "detectandCompute"
+        # find the keypoints and descriptors with SIFT
+        img2 = np.array(image2)
 
-    kp1, des1 = one,two
+        kp1, des1 = one,two
 
-    kp2, des2 = surf.detectAndCompute(img2, None)
+        kp2, des2 = surf.detectAndCompute(img2, None)
 
-    # FLANN parameters
-    FLANN_INDEX_KDTREE = 0
-    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=1)
-    search_params = dict(checks=10)  # or pass empty dictionary
-    flann = cv2.FlannBasedMatcher(index_params, search_params)
-    # http://answers.opencv.org/question/35327/opencv-and-python-problems-with-knnmatch-arguments/
-    matches = flann.knnMatch(np.asarray(des1, np.float32), np.asarray(des2, np.float32), k=2)
-    # Need to draw only good matches, so create a mask
-    matchesMask = [[0, 0] for i in range(len(matches))]
-    # ratio test as per Lowe's paper
-    p = 0  # counter
-    for i, (m, n) in enumerate(matches):
+        # FLANN parameters
+        FLANN_INDEX_KDTREE = 0
+        index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=1)
+        search_params = dict(checks=10)  # or pass empty dictionary
+        flann = cv2.FlannBasedMatcher(index_params, search_params)
+        # http://answers.opencv.org/question/35327/opencv-and-python-problems-with-knnmatch-arguments/
+        matches = flann.knnMatch(np.asarray(des1, np.float32), np.asarray(des2, np.float32), k=2)
+        # Need to draw only good matches, so create a mask
+        matchesMask = [[0, 0] for i in range(len(matches))]
+        # ratio test as per Lowe's paper
+        p = 0  # counter
+        for i, (m, n) in enumerate(matches):
 
-        if m.distance < 0.7 * n.distance:
-            matchesMask[i] = [1, 0]
-            ## Notice: How to get the index
-            p = p + 1
-            pt1 = kp1[m.queryIdx].pt
-            pt2 = kp2[m.trainIdx].pt
-            ## Draw pairs in purple, to make sure the result is ok
-            #cv2.circle(img1, (int(pt1[0]), int(pt1[1])), 10, (255, 0, 255), -1)
-            #cv2.circle(img2, (int(pt2[0]), int(pt2[1])), 10, (255, 0, 255), -1)
+            if m.distance < 0.7 * n.distance:
+                matchesMask[i] = [1, 0]
+                ## Notice: How to get the index
+                p = p + 1
+                pt1 = kp1[m.queryIdx].pt
+                pt2 = kp2[m.trainIdx].pt
+                ## Draw pairs in purple, to make sure the result is ok
+                #cv2.circle(img1, (int(pt1[0]), int(pt1[1])), 10, (255, 0, 255), -1)
+                #cv2.circle(img2, (int(pt2[0]), int(pt2[1])), 10, (255, 0, 255), -1)
 
-    draw_params = dict(matchColor=(0, 255, 0),
-                       singlePointColor=(255, 0, 0),
-                       matchesMask=matchesMask,
-                       flags=0)
+        draw_params = dict(matchColor=(0, 255, 0),
+                           singlePointColor=(255, 0, 0),
+                           matchesMask=matchesMask,
+                           flags=0)
 
-    # img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
+        # img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
 
-    # plt.imshow(img3,),plt.show()
-    return p, kp1  # returns number of best matches,and all keypoints of first img
+        # plt.imshow(img3,),plt.show()
+        return p, kp1  # returns number of best matches,and all keypoints of first img
+    else:
+        # Initiate SIFT detector
+        surf = cv2.xfeatures2d.SURF_create()
+        # surf = cv2.xfeatures2d.SURF_create()
+        # changing from PIL to nparray to work with "detectandCompute"
+        # find the keypoints and descriptors with SIFT
+        img2 = np.array(image2)
+
+        kp1, des1 = one, two
+
+        kp2, des2 = surf.detectAndCompute(img2, None)
+
+        # FLANN parameters
+        FLANN_INDEX_KDTREE = 0
+        index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=1)
+        search_params = dict(checks=10)  # or pass empty dictionary
+        flann = cv2.FlannBasedMatcher(index_params, search_params)
+        # http://answers.opencv.org/question/35327/opencv-and-python-problems-with-knnmatch-arguments/
+        matches = flann.knnMatch(np.asarray(des1, np.float32), np.asarray(des2, np.float32), k=2)
+        # Need to draw only good matches, so create a mask
+        matchesMask = [[0, 0] for i in range(len(matches))]
+        # ratio test as per Lowe's paper
+        p = 0  # counter
+        for i, (m, n) in enumerate(matches):
+
+            if m.distance < 0.7 * n.distance:
+                matchesMask[i] = [1, 0]
+                ## Notice: How to get the index
+                p = p + 1
+                pt1 = kp1[m.queryIdx].pt
+                pt2 = kp2[m.trainIdx].pt
+                ## Draw pairs in purple, to make sure the result is ok
+                # cv2.circle(img1, (int(pt1[0]), int(pt1[1])), 10, (255, 0, 255), -1)
+                # cv2.circle(img2, (int(pt2[0]), int(pt2[1])), 10, (255, 0, 255), -1)
+
+        draw_params = dict(matchColor=(0, 255, 0),
+                           singlePointColor=(255, 0, 0),
+                           matchesMask=matchesMask,
+                           flags=0)
+
+        # img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
+
+        # plt.imshow(img3,),plt.show()
+        return p, kp1  # returns number of best matches,and all keypoints of first img
 
 
 def makegoodclusters(clusters,dictionary,image,threshold):
     arrayOfGoodclusters=[]
     for cluster in clusters:
-        if checkCluster(cluster,dictionary,image)>threshold:
+        y=checkCluster(cluster,dictionary,image)
+        print("grade of cluster: ",y)
+        if y>threshold:
           arrayOfGoodclusters.append(cluster)
     return arrayOfGoodclusters
 

@@ -25,16 +25,25 @@
 #from SURF2 import DB_SCAN
 from functions import *
 #MAIN
-threshold=0.05
+threshold=0.25
 #server side:
 # getting big image array, splitting to smaller arrays
 # and then, for each array do the following
 #function getting array of images, returning the kps and des of the intersect of all images
-img1=cv2.imread("try2.jpg")
-img2=cv2.imread("try1.jpg")
-img3=cv2.imread("try0.jpg")
-img4=cv2.imread("try2.jpg")
-img5=cv2.imread("try1.jpg")
+#img1=cv2.imread("1.jpg")
+#img2=cv2.imread("2.jpg")
+#img3=cv2.imread("3.jpg")
+img4=cv2.imread("100.jpg")
+img5=cv2.imread("101.jpg")
+img6=cv2.imread("102.jpg")
+#img7=cv2.imread("103.jpg")
+#img8=cv2.imread("104.jpg")
+#img9=cv2.imread("9.jpg")
+#img11=cv2.imread("11.jpg")
+#img12=cv2.imread("12.jpg")
+#img13=cv2.imread("13.jpg")
+#img14=cv2.imread("14.jpg")
+#img15=cv2.imread("15.jpg")
 ###
 '''
 from matplotlib import pyplot as plt
@@ -51,14 +60,14 @@ print("finish showing clusterts to boris")
 '''
 ###
 
-arrayimg=[img1,img2,img3,img4,img5]
+arrayimg=[img4,img5,img6]
 kp,des = IntersectOfImages(arrayimg)
 dictionary = CreateDict(kp,des)
-clusters = DB_SCAN(kp,100)
+clusters = DB_SCAN(kp,20)
 print("Number of original clusters: ",len(clusters))
 #given GPS send cluster to client
 #client side:
-image=cv2.imread("try1.jpg")
+image=cv2.imread("115.jpg")
 #for each cluster, if found in camera image, take it off from cameras image
 
 arrayOfGoodclusters=makegoodclusters(clusters,dictionary,image,threshold)
@@ -72,8 +81,18 @@ Newclusters,Newdictionary = clustersOfCroppedImage(croppedimage)
 #
 newimage=makecroppedimage(Newclusters,croppedimage)
 cv2.imwrite('clusters_of_cropped.jpg', newimage)
+
 cv2.imwrite('clusters_to_send.jpg', croppedimage-newimage)
 '''
+src = cv2.imread('clusters_to_send.jpg', 1)
+
+tmp = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
+_,alpha = cv2.threshold(tmp,0,255,cv2.THRESH_BINARY)
+b, g, r = cv2.split(src)
+rgba = [b,g,r, alpha]
+dst = cv2.merge(rgba,4)
+cv2.imwrite("test.jpeg", dst)
+
 counter=0
 for cluster in Newclusters:
     minY, maxY, minX, maxX = corMinMax(cluster)
@@ -81,11 +100,9 @@ for cluster in Newclusters:
                int(minX):int(maxX)]
     cv2.imwrite('newcropped' + str(counter) + '.jpg', crop_img)
     counter=counter+1
-'''
-'''
+
 #in new cameras image(after parts removed) do funccheck
 #cluster the featuers that returned.
 #crop the parts of clusters found in cameras image and return them.
 #to do - check for location of cropped parts in order to tell the server where they are located in server image.
 '''
-
