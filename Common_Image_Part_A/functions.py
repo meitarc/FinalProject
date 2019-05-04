@@ -71,8 +71,6 @@ def DB_SCAN(keypointsArray,epsilon):
     return biglist
 
 
-
-
 def IntersectOfImages(arrayOfimages):
     x, arraykp, arraydes = funcCheck1(arrayOfimages[0], arrayOfimages[1])
     for i in range (2,len(arrayOfimages)):
@@ -93,21 +91,19 @@ def checkCluster(cluster,dictionary,image):
     arrayKP = []
     arrayDES = []
     for cor in cluster:
-
         values = dictionary.get(cor)
-
         if values is not None:
             key=values[0]
             val=values[1]
             arrayKP.append(key)
             arrayDES.append(val)
     p1, p2 = clientFuncCheck(arrayKP, arrayDES, image,1)
-    return ((p1 / len(p2)))
+    return (p1 / len(p2))
 
 def corMinMax(cluster):
     maxX = 0
     maxY = 0
-    print(cluster)
+    #print(cluster)
     minX = cluster[0][0]
     minY = cluster[0][1]
     for cor in cluster:
@@ -148,18 +144,19 @@ def clustersOfCroppedImage(image1):
     #sift = cv2.xfeatures2d.SIFT_create()
 
     cv2.imwrite('imagecheck.jpg', image1)
-    sift = cv2.xfeatures2d.SIFT_create()
+    surf = cv2.xfeatures2d.SURF_create()
     img1 = np.array(image1)
-    kp, des = sift.detectAndCompute(img1, None)
+    kp, des = surf.detectAndCompute(img1, None)
     dictionary = CreateDict(kp, des)
-    clusters = DB_SCAN(kp,100)
+    clusters = DB_SCAN(kp,20)
+
     return clusters,dictionary
 
 def funcCheck1(image1, image2):
     # Initiate SIFT detector
     print("funcheck1")
     surf = cv2.xfeatures2d.SURF_create()
-    #surf = cv2.xfeatures2d.SURF_create()
+    #sift = cv2.xfeatures2d.SIFT_create()
     # changing from PIL to nparray to work with "detectandCompute"
     # find the keypoints and descriptors with SIFT
     img1 = np.array(image1)
@@ -172,8 +169,8 @@ def funcCheck1(image1, image2):
     #print()
     # FLANN parameters
     FLANN_INDEX_KDTREE = 0
-    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=1)
-    search_params = dict(checks=10)  # or pass empty dictionary
+    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+    search_params = dict(checks=50)  # or pass empty dictionary
     flann = cv2.FlannBasedMatcher(index_params, search_params)
     # http://answers.opencv.org/question/35327/opencv-and-python-problems-with-knnmatch-arguments/
     matches = flann.knnMatch(np.asarray(des1, np.float32), np.asarray(des2, np.float32), k=2)
@@ -188,7 +185,7 @@ def funcCheck1(image1, image2):
     odes=[]
 
     for i, (m, n) in enumerate(matches):
-        if m.distance < 0.7 * n.distance:
+        if m.distance < 0.95 * n.distance:
             #print(i,m,n)
             #print(m.trainIdx)
             matchesMask[i] = [1, 0]
@@ -224,7 +221,7 @@ def funcCheck2(kp,des, image2):
     print("funccheck 2")
     # Initiate SIFT detector
     #surf = cv2.SURF(400)
-    #surf = cv2.xfeatures2d.SURF_create()
+    #sift = cv2.xfeatures2d.SIFT_create()
     surf = cv2.xfeatures2d.SURF_create()
     # changing from PIL to nparray to work with "detectandCompute"
     # find the keypoints and descriptors with SIFT
@@ -239,8 +236,8 @@ def funcCheck2(kp,des, image2):
     #print()
     # FLANN parameters
     FLANN_INDEX_KDTREE = 0
-    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=1)
-    search_params = dict(checks=10)  # or pass empty dictionary
+    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+    search_params = dict(checks=50)  # or pass empty dictionary
     flann = cv2.FlannBasedMatcher(index_params, search_params)
     # http://answers.opencv.org/question/35327/opencv-and-python-problems-with-knnmatch-arguments/
     matches = flann.knnMatch(np.asarray(des1, np.float32), np.asarray(des2, np.float32), k=2)
@@ -255,7 +252,7 @@ def funcCheck2(kp,des, image2):
     odes=[]
     okp2=[]
     for i, (m, n) in enumerate(matches):
-        if m.distance < 0.7 * n.distance:
+        if m.distance < 0.95 * n.distance:
             #print(i,m,n)
             #print(m.trainIdx)
             matchesMask[i] = [1, 0]
@@ -285,7 +282,7 @@ def funcCheck2(kp,des, image2):
     return p,okp,odes
 
 def clientFuncCheck(one, two, image2,flag):
-    print("my funcCheck 2, for each cluster:")
+    #print("my funcCheck 2, for each cluster:")
     if flag==1:
         # Initiate SIFT detector
         surf = cv2.xfeatures2d.SURF_create()
@@ -300,8 +297,8 @@ def clientFuncCheck(one, two, image2,flag):
 
         # FLANN parameters
         FLANN_INDEX_KDTREE = 0
-        index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=1)
-        search_params = dict(checks=10)  # or pass empty dictionary
+        index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+        search_params = dict(checks=50)  # or pass empty dictionary
         flann = cv2.FlannBasedMatcher(index_params, search_params)
         # http://answers.opencv.org/question/35327/opencv-and-python-problems-with-knnmatch-arguments/
         matches = flann.knnMatch(np.asarray(des1, np.float32), np.asarray(des2, np.float32), k=2)
@@ -311,7 +308,7 @@ def clientFuncCheck(one, two, image2,flag):
         p = 0  # counter
         for i, (m, n) in enumerate(matches):
 
-            if m.distance < 0.7 * n.distance:
+            if m.distance < 0.95 * n.distance:
                 matchesMask[i] = [1, 0]
                 ## Notice: How to get the index
                 p = p + 1
@@ -355,7 +352,7 @@ def clientFuncCheck(one, two, image2,flag):
         p = 0  # counter
         for i, (m, n) in enumerate(matches):
 
-            if m.distance < 0.7 * n.distance:
+            if m.distance < 0.95 * n.distance:
                 matchesMask[i] = [1, 0]
                 ## Notice: How to get the index
                 p = p + 1
@@ -378,11 +375,14 @@ def clientFuncCheck(one, two, image2,flag):
 
 def makegoodclusters(clusters,dictionary,image,threshold):
     arrayOfGoodclusters=[]
+    counter=0
     for cluster in clusters:
+        print("cluster Number: ",counter)
         y=checkCluster(cluster,dictionary,image)
-        print("grade of cluster: ",y)
+        #print("grade of cluster: ",y)
         if y>threshold:
           arrayOfGoodclusters.append(cluster)
+        counter=counter+1
     return arrayOfGoodclusters
 
 
@@ -393,4 +393,46 @@ def makecroppedimage(arrayOfGoodclusters,image):
         SizeCenter = SizeandCenter(minY, maxY, minX, maxX)
         sizes.append(SizeCenter)
     croppedimage= imageDeleteParts(image,sizes)
-    return  croppedimage
+    cv2.imwrite('testguy.jpg',croppedimage)
+    return croppedimage
+
+
+def sortImageByFeachers(arrayimg):
+    newArrayimg = arrayimg
+    list=[]
+    for image in newArrayimg:
+        x=FetureCount(image)
+        list.append(x)
+    n = len(list)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if list[j] < list[j + 1]:
+                list[j], list[j + 1] = list[j + 1], list[j]
+                newArrayimg[j],newArrayimg[j+1]=newArrayimg[j+1],newArrayimg[j]
+    print(list)
+    return newArrayimg
+
+
+def FetureCount(image1):
+    images = np.array(image1)
+    img1 = cv2.cvtColor(images, cv2.COLOR_BGR2GRAY)
+    # Initiate SIFT detector
+    surf = cv2.xfeatures2d.SURF_create()
+    # find the keypoints and descriptors with SIFT
+    kp1, des1 = surf.detectAndCompute(img1, None)
+    return len(kp1)
+
+
+def tryit(image):
+    images = np.array(image)
+    img1 = cv2.cvtColor(images, cv2.COLOR_BGR2GRAY)
+    # Initiate SIFT detector
+    sift = cv2.xfeatures2d.SIFT_create()
+    # find the keypoints and descriptors with SIFT
+    kp1, des1 = sift.detectAndCompute(img1, None)
+    from matplotlib import pyplot as plt
+    img = np.array(img1)
+    for i in kp1:
+        # print(type(i))
+        cv2.circle(img, (int(i.pt[0]), int(i.pt[1])), 10, (255, 0, 255), -1)
+    plt.imshow(img, ), plt.show()

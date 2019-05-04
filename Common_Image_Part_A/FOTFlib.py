@@ -25,7 +25,7 @@
 #from SURF2 import DB_SCAN
 from functions import *
 #MAIN
-threshold=0.25
+threshold=0.05
 #server side:
 # getting big image array, splitting to smaller arrays
 # and then, for each array do the following
@@ -33,12 +33,12 @@ threshold=0.25
 #img1=cv2.imread("1.jpg")
 #img2=cv2.imread("2.jpg")
 #img3=cv2.imread("3.jpg")
-img4=cv2.imread("100.jpg")
-img5=cv2.imread("101.jpg")
-img6=cv2.imread("102.jpg")
-#img7=cv2.imread("103.jpg")
-#img8=cv2.imread("104.jpg")
-#img9=cv2.imread("9.jpg")
+
+img3=cv2.imread("8.jpg")
+img4=cv2.imread("9.jpg")
+img5=cv2.imread("10.jpg")
+img6=cv2.imread("11.jpg")
+#img9=cv2.imread("12.jpg")
 #img11=cv2.imread("11.jpg")
 #img12=cv2.imread("12.jpg")
 #img13=cv2.imread("13.jpg")
@@ -59,26 +59,45 @@ clusters = DB_SCAN(kp,100)
 print("finish showing clusterts to boris")
 '''
 ###
-
-arrayimg=[img4,img5,img6]
-kp,des = IntersectOfImages(arrayimg)
+#pic=cv2.imread("14b.jpg")
+#tryit(pic)
+arrayimg=[img3,img4,img5,img6]
+newSortedArrayimg=sortImageByFeachers(arrayimg)
+kp,des = IntersectOfImages(newSortedArrayimg)
 dictionary = CreateDict(kp,des)
 clusters = DB_SCAN(kp,20)
+
+imgtoshowboris=newSortedArrayimg[len(newSortedArrayimg)-1]
+print("show kp after intersection: ")
+big_array=[]
+for i in clusters:
+    for j in i:
+        big_array.append(j)
+from matplotlib import pyplot as plt
+img = np.array(imgtoshowboris)
+for i in big_array:
+    #print(type(i))
+    cv2.circle(img, (int(i[0]), int(i[1])), 10, (255, 0, 255), -1)
+plt.imshow(img,),plt.show()
+
 print("Number of original clusters: ",len(clusters))
 #given GPS send cluster to client
 #client side:
-image=cv2.imread("115.jpg")
+#client image
+image=cv2.imread("14a.jpg")
 #for each cluster, if found in camera image, take it off from cameras image
 
 arrayOfGoodclusters=makegoodclusters(clusters,dictionary,image,threshold)
 print("Number of good clusters: ",len(arrayOfGoodclusters))
+print("big array plot: ")
 
 croppedimage=makecroppedimage(arrayOfGoodclusters,image)
 cv2.imwrite('cropped.jpg', croppedimage)
+print("CROPPED ! GO CHECK IT OUT !")
 Newclusters,Newdictionary = clustersOfCroppedImage(croppedimage)
 
 #take out the new clusters in order to send
-#
+
 newimage=makecroppedimage(Newclusters,croppedimage)
 cv2.imwrite('clusters_of_cropped.jpg', newimage)
 
