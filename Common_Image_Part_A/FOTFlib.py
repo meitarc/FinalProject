@@ -25,7 +25,7 @@
 #from SURF2 import DB_SCAN
 from functions import *
 #MAIN
-threshold=0.05
+threshold=0.25
 #server side:
 # getting big image array, splitting to smaller arrays
 # and then, for each array do the following
@@ -34,10 +34,10 @@ threshold=0.05
 #img2=cv2.imread("2.jpg")
 #img3=cv2.imread("3.jpg")
 
-img3=cv2.imread("8.jpg")
-img4=cv2.imread("9.jpg")
-img5=cv2.imread("10.jpg")
-img6=cv2.imread("11.jpg")
+img3=cv2.imread("101.jpg")
+img4=cv2.imread("102.jpg")
+img5=cv2.imread("103.jpg")
+img6=cv2.imread("104.jpg")
 #img9=cv2.imread("12.jpg")
 #img11=cv2.imread("11.jpg")
 #img12=cv2.imread("12.jpg")
@@ -84,7 +84,7 @@ print("Number of original clusters: ",len(clusters))
 #given GPS send cluster to client
 #client side:
 #client image
-image=cv2.imread("14a.jpg")
+image=cv2.imread("115.jpg")
 #for each cluster, if found in camera image, take it off from cameras image
 
 arrayOfGoodclusters=makegoodclusters(clusters,dictionary,image,threshold)
