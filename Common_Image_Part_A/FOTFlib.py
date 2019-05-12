@@ -23,6 +23,7 @@
 
 #imports:
 #from SURF2 import DB_SCAN
+from align.align import *
 from functions import *
 #MAIN
 threshold=0.25
@@ -85,15 +86,24 @@ print("Number of original clusters: ",len(clusters))
 #client side:
 #client image
 image=cv2.imread("115.jpg")
+##new row:
+imReg, h = alignImages( image,newSortedArrayimg[len(newSortedArrayimg)-1])
 #for each cluster, if found in camera image, take it off from cameras image
+#checking if this is client photo
+cv2.imwrite('client truktor.jpg', imReg)
 
-arrayOfGoodclusters=makegoodclusters(clusters,dictionary,image,threshold)
+arrayOfGoodclusters=makegoodclusters(clusters,dictionary,imReg,threshold)
+#arrayOfGoodclusters=makegoodclusters(clusters,dictionary,image,threshold)
 print("Number of good clusters: ",len(arrayOfGoodclusters))
 print("big array plot: ")
 
-croppedimage=makecroppedimage(arrayOfGoodclusters,image)
+croppedimage=makecroppedimage(arrayOfGoodclusters,imReg)
+#croppedimage=makecroppedimage(arrayOfGoodclusters,imReg)
 cv2.imwrite('cropped.jpg', croppedimage)
 print("CROPPED ! GO CHECK IT OUT !")
+#Newclusters,Newdictionary = clustersOfCroppedImage(croppedimage)
+cv2.imwrite('client truktor.jpg', imReg)
+
 Newclusters,Newdictionary = clustersOfCroppedImage(croppedimage)
 
 #take out the new clusters in order to send
