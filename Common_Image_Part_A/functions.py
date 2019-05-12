@@ -97,8 +97,8 @@ def checkCluster(cluster,dictionary,image):
             val=values[1]
             arrayKP.append(key)
             arrayDES.append(val)
-    p1, p2 = clientFuncCheck(arrayKP, arrayDES, image,1)
-    return (p1 / len(p2))
+    p1, p2,image2coordinates = clientFuncCheck(arrayKP, arrayDES, image,1)
+    return (p1 / len(p2)),image2coordinates
 
 def corMinMax(cluster):
     maxX = 0
@@ -306,14 +306,17 @@ def clientFuncCheck(one, two, image2,flag):
         matchesMask = [[0, 0] for i in range(len(matches))]
         # ratio test as per Lowe's paper
         p = 0  # counter
+        img2coordnts=[]
+
         for i, (m, n) in enumerate(matches):
 
-            if m.distance < 0.95 * n.distance:
+            if m.distance < 0.7 * n.distance:
                 matchesMask[i] = [1, 0]
                 ## Notice: How to get the index
                 p = p + 1
                 pt1 = kp1[m.queryIdx].pt
                 pt2 = kp2[m.trainIdx].pt
+                img2coordnts.append(kp2[m.trainIdx].pt)
                 ## Draw pairs in purple, to make sure the result is ok
                 #cv2.circle(img1, (int(pt1[0]), int(pt1[1])), 10, (255, 0, 255), -1)
                 #cv2.circle(img2, (int(pt2[0]), int(pt2[1])), 10, (255, 0, 255), -1)
@@ -326,7 +329,10 @@ def clientFuncCheck(one, two, image2,flag):
         # img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
 
         # plt.imshow(img3,),plt.show()
-        return p, kp1  # returns number of best matches,and all keypoints of first img
+        print("kp1",len(kp1))
+        print("kp2",len(kp2))
+        print("matches", p)
+        return p, kp1,img2coordnts  # returns number of best matches,and all keypoints of first img
     else:
         # Initiate SIFT detector
         surf = cv2.xfeatures2d.SURF_create()
@@ -376,12 +382,17 @@ def clientFuncCheck(one, two, image2,flag):
 def makegoodclusters(clusters,dictionary,image,threshold):
     arrayOfGoodclusters=[]
     counter=0
+
     for cluster in clusters:
+        #print("cluster is: ", cluster)
         print("cluster Number: ",counter)
-        y=checkCluster(cluster,dictionary,image)
+        y,img2coords=checkCluster(cluster,dictionary,image)
         #print("grade of cluster: ",y)
+        #addp2 instead of cluster
+        print(" % is ",y)
         if y>threshold:
-          arrayOfGoodclusters.append(cluster)
+          print("length of clusters ",y,len(img2coords))
+          arrayOfGoodclusters.append(img2coords)
         counter=counter+1
     return arrayOfGoodclusters
 
