@@ -140,6 +140,14 @@ def imageDeleteParts(Image, partsList):
     cv2.imwrite('test2.jpg', test)
     return test
 
+def readImagesToMakeCommonImage():
+    img3 = cv2.imread("101.jpg")
+    img4 = cv2.imread("102.jpg")
+    img5 = cv2.imread("103.jpg")
+    img6 = cv2.imread("104.jpg")
+    arrayimg=[img3,img4,img5,img6]
+    return arrayimg
+
 def clustersOfCroppedImage(image1):
     #sift = cv2.xfeatures2d.SIFT_create()
 

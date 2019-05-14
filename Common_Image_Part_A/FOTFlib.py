@@ -31,20 +31,6 @@ threshold=0.25
 # getting big image array, splitting to smaller arrays
 # and then, for each array do the following
 #function getting array of images, returning the kps and des of the intersect of all images
-#img1=cv2.imread("1.jpg")
-#img2=cv2.imread("2.jpg")
-#img3=cv2.imread("3.jpg")
-
-img3=cv2.imread("101.jpg")
-img4=cv2.imread("102.jpg")
-img5=cv2.imread("103.jpg")
-img6=cv2.imread("104.jpg")
-#img9=cv2.imread("12.jpg")
-#img11=cv2.imread("11.jpg")
-#img12=cv2.imread("12.jpg")
-#img13=cv2.imread("13.jpg")
-#img14=cv2.imread("14.jpg")
-#img15=cv2.imread("15.jpg")
 ###
 '''
 from matplotlib import pyplot as plt
@@ -62,47 +48,35 @@ print("finish showing clusterts to boris")
 ###
 #pic=cv2.imread("14b.jpg")
 #tryit(pic)
-arrayimg=[img3,img4,img5,img6]
+arrayimg=readImagesToMakeCommonImage()
+# sort images by number of features:
 newSortedArrayimg=sortImageByFeachers(arrayimg)
+#find inersect of features on all images:
 kp,des = IntersectOfImages(newSortedArrayimg)
+#dictionary between coordinates and keypoints+descriptors:
 dictionary = CreateDict(kp,des)
+#clustering the kp according to coords
+# the value isL low for more cluster, 10-100 most likely, now we are on 20.
 clusters = DB_SCAN(kp,20)
-
-imgtoshowboris=newSortedArrayimg[len(newSortedArrayimg)-1]
-print("show kp after intersection: ")
-big_array=[]
-for i in clusters:
-    for j in i:
-        big_array.append(j)
-from matplotlib import pyplot as plt
-img = np.array(imgtoshowboris)
-for i in big_array:
-    #print(type(i))
-    cv2.circle(img, (int(i[0]), int(i[1])), 10, (255, 0, 255), -1)
-plt.imshow(img,),plt.show()
-
 print("Number of original clusters: ",len(clusters))
+
 #given GPS send cluster to client
 #client side:
 #client image
 image=cv2.imread("115.jpg")
 ##new row:
 imReg, h = alignImages( image,newSortedArrayimg[len(newSortedArrayimg)-1])
-#for each cluster, if found in camera image, take it off from cameras image
-#checking if this is client photo
-cv2.imwrite('client truktor.jpg', imReg)
-
+#for each cluster, if found in camera image, take it off from cameras image:
 arrayOfGoodclusters=makegoodclusters(clusters,dictionary,imReg,threshold)
+
 #arrayOfGoodclusters=makegoodclusters(clusters,dictionary,image,threshold)
 print("Number of good clusters: ",len(arrayOfGoodclusters))
-print("big array plot: ")
-
+# drop the areas of clusters found in the client image that match the server image
 croppedimage=makecroppedimage(arrayOfGoodclusters,imReg)
 #croppedimage=makecroppedimage(arrayOfGoodclusters,imReg)
 cv2.imwrite('cropped.jpg', croppedimage)
 print("CROPPED ! GO CHECK IT OUT !")
 #Newclusters,Newdictionary = clustersOfCroppedImage(croppedimage)
-cv2.imwrite('client truktor.jpg', imReg)
 
 Newclusters,Newdictionary = clustersOfCroppedImage(croppedimage)
 
