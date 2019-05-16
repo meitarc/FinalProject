@@ -67,7 +67,7 @@ print("Number of original clusters: ",len(clusters))
 #given GPS send cluster to client
 #client side:
 #client image
-image=cv2.imread("115.jpg")
+image=cv2.imread("source/115.jpg")
 ##new row:
 imReg, h = alignImages( image,newSortedArrayimg[len(newSortedArrayimg)-1])
 #for each cluster, if found in camera image, take it off from cameras image:
@@ -84,7 +84,7 @@ print("Number of good clusters: ",len(arrayOfGoodclusters))
 # drop the areas of clusters found in the client image that match the server image
 croppedimage=makecroppedimage(arrayOfGoodclusters,imReg)
 #croppedimage=makecroppedimage(arrayOfGoodclusters,imReg)
-cv2.imwrite('cropped.jpg', croppedimage)
+cv2.imwrite('output/cropped.jpg', croppedimage)
 
 
 
@@ -97,9 +97,9 @@ Newclusters,Newdictionary = clustersOfCroppedImage(croppedimage)
 
 newimage=makecroppedimage(Newclusters,croppedimage)
 #newimage=croppedmatchingareas(croppedimage,Newclusters)
-cv2.imwrite('clusters_of_cropped.jpg', newimage)
+cv2.imwrite('output/clusters_of_cropped.jpg', newimage)
 
-cv2.imwrite('clusters_to_send.jpg', croppedimage-newimage)
+cv2.imwrite('output/clusters_to_send.jpg', croppedimage-newimage)
 
 
 '''

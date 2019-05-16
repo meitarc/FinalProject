@@ -216,24 +216,24 @@ def SizeandCenter(minY,maxY,minX,maxX):
 #The function returns the original image, after deleting the surrounding area given around the x,y.
 def imageDeleteParts(Image, partsList):
     test = Image.copy()
-    cv2.imwrite('test.jpg', test)
+    cv2.imwrite('output/test.jpg', test)
     for range in partsList:
         test[ int(range[0] - range[3]) : int(range[0] + range[3]),int(range[1] - range[2]) : int(range[1] + range[2]) ] = 0
-    cv2.imwrite('test2.jpg', test)
+    cv2.imwrite('output/test2.jpg', test)
     return test
 
 def readImagesToMakeCommonImage():
-    img3 = cv2.imread("101.jpg")
-    img4 = cv2.imread("102.jpg")
-    img5 = cv2.imread("103.jpg")
-    img6 = cv2.imread("104.jpg")
+    img3 = cv2.imread("source/101.jpg")
+    img4 = cv2.imread("source/102.jpg")
+    img5 = cv2.imread("source/103.jpg")
+    img6 = cv2.imread("source/104.jpg")
     arrayimg=[img3,img4,img5,img6]
     return arrayimg
 
 def clustersOfCroppedImage(image1):
     #sift = cv2.xfeatures2d.SIFT_create()
 
-    cv2.imwrite('imagecheck.jpg', image1)
+    cv2.imwrite('output/imagecheck.jpg', image1)
     surf = cv2.xfeatures2d.SURF_create()
     img1 = np.array(image1)
     kp, des = surf.detectAndCompute(img1, None)
@@ -494,7 +494,7 @@ def makecroppedimage(arrayOfGoodclusters,image):
         SizeCenter = SizeandCenter(minY, maxY, minX, maxX)
         sizes.append(SizeCenter)
     croppedimage= imageDeleteParts(image,sizes)
-    cv2.imwrite('testguy.jpg',croppedimage)
+    cv2.imwrite('output/testguy.jpg',croppedimage)
     return croppedimage
 
 
