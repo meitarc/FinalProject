@@ -115,72 +115,139 @@ def croppedmatchingareas(clientimagepath, goodclustersarray):
 
 from functions import DB_SCAN
 
+def function():
+    img=cv2.imread("115.jpg")
+    # Constructing the input point data
+    images = np.array(img)
+    img1 = cv2.cvtColor(images, cv2.COLOR_BGR2GRAY)
+    # Initiate SIFT detector
+    surf = cv2.xfeatures2d.SURF_create()
+    # find the keypoints and descriptors with SIFT
+    kp1, des1 = surf.detectAndCompute(img1, None)
+    clusters = DB_SCAN(kp1,20)
+    x=[]
+    y=[]
 
-img=cv2.imread("115.jpg")
-# Constructing the input point data
-images = np.array(img)
-img1 = cv2.cvtColor(images, cv2.COLOR_BGR2GRAY)
-# Initiate SIFT detector
-surf = cv2.xfeatures2d.SURF_create()
-# find the keypoints and descriptors with SIFT
-kp1, des1 = surf.detectAndCompute(img1, None)
-clusters = DB_SCAN(kp1,20)
-x=[]
-y=[]
-
-for i in clusters[3]:
-    for j in i:
-        x=np.append(x,i[0])
-        y = np.append(y, i[1])
-
-
-inside = ((x ** 2 + y ** 2 > 1.0) & ((x - 3) ** 2 + y ** 2 > 1.0))
-points = np.vstack([x[inside], y[inside]]).T
-#print(points)
-# Computing the alpha shape
-edges = alpha_shape(points, alpha=16, only_outer=True)
-
-ed=stitch_boundaries(edges)
-
-'''
-from matplotlib.pyplot import *
-
-# Constructing the input point data
-np.random.seed(0)
-x = 3.0 * np.random.rand(2000)
-y = 2.0 * np.random.rand(2000) - 1.0
-inside = ((x ** 2 + y ** 2 > 1.0) & ((x - 3) ** 2 + y ** 2 > 1.0))
-points = np.vstack([x[inside], y[inside]]).T
-
-# Computing the alpha shape
-edges = alpha_shape(points, alpha=0.25, only_outer=True)
-'''
-# Plotting the output
-figure()
-axis('equal')
-plot(points[:, 0], points[:, 1], '.')
-for i, j in edges:
-    plot(points[[i, j], 0], points[[i, j], 1])
-show()
+    for i in clusters:
+        for j in i:
+            x=np.append(x,j[0])
+            y = np.append(y, j[1])
 
 
-# original image
-# -1 loads as-is so if it will be 3 or 4 channel as the original
-image = cv2.imread('115.jpg', -1)
-# mask defaulting to black for 3-channel and transparent for 4-channel
-# (of course replace corners with yours)
-mask = np.zeros(image.shape, dtype=np.uint8)
-print(ed[0])
+    inside = ((x ** 2 + y ** 2 > 1.0) & ((x - 3) ** 2 + y ** 2 > 1.0))
+    points = np.vstack([x[inside], y[inside]]).T
+    #print(points)
+    # Computing the alpha shape
+    edges = alpha_shape(points, alpha=20, only_outer=True)
 
-roi_corners = np.array([ed[0]], dtype=np.int32)
-# fill the ROI so it doesn't get wiped out when the mask is applied
-channel_count = image.shape[2]  # i.e. 3 or 4 depending on your image
-ignore_mask_color = (255,)*channel_count
-cv2.fillPoly(mask, roi_corners, ignore_mask_color)
-# from Masterfool: use cv2.fillConvexPoly if you know it's convex
+    ed=stitch_boundaries(edges)
 
-# apply the mask
-masked_image = cv2.bitwise_and(image, mask)
+    '''
+    from matplotlib.pyplot import *
+    
+    # Constructing the input point data
+    np.random.seed(0)
+    x = 3.0 * np.random.rand(2000)
+    y = 2.0 * np.random.rand(2000) - 1.0
+    inside = ((x ** 2 + y ** 2 > 1.0) & ((x - 3) ** 2 + y ** 2 > 1.0))
+    points = np.vstack([x[inside], y[inside]]).T
+    
+    # Computing the alpha shape
+    edges = alpha_shape(points, alpha=0.25, only_outer=True)
+    '''
+    # Plotting the output
+    figure()
+    axis('equal')
+    plot(points[:, 0], points[:, 1], '.')
+    for i, j in edges:
+        plot(points[[i, j], 0], points[[i, j], 1])
+    show()
 
-# save the result
-cv2.imwrite('image_masked.png', masked_image)
+
+    # original image
+    # -1 loads as-is so if it will be 3 or 4 channel as the original
+    image = cv2.imread('cropped.jpg', -1)
+    # mask defaulting to black for 3-channel and transparent for 4-channel
+    # (of course replace corners with yours)
+    mask = np.zeros(image.shape, dtype=np.uint8)
+    print(ed[0])
+
+    roi_corners = np.array([ed[0]], dtype=np.int32)
+    # fill the ROI so it doesn't get wiped out when the mask is applied
+    channel_count = image.shape[2]  # i.e. 3 or 4 depending on your image
+    ignore_mask_color = (255,)*channel_count
+    cv2.fillPoly(mask, roi_corners, ignore_mask_color)
+    # from Masterfool: use cv2.fillConvexPoly if you know it's convex
+
+    # apply the mask
+    masked_image = cv2.bitwise_and(image, mask)
+
+    # save the result
+    cv2.imwrite('image_masked2.jpg', masked_image)
+
+def function2(clusters1):
+    #img = cv2.imread("100.jpg")
+    # Constructing the input point data
+    #images = np.array(img)
+    #img1 = cv2.cvtColor(images, cv2.COLOR_BGR2GRAY)
+    # Initiate SIFT detector
+    #surf = cv2.xfeatures2d.SURF_create()
+    # find the keypoints and descriptors with SIFT
+    #kp1, des1 = surf.detectAndCompute(img1, None)
+    clusters = clusters1
+    x = []
+    y = []
+
+    for i in clusters:
+        for j in i:
+            x = np.append(x, j[0])
+            y = np.append(y, j[1])
+
+    inside = ((x ** 2 + y ** 2 > 1.0) & ((x - 3) ** 2 + y ** 2 > 1.0))
+    points = np.vstack([x[inside], y[inside]]).T
+    # print(points)
+    # Computing the alpha shape
+    edges = alpha_shape(points, alpha=20, only_outer=True)
+    ed = stitch_boundaries(edges)
+    '''
+    from matplotlib.pyplot import *
+
+    # Constructing the input point data
+    np.random.seed(0)
+    x = 3.0 * np.random.rand(2000)
+    y = 2.0 * np.random.rand(2000) - 1.0
+    inside = ((x ** 2 + y ** 2 > 1.0) & ((x - 3) ** 2 + y ** 2 > 1.0))
+    points = np.vstack([x[inside], y[inside]]).T
+
+    # Computing the alpha shape
+    edges = alpha_shape(points, alpha=0.25, only_outer=True)
+    '''
+    # Plotting the output
+    figure()
+    axis('equal')
+    plot(points[:, 0], points[:, 1], '.')
+    for i, j in edges:
+        plot(points[[i, j], 0], points[[i, j], 1])
+    show()
+
+    # original image
+    # -1 loads as-is so if it will be 3 or 4 channel as the original
+    image = cv2.imread('115.jpg', -1)
+    # mask defaulting to black for 3-channel and transparent for 4-channel
+    # (of course replace corners with yours)
+    mask = np.zeros(image.shape, dtype=np.uint8)
+    print(ed[0])
+
+    roi_corners = np.array([ed[0]], dtype=np.int32)
+    # fill the ROI so it doesn't get wiped out when the mask is applied
+    channel_count = image.shape[2]  # i.e. 3 or 4 depending on your image
+    ignore_mask_color = (255,) * channel_count
+    cv2.fillPoly(mask, roi_corners, ignore_mask_color)
+    # from Masterfool: use cv2.fillConvexPoly if you know it's convex
+
+    # apply the mask
+    masked_image = cv2.bitwise_and(image, mask)
+
+    # save the result
+    cv2.imwrite('image_masked2.jpg', masked_image)
+    return masked_image

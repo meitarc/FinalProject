@@ -27,10 +27,10 @@ from align.align import *
 from functions import *
 from matplotlib.pyplot import *
 from scipy.spatial import Delaunay
-
+from testofBoundery import function2
 from scipy.spatial import Delaunay
 #MAIN
-threshold=0.25
+threshold=0.15
 #server side:
 # getting big image array, splitting to smaller arrays
 # and then, for each array do the following
@@ -72,32 +72,38 @@ image=cv2.imread("115.jpg")
 imReg, h = alignImages( image,newSortedArrayimg[len(newSortedArrayimg)-1])
 #for each cluster, if found in camera image, take it off from cameras image:
 arrayOfGoodclusters=makegoodclusters(clusters,dictionary,imReg,threshold)
-croppedimage= croppedmatchingareas(image,arrayOfGoodclusters)
-img=cv2.imread("115.jpg")
+#croppedimage=function2(arrayOfGoodclusters)
+
+#croppedimage= croppedmatchingareas(image,arrayOfGoodclusters)
+#img=cv2.imread("115.jpg")
 # Constructing the input point data
 
-'''
+
 #arrayOfGoodclusters=makegoodclusters(clusters,dictionary,image,threshold)
 print("Number of good clusters: ",len(arrayOfGoodclusters))
 # drop the areas of clusters found in the client image that match the server image
 croppedimage=makecroppedimage(arrayOfGoodclusters,imReg)
 #croppedimage=makecroppedimage(arrayOfGoodclusters,imReg)
 cv2.imwrite('cropped.jpg', croppedimage)
-'''
+
+
+
+
 
 print("CROPPED ! GO CHECK IT OUT !")
-#Newclusters,Newdictionary = clustersOfCroppedImage(croppedimage)
-
 Newclusters,Newdictionary = clustersOfCroppedImage(croppedimage)
 
 #take out the new clusters in order to send
 
-#newimage=makecroppedimage(Newclusters,croppedimage)
-newimage=croppedmatchingareas(croppedimage,Newclusters)
+newimage=makecroppedimage(Newclusters,croppedimage)
+#newimage=croppedmatchingareas(croppedimage,Newclusters)
 cv2.imwrite('clusters_of_cropped.jpg', newimage)
 
 cv2.imwrite('clusters_to_send.jpg', croppedimage-newimage)
 
+
+'''
+'''
 
 '''
 src = cv2.imread('clusters_to_send.jpg', 1)
