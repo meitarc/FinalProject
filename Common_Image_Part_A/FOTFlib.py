@@ -30,7 +30,7 @@ from scipy.spatial import Delaunay
 from testofBoundery import function2
 from scipy.spatial import Delaunay
 #MAIN
-threshold=0.15
+threshold=0.55
 #server side:
 # getting big image array, splitting to smaller arrays
 # and then, for each array do the following
@@ -67,8 +67,11 @@ print("Number of original clusters: ",len(clusters))
 #given GPS send cluster to client
 #client side:
 #client image
+#experiment1:
 #image=cv2.imread("source/115.jpg")
+
 #image=cv2.imread("source/14b.jpg")
+#experiment2:
 image=cv2.imread("source/Experiment2/204.jpg")
 
 ##new row:

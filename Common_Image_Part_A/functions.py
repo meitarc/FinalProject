@@ -223,7 +223,9 @@ def imageDeleteParts(Image, partsList):
     return test
 
 def readImagesToMakeCommonImage():
+
     '''
+    #experiment1:
     img3 = cv2.imread("source/101.jpg")
     img4 = cv2.imread("source/102.jpg")
     img5 = cv2.imread("source/103.jpg")
@@ -235,9 +237,10 @@ def readImagesToMakeCommonImage():
     img5 = cv2.imread("source/12.jpg")
     img6 = cv2.imread("source/14.jpg")
     '''
+    # experiment2:
     img3 = cv2.imread("source/Experiment2/80.jpg")
-    img4 = cv2.imread("source/Experiment2/189.jpg")
-    img5 = cv2.imread("source/Experiment2/191.jpg")
+    img4 = cv2.imread("source/Experiment2/186.jpg")
+    img5 = cv2.imread("source/Experiment2/187.jpg")
     img6 = cv2.imread("source/Experiment2/196.jpg")
     arrayimg=[img3,img4,img5,img6]
     return arrayimg
@@ -519,7 +522,7 @@ def sortImageByFeachers(arrayimg):
     n = len(list)
     for i in range(n):
         for j in range(0, n - i - 1):
-            if list[j] < list[j + 1]:
+            if list[j] > list[j + 1]:
                 list[j], list[j + 1] = list[j + 1], list[j]
                 newArrayimg[j],newArrayimg[j+1]=newArrayimg[j+1],newArrayimg[j]
     print("counttttttttttttttttt:")
