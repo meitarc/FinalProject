@@ -223,10 +223,22 @@ def imageDeleteParts(Image, partsList):
     return test
 
 def readImagesToMakeCommonImage():
+    '''
     img3 = cv2.imread("source/101.jpg")
     img4 = cv2.imread("source/102.jpg")
     img5 = cv2.imread("source/103.jpg")
     img6 = cv2.imread("source/104.jpg")
+    '''
+    '''
+    img3 = cv2.imread("source/10.jpg")
+    img4 = cv2.imread("source/11.jpg")
+    img5 = cv2.imread("source/12.jpg")
+    img6 = cv2.imread("source/14.jpg")
+    '''
+    img3 = cv2.imread("source/Experiment2/80.jpg")
+    img4 = cv2.imread("source/Experiment2/189.jpg")
+    img5 = cv2.imread("source/Experiment2/191.jpg")
+    img6 = cv2.imread("source/Experiment2/196.jpg")
     arrayimg=[img3,img4,img5,img6]
     return arrayimg
 
@@ -510,9 +522,26 @@ def sortImageByFeachers(arrayimg):
             if list[j] < list[j + 1]:
                 list[j], list[j + 1] = list[j + 1], list[j]
                 newArrayimg[j],newArrayimg[j+1]=newArrayimg[j+1],newArrayimg[j]
+    print("counttttttttttttttttt:")
     print(list)
     return newArrayimg
 
+'''
+def sortImageByFeachers(arrayimg):
+    newArrayimg = arrayimg
+    list=[]
+    for image in newArrayimg:
+        x=FetureCount(image)
+        list.append(x)
+    n = len(list)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if list[j] < list[j + 1]:
+                list[j], list[j + 1] = list[j + 1], list[j]
+                newArrayimg[j],newArrayimg[j+1]=newArrayimg[j+1],newArrayimg[j]
+    print(list)
+    return newArrayimg
+'''
 
 def FetureCount(image1):
     images = np.array(image1)
