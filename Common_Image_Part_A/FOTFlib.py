@@ -67,12 +67,16 @@ print("Number of original clusters: ",len(clusters))
 #given GPS send cluster to client
 #client side:
 #client image
+#image=cv2.imread("source/14b.jpg")
+
 #experiment1:
 #image=cv2.imread("source/115.jpg")
 
-#image=cv2.imread("source/14b.jpg")
 #experiment2:
-image=cv2.imread("source/Experiment2/204.jpg")
+#image=cv2.imread("source/Experiment2/204.jpg")
+
+#experiment3:
+image=cv2.imread("source/Experiment3/124.jpg")
 
 ##new row:
 imReg, h = alignImages( image,newSortedArrayimg[len(newSortedArrayimg)-1])

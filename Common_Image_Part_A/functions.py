@@ -224,6 +224,13 @@ def imageDeleteParts(Image, partsList):
 
 def readImagesToMakeCommonImage():
     '''
+    img3 = cv2.imread("source/10.jpg")
+    img4 = cv2.imread("source/11.jpg")
+    img5 = cv2.imread("source/12.jpg")
+    img6 = cv2.imread("source/14.jpg")
+    '''
+
+    '''
     #experiment1:
     img3 = cv2.imread("source/101.jpg")
     img4 = cv2.imread("source/102.jpg")
@@ -231,17 +238,26 @@ def readImagesToMakeCommonImage():
     img6 = cv2.imread("source/104.jpg")
     '''
     '''
-    img3 = cv2.imread("source/10.jpg")
-    img4 = cv2.imread("source/11.jpg")
-    img5 = cv2.imread("source/12.jpg")
-    img6 = cv2.imread("source/14.jpg")
-    '''
     # experiment2:
     img3 = cv2.imread("source/Experiment2/80.jpg")
     img4 = cv2.imread("source/Experiment2/186.jpg")
     img5 = cv2.imread("source/Experiment2/187.jpg")
     img6 = cv2.imread("source/Experiment2/196.jpg")
-    arrayimg=[img3,img4,img5,img6]
+    '''
+    # experiment3:
+    img1 = cv2.imread("source/Experiment3/95.jpg")
+    img2 = cv2.imread("source/Experiment3/96.jpg")
+    img3 = cv2.imread("source/Experiment3/97.jpg")
+    img4 = cv2.imread("source/Experiment3/98.jpg")
+    img5 = cv2.imread("source/Experiment3/99.jpg")
+    img6 = cv2.imread("source/Experiment3/100.jpg")
+    img7 = cv2.imread("source/Experiment3/101.jpg")
+    img8 = cv2.imread("source/Experiment3/102.jpg")
+    img9 = cv2.imread("source/Experiment3/103.jpg")
+    img10 = cv2.imread("source/Experiment3/104.jpg")
+
+    #arrayimg=[img3,img4,img5,img6]
+    arrayimg = [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10]
     return arrayimg
 
 def clustersOfCroppedImage(image1):
