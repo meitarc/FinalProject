@@ -30,7 +30,7 @@ from scipy.spatial import Delaunay
 from testofBoundery import function2
 from scipy.spatial import Delaunay
 #MAIN
-threshold=0.55
+threshold=0.25
 #server side:
 # getting big image array, splitting to smaller arrays
 # and then, for each array do the following
