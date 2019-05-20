@@ -25,12 +25,13 @@
 #from SURF2 import DB_SCAN
 from align.align import *
 from functions import *
+
 from matplotlib.pyplot import *
 from scipy.spatial import Delaunay
 from testofBoundery import function2
 from scipy.spatial import Delaunay
 #MAIN
-threshold=0.15
+threshold=0.25
 #server side:
 # getting big image array, splitting to smaller arrays
 # and then, for each array do the following
@@ -62,6 +63,15 @@ dictionary = CreateDict(kp,des)
 #clustering the kp according to coords
 # the value isL low for more cluster, 10-100 most likely, now we are on 20.
 clusters = DB_SCAN(kp,20)
+####
+
+dict={}#dict of dictionary and flag, for first photo
+for i in range(0,len(clusters)):
+    minY, maxY, minX, maxX = corMinMax(clusters[i])
+    #SizeCenter = SizeandCenter(minY, maxY, minX, maxX)
+    SizeCenter = topleftAndSizes(minY, maxY, minX, maxX)
+    dict.update({i:(SizeCenter)})
+####
 print("Number of original clusters: ",len(clusters))
 
 #given GPS send cluster to client
@@ -69,9 +79,23 @@ print("Number of original clusters: ",len(clusters))
 #client image
 image=cv2.imread("source/115.jpg")
 ##new row:
-imReg, h = alignImages( image,newSortedArrayimg[len(newSortedArrayimg)-1])
+imReg, h = alignImages(image,newSortedArrayimg[len(newSortedArrayimg)-1])
 #for each cluster, if found in camera image, take it off from cameras image:
-arrayOfGoodclusters=makegoodclusters(clusters,dictionary,imReg,threshold)
+arrayOfGoodclusters,flagsOfGoodClusters = makegoodclusters(clusters,dictionary,imReg,threshold)
+#arrayOfGoodclusters = makegoodclusters(clusters,dictionary,imReg,threshold)
+
+
+dict2={}
+print("flags")
+#create dict2 for client image
+for i in range (0,len(arrayOfGoodclusters)):
+    minY, maxY, minX, maxX = corMinMax(arrayOfGoodclusters[i])
+    #SizeCenter = SizeandCenter(minY, maxY, minX, maxX)
+    SizeCenter=topleftAndSizes(minY, maxY, minX, maxX)
+    z=flagsOfGoodClusters[i]
+    dict2.update({z:SizeCenter})
+    print(i,z)
+
 #croppedimage=function2(arrayOfGoodclusters)
 
 #croppedimage= croppedmatchingareas(image,arrayOfGoodclusters)
@@ -84,24 +108,38 @@ print("Number of good clusters: ",len(arrayOfGoodclusters))
 # drop the areas of clusters found in the client image that match the server image
 croppedimage=makecroppedimage(arrayOfGoodclusters,imReg)
 #croppedimage=makecroppedimage(arrayOfGoodclusters,imReg)
-cv2.imwrite('output/cropped.jpg', croppedimage)
-
-
-
-
+cv2.imwrite('output/cropped2.jpg', croppedimage)
+#returnCroppedParts(croppedimage,newSortedArrayimg[len(newSortedArrayimg)-1],dict2,dict)
 
 print("CROPPED ! GO CHECK IT OUT !")
 Newclusters,Newdictionary = clustersOfCroppedImage(croppedimage)
 
 #take out the new clusters in order to send
 
+#newimage=makecroppedimageseconduse(Newclusters,croppedimage)
 newimage=makecroppedimage(Newclusters,croppedimage)
+
 #newimage=croppedmatchingareas(croppedimage,Newclusters)
-cv2.imwrite('output/clusters_of_cropped.jpg', newimage)
+cv2.imwrite('output/clusters_of_cropped2.jpg', newimage)
 
-cv2.imwrite('output/clusters_to_send.jpg', croppedimage-newimage)
+cv2.imwrite('output/clusters_to_send2.jpg', croppedimage-newimage)
+
+imagetosend=croppedimage-newimage
+
+imagetotakeclustersfrom=newSortedArrayimg[len(newSortedArrayimg)-1]
 
 
+returnCroppedParts(imagetosend,newSortedArrayimg[len(newSortedArrayimg)-1],dict2,dict)
+
+
+#func3()
+
+#dim=godel
+#image= cv2.resize(imagetotakeclustersfrom[curtainspot],dim,interpolation=cv2.INTER_AREA)
+#imagetosend[x,y of smola lemata]=image
+#we need to take clusters from "imagetotakeclustersfrom" in places of dict()
+
+#cv2.imwrite('project.jpg',l_img)
 '''
 '''
 
