@@ -1,4 +1,15 @@
-def findObjects(image, prototxtPath, caffemodelPath, threshold):
+######### findObjects #########
+#Gets:  image - an image as defined by cv2.imgread().
+#       prototxtPath, caffemodelPath - the path to the prototxt and caffemodel files needed for the object detection.
+#       threshold - the threshold to decide if an object is recognized or not, default should be 0.6
+#Returns: a list of (startX, startY, endX, endY) ranges of the objects found.
+
+def findObject(image, prototxtPath, caffemodelPath):
+    findObjectsWithThreshold(image, prototxtPath, caffemodelPath, 0.6)
+
+######### findObjectsWithThreshold #########
+# like the findObjects, with the option to define the threshold.
+def findObjectsWithThreshold(image, prototxtPath, caffemodelPath, threshold):
     CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
                "bottle", "bus", "car", "cat", "chair", "cow", "diningtable",
                "dog", "horse", "motorbike", "person", "pottedplant", "sheep",
@@ -34,16 +45,16 @@ def findObjects(image, prototxtPath, caffemodelPath, threshold):
 
     return detectionList
 
-example input:
-imagePath = 'images/carTest.jpg'
-imageFile = cv2.imread(imagePath)
-threshold = 0.6
-prototxtPath = 'MobileNetSSD_deploy.prototxt.txt'
-caffemodelPath = 'MobileNetSSD_deploy.caffemodel'
-
-example output use:
-list = findObjects(imageFile, prototxtPath, caffemodelPath, 0.6)
-
-output:
-list = [(606, 854, 1037, 1482), (524, 807, 596, 976)] #an exmaple output
-cv2.imwrite('testttt.jpg', imageFile[524:807, 596:976]) #an example saving specific object into a unique image
+#example input:
+#imagePath = 'images/carTest.jpg'
+#imageFile = cv2.imread(imagePath)
+#threshold = 0.6
+#prototxtPath = 'MobileNetSSD_deploy.prototxt.txt'
+#caffemodelPath = 'MobileNetSSD_deploy.caffemodel'
+#
+#example output use:
+#list = findObjects(imageFile, prototxtPath, caffemodelPath, 0.6)
+#
+#output:
+#list = [(606, 854, 1037, 1482), (524, 807, 596, 976)] #an exmaple output
+#cv2.imwrite('testttt.jpg', imageFile[524:807, 596:976]) #an example saving specific object into a unique image

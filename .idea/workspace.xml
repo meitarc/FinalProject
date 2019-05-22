@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/ObjectDetection/ObjectDetection.py" line="59" mnemonic="3" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="de7457df-5d96-4172-b1f5-77905f843d28" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Common_Image_Part_A/ObjectDetection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ObjectDetection/ObjectDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/ObjectDetection/ObjectDetection.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -14,10 +17,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Common_Image_Part_A/ObjectDetection.py">
+        <entry file="file://$PROJECT_DIR$/ObjectDetection/ObjectDetection.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="464">
-              <caret line="48" column="110" selection-start-line="48" selection-start-column="110" selection-end-line="48" selection-end-column="110" />
+              <caret line="59" column="1" selection-start-line="59" selection-start-column="1" selection-end-line="59" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -82,6 +85,7 @@
         <option value="$PROJECT_DIR$/Common_Image_Part_A/FOTFlib.py" />
         <option value="$PROJECT_DIR$/Common_Image_Part_A/functions.py" />
         <option value="$PROJECT_DIR$/Common_Image_Part_A/ObjectDetection.py" />
+        <option value="$PROJECT_DIR$/ObjectDetection/ObjectDetection.py" />
       </list>
     </option>
   </component>
@@ -109,6 +113,11 @@
               <item name="FinalProject" type="462c0819:PsiDirectoryNode" />
               <item name="Common_Image_Part_A" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="FinalProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FinalProject" type="462c0819:PsiDirectoryNode" />
+              <item name="ObjectDetection" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -119,6 +128,11 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Common_Image_Part_A/SURF2.py" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Guy\PycharmProjects\FinalProject\ObjectDetection" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -308,14 +322,28 @@
       <option name="project" value="LOCAL" />
       <updated>1556728174790</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Object Detection.&#10;&#10;returns the locations of objects on an image.">
+      <created>1558536064682</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1558536064682</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Object Detection.&#10;&#10;returns the locations of objects on an image.">
+      <created>1558536303719</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1558536303719</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24288724" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24288724" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -327,7 +355,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50074404" side_tool="true" visible="true" weight="0.37919825" />
+      <window_info active="true" anchor="bottom" id="Event Log" order="9" sideWeight="0.50074404" side_tool="true" visible="true" weight="0.37919825" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -359,7 +387,8 @@
     <MESSAGE value="knnmatch" />
     <MESSAGE value="dbscan" />
     <MESSAGE value="file of all functions and project" />
-    <option name="LAST_COMMIT_MESSAGE" value="file of all functions and project" />
+    <MESSAGE value="Object Detection.&#10;&#10;returns the locations of objects on an image." />
+    <option name="LAST_COMMIT_MESSAGE" value="Object Detection.&#10;&#10;returns the locations of objects on an image." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -480,10 +509,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Common_Image_Part_A/ObjectDetection.py">
+    <entry file="file://$PROJECT_DIR$/ObjectDetection/ObjectDetection.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="464">
-          <caret line="48" column="110" selection-start-line="48" selection-start-column="110" selection-end-line="48" selection-end-column="110" />
+          <caret line="59" column="1" selection-start-line="59" selection-start-column="1" selection-end-line="59" selection-end-column="1" />
         </state>
       </provider>
     </entry>
