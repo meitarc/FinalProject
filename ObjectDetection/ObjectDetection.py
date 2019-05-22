@@ -5,7 +5,7 @@
 #Returns: a list of (startX, startY, endX, endY) ranges of the objects found.
 
 def findObject(image, prototxtPath, caffemodelPath):
-    findObjectsWithThreshold(image, prototxtPath, caffemodelPath, 0.6)
+    return findObjectsWithThreshold(image, prototxtPath, caffemodelPath, 0.6)
 
 ######### findObjectsWithThreshold #########
 # like the findObjects, with the option to define the threshold.
