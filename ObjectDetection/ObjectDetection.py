@@ -57,4 +57,4 @@ def findObjectsWithThreshold(image, prototxtPath, caffemodelPath, threshold):
 #
 #output:
 #list = [(606, 854, 1037, 1482), (524, 807, 596, 976)] #an exmaple output
-#cv2.imwrite('testttt.jpg', imageFile[524:807, 596:976]) #an example saving specific object into a unique image
+#cv2.imwrite('test.jpg', imageFile[524:807, 596:976]) #an example saving specific object into a unique image
