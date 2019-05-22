@@ -39,7 +39,6 @@ def findObjectsWithThreshold(image, prototxtPath, caffemodelPath, threshold):
             idx = int(detections[0, 0, i, 1])
             box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
             (startX, startY, endX, endY) = box.astype("int")
-            y = startY - 15 if startY - 15 > 15 else startY + 15
             temp = (startY, endY, startX, endX)
             detectionList.append(temp)
 
