@@ -1,3 +1,6 @@
+import cv2
+import numpy as np
+
 ######### findObjects #########
 #Gets:  image - an image as defined by cv2.imgread().
 #       prototxtPath, caffemodelPath - the path to the prototxt and caffemodel files needed for the object detection.
