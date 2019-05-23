@@ -60,3 +60,14 @@ def findObjectsWithThreshold(image, prototxtPath, caffemodelPath, threshold):
 #output:
 #list = [(606, 854, 1037, 1482), (524, 807, 596, 976)] #an exmaple output
 #cv2.imwrite('test.jpg', imageFile[524:807, 596:976]) #an example saving specific object into a unique image
+
+######### returnSubImage( image, startY, endY, startX, endX) #########
+def returnSubImage( image, startY, endY, startX, endX):
+    temp = image.copy()
+    temp = temp[startY:endY, startX:endX]
+    return temp
+
+
+# Now, after we have the Object, we will extract the keypoints (according to SIFT / SURF)
+
+#MAIN
