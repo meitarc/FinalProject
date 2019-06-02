@@ -20,28 +20,35 @@ def returnCroppedParts(imagetosend,imagetotakeclustersfrom,dict2,dict):
                 k=dict2.get(i)
                 dim=(k[2],k[3])
                 #dim=(2,2)
-                print("before")
-                print(crp.shape[0])
-                print(crp.shape[1])
+                #print("before")
+                #print(crp.shape[0])
+                #print(crp.shape[1])
 
                 if (dim[0] > 1 and dim[1]>1 and (crp.shape[0]>0 or crp.shape[1]>0)):
-                    print(dim)
+                    #print(dim)
                     #crp=cv2.resize(crp,dim,interpolation=cv2.INTER_AREA)
-                    print("after")
-                    print(crp.shape[0])
-                    print(crp.shape[1])
-                    smallemala=dict2.get(i)
-                    print(smallemala)
-                    x_offset=int(smallemala[0])
-                    y_offset=int(smallemala[1])
-                    s_img=crp
-                    print(cnt)
-                    print(x_offset)
-                    print(y_offset)
-                    print(s_img.shape[0])
-                    print(s_img.shape[1])
-                    print(imagetosend.shape[0])
-                    print(l_img.shape[1])
+                    #print("after")
+                    #print(crp.shape[0])
+                    #print(crp.shape[1])
+                    #print(smallemala)
+                    smallemala = dict2.get(i)
+                    x_offset=int(smallemala[1])
+                    y_offset=int(smallemala[0])
+                    #s_img=crp
+                    print("small lemala", smallemala)
+                    print("s_img.shape 0",crp.shape[0])
+                    print("s_img.shape[1]",crp.shape[1])
+                    ss_img=cv2.resize(crp, (int(smallemala[3]), int(smallemala[2])),interpolation=cv2.INTER_AREA)
+                    #print(cnt)
+                    print("x_offset ",x_offset)
+                    print("y_offset ",y_offset)
+                    print("s_img.shape[0] ",ss_img.shape[0])
+                    print("s_img.shape[1] ",ss_img.shape[1])
+                    print()
+                    print("l_img.shape[0] ",l_img.shape[0])
+                    print("l_img.shape[1] ",l_img.shape[1])
+                    #print(imagetosend.shape[0])
+                    #print(l_img.shape[1])
                     '''
                     if x_offset + s_img.shape[0]<crp.shape[0]:
                         if (y_offset + s_img.shape[1] < crp.shape[1]):
@@ -59,10 +66,11 @@ def returnCroppedParts(imagetosend,imagetotakeclustersfrom,dict2,dict):
                             print(y_offset, y_offset + s_img.shape[1])
                             print("end not small")
                     '''
-                    l_img[x_offset: x_offset + s_img.shape[0], y_offset:y_offset + s_img.shape[1]] = s_img
-
+                    l_img[ y_offset: y_offset + int(smallemala[2]), x_offset:x_offset + int(smallemala[3])] = ss_img
+                    #s_img.shape[0]
         cnt = cnt + 1
     cv2.imwrite('output/profetOmri.jpg', l_img)
+
 def returnCroppedParts2try(imagetosend,imagetotakeclustersfrom,dict2,dict):
     arr=[]
     for i in dict2.keys():
@@ -154,12 +162,15 @@ def distanceAndAngle(arrayOfClusters):
     arrayOfDistanceAndAngle=[]
     n = len(centers)
     for i in range(0,n):
-        for j in range(i+1, n):
+        smallArray=[]
+        for j in range(0, n):
             angle=AngleBtw2Points(centers[i],centers[j])
-            distance = sqrt(((centers[i][0] - centers[j][0]) * 2) + ((centers[i][1] - centers[j][1]) * 2))
+            distance = sqrt(((centers[i][0] - centers[j][0]) ** 2) + ((centers[i][1] - centers[j][1]) ** 2))
             #distance = math.sqrt(((p1[0] - p2[0]) * 2) + ((p1[1] - p2[1]) * 2))
-            distanceAndangle=angle,distance
-            arrayOfDistanceAndAngle.append(distanceAndangle)
+            distanceAndangle=j,angle,distance
+            smallArray.append(distanceAndangle)
+        tupletoAdd=(i,smallArray,centers[i])
+        arrayOfDistanceAndAngle.append(tupletoAdd)
     return arrayOfDistanceAndAngle
 def alpha_shape(points, alpha, only_outer=True):
     """
@@ -328,11 +339,12 @@ def checkCluster(cluster,dictionary,image):
             arrayKP.append(key)
             arrayDES.append(val)
     p1, p2,image2coordinates = clientFuncCheck(arrayKP, arrayDES, image,1)
-    return (p1 / len(p2)),image2coordinates
+    return (p1 / len(p2)),image2coordinates,arrayKP
 def corMinMax(cluster):
     maxX = 0
     maxY = 0
     #print(cluster)
+
     minX = cluster[0][0]
     minY = cluster[0][1]
     for cor in cluster:
@@ -649,12 +661,14 @@ def clientFuncCheck(one, two, image2,flag):
         return p, kp1  # returns number of best matches,and all keypoints of first img
 def makegoodclusters(clusters,dictionary,image,threshold):
     arrayOfGoodclusters=[]
+    arrayOfBadclusters=[]
     counter=0
     flags=[]
+    flags2 = []
     for cluster in clusters:
         #print("cluster is: ", cluster)
         print("cluster Number: ",counter)
-        y,img2coords=checkCluster(cluster,dictionary,image)
+        y,img2coords,getarraykp=checkCluster(cluster,dictionary,image)
         #print("grade of cluster: ",y)
         #addp2 instead of cluster
         print(" % is ",y)
@@ -662,8 +676,12 @@ def makegoodclusters(clusters,dictionary,image,threshold):
           print("length of clusters ",y,len(img2coords))
           arrayOfGoodclusters.append(img2coords)
           flags.append(counter)
+        else: #option- add a condition , of the number of kp
+            if len(getarraykp)<100:
+                arrayOfBadclusters.append(img2coords)
+                flags2.append(counter)
         counter=counter+1
-    return arrayOfGoodclusters,flags
+    return arrayOfGoodclusters,flags,arrayOfBadclusters,flags2
     #return arrayOfGoodclusters
 
 def makecroppedimage(arrayOfGoodclusters,image):
@@ -730,3 +748,46 @@ def tryit(image):
         cv2.circle(img, (int(i.pt[0]), int(i.pt[1])), 10, (255, 0, 255), -1)
     plt.imshow(img, ), plt.show()
 '''
+
+import cv2
+import numpy as np
+from scipy.optimize import fsolve
+def findcenters(clusters):
+    centers=[]
+    print("clusteRSSSSS: ")
+    for i in clusters:
+        if len(i)>0:
+            minY, maxY, minX, maxX=corMinMax(i)
+            center=((minX+maxX)/2,(minY+maxY)/2)
+            centers.append(center)
+        else:
+            centers.append(center)#patch
+    return centers
+def findextremeclusteres(badclusters,indexes):
+    centers=findcenters(badclusters)
+    minX=centers[0][0]
+    maxX=0
+    minY=centers[0][1]
+    indexminX=-1
+    indexmaxX=-1
+    indexminY=-1
+    for j,index in zip(centers,indexes):
+        #print("centers")
+        #print(j[0])
+        if j[0]>maxX:
+            indexmaxX=index
+            maxX=j[0]
+        else:
+            if j[0]<minX:
+                indexminX = index
+                minX = j[0]
+        if j[1]<minY:
+            indexminY = index
+            minY = j[1]
+
+    return indexminX,indexmaxX,indexminY
+def fourth(indexOne,indexTwo,indexThree):
+    a= indexOne
+    b = indexTwo
+    c = indexThree
+    return a,b,c
