@@ -407,7 +407,7 @@ def imageDeleteParts2seconduse(Image, partsList):
     cv2.imwrite('output/imageaftercropped.jpg', Image)
     return Image
 def readImagesToMakeCommonImage():
-    '''
+
     img3 = cv2.imread("source/100.jpg")
     img4 = cv2.imread("source/101.jpg")
     img5 = cv2.imread("source/102.jpg")
@@ -418,6 +418,8 @@ def readImagesToMakeCommonImage():
     img4 = cv2.imread("source/meitar_pics/test2/2.jpg")
     img5 = cv2.imread("source/meitar_pics/test2/3.jpg")
     arrayimg=[img3,img4,img5]
+    '''
+
     return arrayimg
 def clustersOfCroppedImage(image1):
     #sift = cv2.xfeatures2d.SIFT_create()
