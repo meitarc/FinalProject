@@ -47,6 +47,7 @@ def findObjectsWithThreshold(image, prototxtPath, caffemodelPath, threshold):
             y = startY - 15 if startY - 15 > 15 else startY + 15
             temp = (startY, endY, startX, endX)
             detectionList.append(temp)
+
     #print('test: ')
     #print(detectionList)
     return detectionList
