@@ -86,7 +86,8 @@ print("Number of original clusters: ",len(clusters))
 #image=cv2.imread("source/Experiment2/204.jpg")
 
 #experiment3:
-image=cv2.imread("source/Experiment3/124.jpg")
+#image=cv2.imread("source/Experiment3/124.jpg")
+image=cv2.imread("source/meitar_pics/test2/4.jpg")
 
 ##new row:
 imReg, h = alignImages(image,newSortedArrayimg[len(newSortedArrayimg)-1])

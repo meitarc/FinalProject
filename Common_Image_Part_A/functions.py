@@ -249,7 +249,7 @@ def DB_SCAN(keypointsArray,epsilon):
     # Generate sample data
     AKP = np.array(Arraykeypoints)
     # Compute DBSCAN
-    db = DBSCAN(eps=epsilon, min_samples=10).fit(AKP)
+    db = DBSCAN(eps=epsilon, min_samples=8).fit(AKP)
     core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
     core_samples_mask[db.core_sample_indices_] = True
     labels = db.labels_
@@ -407,11 +407,17 @@ def imageDeleteParts2seconduse(Image, partsList):
     cv2.imwrite('output/imageaftercropped.jpg', Image)
     return Image
 def readImagesToMakeCommonImage():
+    '''
     img3 = cv2.imread("source/100.jpg")
     img4 = cv2.imread("source/101.jpg")
     img5 = cv2.imread("source/102.jpg")
     img6 = cv2.imread("source/103.jpg")
     arrayimg=[img3,img4,img5,img6]
+    '''
+    img3 = cv2.imread("source/meitar_pics/test2/1.jpg")
+    img4 = cv2.imread("source/meitar_pics/test2/2.jpg")
+    img5 = cv2.imread("source/meitar_pics/test2/3.jpg")
+    arrayimg=[img3,img4,img5]
     return arrayimg
 def clustersOfCroppedImage(image1):
     #sift = cv2.xfeatures2d.SIFT_create()
@@ -421,7 +427,7 @@ def clustersOfCroppedImage(image1):
     img1 = np.array(image1)
     kp, des = surf.detectAndCompute(img1, None)
     dictionary = CreateDict(kp, des)
-    clusters = DB_SCAN(kp,20)
+    clusters = DB_SCAN(kp,10)
 
     return clusters,dictionary
 def funcCheck1(image1, image2):

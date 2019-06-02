@@ -61,7 +61,7 @@ for j in range(0,11):
 	print("******" + str(threshhold) + "*****")
 	print("******" + str(threshhold2) + "*****")
 
-	for i in range(1,14):
+	for i in range(1,32):
 		pic=i
 		findObjects(threshhold, "source/pics_for_find_objects_test/"+str(pic)+".jpg","output/findObjTest/"+str(threshhold)+"/"+str(pic)+".jpg")
 		findObjects(threshhold2, "source/pics_for_find_objects_test/"+str(pic)+".jpg","output/findObjTest/"+str(threshhold2)+"/"+str(pic)+".jpg")
