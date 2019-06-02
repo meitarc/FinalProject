@@ -54,7 +54,7 @@ def findObjects (threshold, imagePath,outputPath):
     # show the output image
     cv2.imwrite(outputPath, image)
 #run find objects test
-for j in range(1,11):
+for j in range(0,11):
 	threshhold=(j/10)
 	threshhold2=threshhold+0.05
 	threshhold2=float("%.2f" % threshhold2)
@@ -64,4 +64,4 @@ for j in range(1,11):
 	for i in range(1,14):
 		pic=i
 		findObjects(threshhold, "source/pics_for_find_objects_test/"+str(pic)+".jpg","output/findObjTest/"+str(threshhold)+"/"+str(pic)+".jpg")
-		findObjects(threshhold2, "source/pics_for_find_objects_test/"+str(pic)+".jpg","output/findObjTest/"+str(threshhold)+"/"+str(pic)+".jpg")
+		findObjects(threshhold2, "source/pics_for_find_objects_test/"+str(pic)+".jpg","output/findObjTest/"+str(threshhold2)+"/"+str(pic)+".jpg")
