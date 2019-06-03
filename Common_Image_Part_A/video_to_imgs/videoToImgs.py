@@ -20,4 +20,5 @@ def getFramesFromVideo(videoInputPath, outputFolderPath, milliSeconds):
 
 
 #main
-getFramesFromVideo("input/2018_1210_075647.MP4","output2/",500)
+for i in range(1, 10):
+    getFramesFromVideo("input/"+str(i)+".MP4",str(i)+"/",500)
