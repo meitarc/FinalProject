@@ -28,3 +28,4 @@ def find_imgs_same_gps(imgSource, folderPath):
 
 myImgArray=find_imgs_same_gps("pics_for_gps/20190603_172000.jpg","pics_for_gps")
 print(myImgArray)
+print(len(myImgArray))
