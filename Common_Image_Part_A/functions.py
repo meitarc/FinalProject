@@ -69,8 +69,75 @@ def returnCroppedParts(imagetosend,imagetotakeclustersfrom,dict2,dict):
                     l_img[ y_offset: y_offset + int(smallemala[2]), x_offset:x_offset + int(smallemala[3])] = ss_img
                     #s_img.shape[0]
         cnt = cnt + 1
-    cv2.imwrite('output/profetOmri.jpg', l_img)
+    cv2.imwrite('output/profetOmriGOOD.jpg', l_img)
+    return l_img
 
+def returnCroppedParts2(imagetosend,imagetotakeclustersfrom,dict2,dict):
+    cnt=0
+    l_img = imagetosend
+    for i in dict2.keys():
+        r = dict.get(i)
+        if r[2]>0 and r[3]>0:
+            #coor1=(  int(r[0]-(r[2]))  ,  int(r[0]+(r[2])))
+            #coor2 = (int(r[1] - (r[3] )), int(r[1] + (r[3] )))
+            #if coor1[0]>1 and coor2[0]>1 and coor1[1]>1 and coor2[1]>1:
+                crp=imagetotakeclustersfrom[int(r[0]):int(r[0])+int(r[2]),int(r[1]):int(r[1])+int(r[3])]
+                cv2.imwrite('output/bad0'+str(cnt)+'.jpg',crp)
+                #imagetosend[dict2.get(i)]=resize(imagetotakeclustersfrom.dict.get(i))
+                k=dict2.get(i)
+                dim=(k[2],k[3])
+                #dim=(2,2)
+                #print("before")
+                #print(crp.shape[0])
+                #print(crp.shape[1])
+
+                if (dim[0] > 1 and dim[1]>1 and (crp.shape[0]>0 or crp.shape[1]>0)):
+                    #print(dim)
+                    #crp=cv2.resize(crp,dim,interpolation=cv2.INTER_AREA)
+                    #print("after")
+                    #print(crp.shape[0])
+                    #print(crp.shape[1])
+                    #print(smallemala)
+                    smallemala = dict2.get(i)
+                    x_offset=int(smallemala[1])
+                    y_offset=int(smallemala[0])
+                    #s_img=crp
+                    print("small lemala", smallemala)
+                    print("s_img.shape 0",crp.shape[0])
+                    print("s_img.shape[1]",crp.shape[1])
+                    ss_img=cv2.resize(crp, (int(smallemala[3]), int(smallemala[2])),interpolation=cv2.INTER_AREA)
+                    #print(cnt)
+                    print("x_offset ",x_offset)
+                    print("y_offset ",y_offset)
+                    print("s_img.shape[0] ",ss_img.shape[0])
+                    print("s_img.shape[1] ",ss_img.shape[1])
+                    print()
+                    print("l_img.shape[0] ",l_img.shape[0])
+                    print("l_img.shape[1] ",l_img.shape[1])
+                    #print(imagetosend.shape[0])
+                    #print(l_img.shape[1])
+                    '''
+                    if x_offset + s_img.shape[0]<crp.shape[0]:
+                        if (y_offset + s_img.shape[1] < crp.shape[1]):
+                            l_img[x_offset: x_offset + s_img.shape[0] + 1, y_offset:y_offset + s_img.shape[1] + 1] = s_img
+                        else:
+                            l_img[x_offset : x_offset + s_img.shape[0]+1, y_offset:y_offset + s_img.shape[1]] = s_img
+                    else:
+                        if y_offset + s_img.shape[1] < crp.shape[1]:
+                            l_img[x_offset : x_offset + s_img.shape[0], y_offset:y_offset + s_img.shape[1]+1] = s_img
+                        else:
+                            print("not small")
+                            print(s_img.shape[0])
+                            print(s_img.shape[1])
+                            print(x_offset, x_offset + s_img.shape[0])
+                            print(y_offset, y_offset + s_img.shape[1])
+                            print("end not small")
+                    '''
+                    l_img[ y_offset: y_offset + int(smallemala[2]), x_offset:x_offset + int(smallemala[3])] = ss_img
+                    #s_img.shape[0]
+        cnt = cnt + 1
+    cv2.imwrite('output/profetOmriBAD.jpg', l_img)
+    return l_img
 def returnCroppedParts2try(imagetosend,imagetotakeclustersfrom,dict2,dict):
     arr=[]
     for i in dict2.keys():
@@ -418,8 +485,48 @@ def imageDeleteParts2seconduse(Image, partsList):
         checker=checker+1
     cv2.imwrite('output/imageaftercropped.jpg', Image)
     return Image
+
+def makeDictforOriginalClusters(clusters): # make dictionary for server image
+    dict={}#dict of dictionary and flag, for first photo
+    for i in range(0,len(clusters)):
+        minY, maxY, minX, maxX = corMinMax(clusters[i])
+        #SizeCenter = SizeandCenter(minY, maxY, minX, maxX)
+        SizeCenter = topleftAndSizes(minY, maxY, minX, maxX)
+        dict.update({i:(SizeCenter)})
+    return dict
+
+def makeDictforGoodClusters(arrayOfGoodclusters,flagsOfGoodClusters): # make dictionary for Good clusters
+    dict2 = {}
+    print("flags")
+    # create dict2 for client image
+    for i in range(0, len(arrayOfGoodclusters)):
+        minY, maxY, minX, maxX = corMinMax(arrayOfGoodclusters[i])
+        # SizeCenter = SizeandCenter(minY, maxY, minX, maxX)
+        SizeCenter = topleftAndSizes(minY, maxY, minX, maxX)
+        z = flagsOfGoodClusters[i]
+        dict2.update({z: SizeCenter})
+        print(i, z)
+    return dict2
+
+def makeDictforBadClusters(arrayOfBadclusters,flagsOfBadClusters):
+    dict3={}
+    print("Badflags")
+    #create dict2 for client image
+    print("bad clusters are: ",arrayOfBadclusters)
+    for i in range (0,len(arrayOfBadclusters)):
+        minY, maxY, minX, maxX = corMinMax(arrayOfBadclusters[i])
+        #SizeCenter = SizeandCenter(minY, maxY, minX, maxX)
+        SizeCenter=topleftAndSizes(minY, maxY, minX, maxX)
+        h=flagsOfBadClusters[i]
+        dict3.update({h:SizeCenter})
+        print(i,h)
+
 def readImagesToMakeCommonImage():
 
+    #img3 = cv2.imread("source/Experiment2/186.jpg")
+    #img4 = cv2.imread("source/Experiment2/80.jpg")
+    #img5 = cv2.imread("source/Experiment2/187.jpg")
+    #img6 = cv2.imread("source/Experiment2/196.jpg")
     img3 = cv2.imread("source/100.jpg")
     img4 = cv2.imread("source/101.jpg")
     img5 = cv2.imread("source/102.jpg")
@@ -441,12 +548,12 @@ def clustersOfCroppedImage(image1):
     img1 = np.array(image1)
     kp, des = surf.detectAndCompute(img1, None)
     dictionary = CreateDict(kp, des)
-    clusters = DB_SCAN(kp,10)
+    clusters = DB_SCAN(kp,15)
 
     return clusters,dictionary
 def funcCheck1(image1, image2):
     # Initiate SIFT detector
-    print("funcheck1")
+    #print("funcheck1")
     surf = cv2.xfeatures2d.SURF_create()
     #sift = cv2.xfeatures2d.SIFT_create()
     # changing from PIL to nparray to work with "detectandCompute"
@@ -506,10 +613,10 @@ def funcCheck1(image1, image2):
     # plt.imshow(img3,),plt.show()
     #print(okp)
     #print(odes)
-    print("funccheck1 ,matches,number of kp first image",p, " ",len(kp1))
+    #print("funccheck1 ,matches,number of kp first image",p, " ",len(kp1))
     return p,okp,odes  # returns number of best matches,and all keypoints of first img
 def funcCheck2(kp,des, image2):
-    print("funccheck 2")
+    #print("funccheck 2")
     # Initiate SIFT detector
     #surf = cv2.SURF(400)
     #sift = cv2.xfeatures2d.SIFT_create()
@@ -569,7 +676,7 @@ def funcCheck2(kp,des, image2):
     # img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
 
     # plt.imshow(img3,),plt.show()
-    print("funccheck2 results ",p,len(kp1))
+    #print("funccheck2 results ",p,len(kp1))
     return p,okp,odes
 def clientFuncCheck(one, two, image2,flag):
     #print("my funcCheck 2, for each cluster:")
@@ -619,9 +726,9 @@ def clientFuncCheck(one, two, image2,flag):
         # img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
 
         # plt.imshow(img3,),plt.show()
-        print("kp1",len(kp1))
-        print("kp2",len(kp2))
-        print("matches", p)
+        #print("kp1",len(kp1))
+        #print("kp2",len(kp2))
+        #print("matches", p)
         return p, kp1,img2coordnts  # returns number of best matches,and all keypoints of first img
     else:
         # Initiate SIFT detector
@@ -677,18 +784,25 @@ def makegoodclusters(clusters,dictionary,image,threshold):
         #print("cluster is: ", cluster)
         print("cluster Number: ",counter)
         y,img2coords,getarraykp=checkCluster(cluster,dictionary,image)
-        #print("grade of cluster: ",y)
+        print("grade of cluster: ",y)
         #addp2 instead of cluster
+        print("size of cluster ",len(getarraykp))
+        print("img2coords ",len(img2coords))
         print(" % is ",y)
         if y>threshold:
-          print("length of clusters ",y,len(img2coords))
+          #print("length of clusters ",y,len(img2coords))
           arrayOfGoodclusters.append(img2coords)
           flags.append(counter)
         else: #option- add a condition , of the number of kp
-            if len(getarraykp)<100:
+            if len(getarraykp)>2 and len(img2coords)>2:
+                print(img2coords, "HII")
                 arrayOfBadclusters.append(img2coords)
                 flags2.append(counter)
+            else:
+                print(img2coords, "wrong")
         counter=counter+1
+    print("Number of good clusters: ", len(arrayOfGoodclusters))
+    print("Number of bad clusters: ", len(arrayOfBadclusters))
     return arrayOfGoodclusters,flags,arrayOfBadclusters,flags2
     #return arrayOfGoodclusters
 

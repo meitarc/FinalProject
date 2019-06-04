@@ -1,3 +1,4 @@
+#Comments:
 '''
     1. Description of the project
     2. imports
@@ -23,15 +24,14 @@
 
 #imports:
 #from SURF2 import DB_SCAN
-from align.align import *
+#from align.align import *
 from functions import *
 
 from matplotlib.pyplot import *
 from scipy.spatial import Delaunay
 from testofBoundery import function2
 from scipy.spatial import Delaunay
-#MAIN
-threshold=0.25
+
 #server side:
 # getting big image array, splitting to smaller arrays
 # and then, for each array do the following
@@ -51,29 +51,16 @@ clusters = DB_SCAN(kp,100)
 print("finish showing clusterts to boris")
 '''
 ###
-#pic=cv2.imread("14b.jpg")
-#tryit(pic)
+#MAIN
+threshold=0.25 # precentege of matches in order to consider good cluster
 arrayimg=readImagesToMakeCommonImage()
-# sort images by number of features:
-newSortedArrayimg=sortImageByFeachers(arrayimg)
-#find inersect of features on all images:
-kp,des = IntersectOfImages(newSortedArrayimg)
-#dictionary between coordinates and keypoints+descriptors:
-dictionary = CreateDict(kp,des)
-#clustering the kp according to coords
-# the value isL low for more cluster, 10-100 most likely, now we are on 20.
-clusters = DB_SCAN(kp,20)
-####
-
-dict={}#dict of dictionary and flag, for first photo
-for i in range(0,len(clusters)):
-    minY, maxY, minX, maxX = corMinMax(clusters[i])
-    #SizeCenter = SizeandCenter(minY, maxY, minX, maxX)
-    SizeCenter = topleftAndSizes(minY, maxY, minX, maxX)
-    dict.update({i:(SizeCenter)})
-####
+newSortedArrayimg=sortImageByFeachers(arrayimg) # sort images by number of features:
+kp,des = IntersectOfImages(newSortedArrayimg) # find inersect of features on all images:
+dictionary = CreateDict(kp,des) #dictionary between coordinates and keypoints+descriptors:
+clusters = DB_SCAN(kp,25) #clustering the kp according to coords
+# low value mean more clusters, 10-100 most likely, now we are on 20.
+dict=makeDictforOriginalClusters(clusters)
 print("Number of original clusters: ",len(clusters))
-
 #given GPS send cluster to client
 #client side:
 #client image
@@ -86,26 +73,14 @@ print("Number of original clusters: ",len(clusters))
 #image=cv2.imread("source/Experiment2/204.jpg")
 
 #experiment3:
-image=cv2.imread("source/Experiment3/124.jpg")
-
 ##new row:
-imReg, h = alignImages(image,newSortedArrayimg[len(newSortedArrayimg)-1])
+#imReg, h = alignImages(image,newSortedArrayimg[len(newSortedArrayimg)-1])
 #for each cluster, if found in camera image, take it off from cameras image:
-arrayOfGoodclusters,flagsOfGoodClusters = makegoodclusters(clusters,dictionary,imReg,threshold)
-#arrayOfGoodclusters = makegoodclusters(clusters,dictionary,imReg,threshold)
+image=cv2.imread("source/115.jpg") # read client image
+arrayOfGoodclusters,flagsOfGoodClusters,arrayOfBadclusters,flagsOfBadClusters = makegoodclusters(clusters,dictionary,image,threshold) #find good clusters and bad clusters
 
-
-dict2={}
-print("flags")
-#create dict2 for client image
-for i in range (0,len(arrayOfGoodclusters)):
-    minY, maxY, minX, maxX = corMinMax(arrayOfGoodclusters[i])
-    #SizeCenter = SizeandCenter(minY, maxY, minX, maxX)
-    SizeCenter=topleftAndSizes(minY, maxY, minX, maxX)
-    z=flagsOfGoodClusters[i]
-    dict2.update({z:SizeCenter})
-    print(i,z)
-
+dict2=makeDictforGoodClusters(arrayOfGoodclusters,flagsOfGoodClusters)
+dict3=makeDictforBadClusters(arrayOfBadclusters,flagsOfBadClusters)
 #croppedimage=function2(arrayOfGoodclusters)
 
 #croppedimage= croppedmatchingareas(image,arrayOfGoodclusters)
@@ -114,33 +89,26 @@ for i in range (0,len(arrayOfGoodclusters)):
 
 
 #arrayOfGoodclusters=makegoodclusters(clusters,dictionary,image,threshold)
-print("Number of good clusters: ",len(arrayOfGoodclusters))
+
 # drop the areas of clusters found in the client image that match the server image
-croppedimage=makecroppedimage(arrayOfGoodclusters,imReg)
-#croppedimage=makecroppedimage(arrayOfGoodclusters,imReg)
+croppedimage = makecroppedimage(arrayOfGoodclusters,image) #crop good clusters from client image
 cv2.imwrite('output/cropped2.jpg', croppedimage)
 #returnCroppedParts(croppedimage,newSortedArrayimg[len(newSortedArrayimg)-1],dict2,dict)
-
 print("CROPPED ! GO CHECK IT OUT !")
-Newclusters,Newdictionary = clustersOfCroppedImage(croppedimage)
-
+Newclusters,Newdictionary = clustersOfCroppedImage(croppedimage) # sift and cluster kp's on client image after crop
 #take out the new clusters in order to send
 
 #newimage=makecroppedimageseconduse(Newclusters,croppedimage)
-newimage=makecroppedimage(Newclusters,croppedimage)
-
+newimage=makecroppedimage(Newclusters,croppedimage) # newimage is the cropped image after cropping sift clusters from it
 #newimage=croppedmatchingareas(croppedimage,Newclusters)
 cv2.imwrite('output/clusters_of_cropped2.jpg', newimage)
+imagetosend=croppedimage-newimage  # the negetivity in order to send to. makes it that we send just the clusters we found after first cropped
+cv2.imwrite('output/clusters_to_send2.jpg', imagetosend)
 
-cv2.imwrite('output/clusters_to_send2.jpg', croppedimage-newimage)
-
-imagetosend=croppedimage-newimage
-
-imagetotakeclustersfrom=newSortedArrayimg[len(newSortedArrayimg)-1]
-
-
-returnCroppedParts(imagetosend,newSortedArrayimg[len(newSortedArrayimg)-1],dict2,dict)
-
+#for better understanding of image, on server side, return parts of good clusters and bad clsuters:
+imagetotakeclustersfrom = newSortedArrayimg[len(newSortedArrayimg)-1]
+imgafterGoodclustersreturn = returnCroppedParts(imagetosend,newSortedArrayimg[len(newSortedArrayimg)-1],dict2,dict)
+imgafterBadclustersreturn = returnCroppedParts2(imgafterGoodclustersreturn,newSortedArrayimg[len(newSortedArrayimg)-1],dict3, dict)
 
 #func3()
 
