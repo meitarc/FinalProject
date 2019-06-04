@@ -62,7 +62,7 @@ kp,des = IntersectOfImages(newSortedArrayimg)
 dictionary = CreateDict(kp,des)
 #clustering the kp according to coords
 # the value isL low for more cluster, 10-100 most likely, now we are on 20.
-clusters = DB_SCAN(kp,20)
+clusters = DB_SCAN(kp,15)
 ####
 
 dict={}#dict of dictionary and flag, for first photo
@@ -86,7 +86,9 @@ print("Number of original clusters: ",len(clusters))
 #image=cv2.imread("source/Experiment2/204.jpg")
 
 #experiment3:
-image=cv2.imread("source/Experiment3/124.jpg")
+#image=cv2.imread("source/Experiment3/124.jpg")
+
+image=cv2.imread("source/3.6.19/4/19.jpg")
 
 ##new row:
 imReg, h = alignImages(image,newSortedArrayimg[len(newSortedArrayimg)-1])

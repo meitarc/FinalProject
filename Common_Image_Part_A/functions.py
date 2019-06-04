@@ -420,11 +420,19 @@ def imageDeleteParts2seconduse(Image, partsList):
     return Image
 def readImagesToMakeCommonImage():
 
-    img3 = cv2.imread("source/100.jpg")
-    img4 = cv2.imread("source/101.jpg")
-    img5 = cv2.imread("source/102.jpg")
-    img6 = cv2.imread("source/103.jpg")
+    img3 = cv2.imread("source/3.6.19/4/1.jpg")
+    img4 = cv2.imread("source/3.6.19/4/2.jpg")
+    img5 = cv2.imread("source/3.6.19/4/3.jpg")
+    img6 = cv2.imread("source/3.6.19/4/4.jpg")
     arrayimg=[img3,img4,img5,img6]
+
+    # experiment2:
+    #img3 = cv2.imread("source/Experiment2/80.jpg")
+    #img4 = cv2.imread("source/Experiment2/186.jpg")
+    #img5 = cv2.imread("source/Experiment2/187.jpg")
+    #img6 = cv2.imread("source/Experiment2/196.jpg")
+    #arrayimg=[img3,img4,img5,img6]
+
     '''
     img3 = cv2.imread("source/meitar_pics/test2/1.jpg")
     img4 = cv2.imread("source/meitar_pics/test2/2.jpg")
@@ -441,7 +449,7 @@ def clustersOfCroppedImage(image1):
     img1 = np.array(image1)
     kp, des = surf.detectAndCompute(img1, None)
     dictionary = CreateDict(kp, des)
-    clusters = DB_SCAN(kp,10)
+    clusters = DB_SCAN(kp,15)
 
     return clusters,dictionary
 def funcCheck1(image1, image2):
@@ -689,10 +697,12 @@ def makegoodclusters(clusters,dictionary,image,threshold):
                 arrayOfBadclusters.append(img2coords)
                 flags2.append(counter)
         counter=counter+1
-    return arrayOfGoodclusters,flags,arrayOfBadclusters,flags2
+    return arrayOfGoodclusters,flags
+    #,arrayOfBadclusters,flags2
     #return arrayOfGoodclusters
 
 def makecroppedimage(arrayOfGoodclusters,image):
+    print("lalalalallala")
     sizes=[]
     for cluster in arrayOfGoodclusters:
         minY, maxY, minX, maxX = corMinMax(cluster)
