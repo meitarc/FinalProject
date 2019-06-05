@@ -528,10 +528,10 @@ def readImagesToMakeCommonImage():
     #img4 = cv2.imread("source/Experiment2/80.jpg")
     #img5 = cv2.imread("source/Experiment2/187.jpg")
     #img6 = cv2.imread("source/Experiment2/196.jpg")
-    img3 = cv2.imread("source/new/100.jpg")
-    img4 = cv2.imread("source/new/101.jpg")
-    img5 = cv2.imread("source/new/102.jpg")
-    img6 = cv2.imread("source/new/103.jpg")
+    img3 = cv2.imread("source/old_pics/100.jpg")
+    img4 = cv2.imread("source/old_pics/101.jpg")
+    img5 = cv2.imread("source/old_pics/102.jpg")
+    img6 = cv2.imread("source/old_pics/103.jpg")
     arrayimg=[img3,img4,img5,img6]
     '''
     img3 = cv2.imread("source/meitar_pics/test2/1.jpg")

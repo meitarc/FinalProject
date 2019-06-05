@@ -251,3 +251,5 @@ def function2(clusters1):
     # save the result
     cv2.imwrite('image_masked2.jpg', masked_image)
     return masked_image
+
+function()
