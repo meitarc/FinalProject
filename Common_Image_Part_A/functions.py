@@ -72,10 +72,10 @@ def returnCroppedParts(imagetosend,imagetotakeclustersfrom,dict2,dict):
     cv2.imwrite('output/profetOmriGOOD.jpg', l_img)
     return l_img
 
-def returnCroppedParts2(imagetosend,imagetotakeclustersfrom,dict2,dict):
+def returnCroppedParts2(imagetosend,imagetotakeclustersfrom,dict3,dict):
     cnt=0
     l_img = imagetosend
-    for i in dict2.keys():
+    for i in dict3.keys():
         r = dict.get(i)
         if r[2]>0 and r[3]>0:
             #coor1=(  int(r[0]-(r[2]))  ,  int(r[0]+(r[2])))
@@ -84,7 +84,7 @@ def returnCroppedParts2(imagetosend,imagetotakeclustersfrom,dict2,dict):
                 crp=imagetotakeclustersfrom[int(r[0]):int(r[0])+int(r[2]),int(r[1]):int(r[1])+int(r[3])]
                 cv2.imwrite('output/bad0'+str(cnt)+'.jpg',crp)
                 #imagetosend[dict2.get(i)]=resize(imagetotakeclustersfrom.dict.get(i))
-                k=dict2.get(i)
+                k=dict3.get(i)
                 dim=(k[2],k[3])
                 #dim=(2,2)
                 #print("before")
@@ -98,7 +98,7 @@ def returnCroppedParts2(imagetosend,imagetotakeclustersfrom,dict2,dict):
                     #print(crp.shape[0])
                     #print(crp.shape[1])
                     #print(smallemala)
-                    smallemala = dict2.get(i)
+                    smallemala = dict3.get(i)
                     x_offset=int(smallemala[1])
                     y_offset=int(smallemala[0])
                     #s_img=crp
@@ -520,6 +520,7 @@ def makeDictforBadClusters(arrayOfBadclusters,flagsOfBadClusters):
         h=flagsOfBadClusters[i]
         dict3.update({h:SizeCenter})
         print(i,h)
+    return dict3
 
 def readImagesToMakeCommonImage():
 
@@ -527,10 +528,10 @@ def readImagesToMakeCommonImage():
     #img4 = cv2.imread("source/Experiment2/80.jpg")
     #img5 = cv2.imread("source/Experiment2/187.jpg")
     #img6 = cv2.imread("source/Experiment2/196.jpg")
-    img3 = cv2.imread("source/100.jpg")
-    img4 = cv2.imread("source/101.jpg")
-    img5 = cv2.imread("source/102.jpg")
-    img6 = cv2.imread("source/103.jpg")
+    img3 = cv2.imread("source/new/100.jpg")
+    img4 = cv2.imread("source/new/101.jpg")
+    img5 = cv2.imread("source/new/102.jpg")
+    img6 = cv2.imread("source/new/103.jpg")
     arrayimg=[img3,img4,img5,img6]
     '''
     img3 = cv2.imread("source/meitar_pics/test2/1.jpg")

@@ -76,7 +76,7 @@ print("Number of original clusters: ",len(clusters))
 ##new row:
 #imReg, h = alignImages(image,newSortedArrayimg[len(newSortedArrayimg)-1])
 #for each cluster, if found in camera image, take it off from cameras image:
-image=cv2.imread("source/115.jpg") # read client image
+image=cv2.imread("source/new/115.jpg") # read client image
 arrayOfGoodclusters,flagsOfGoodClusters,arrayOfBadclusters,flagsOfBadClusters = makegoodclusters(clusters,dictionary,image,threshold) #find good clusters and bad clusters
 
 dict2=makeDictforGoodClusters(arrayOfGoodclusters,flagsOfGoodClusters)
