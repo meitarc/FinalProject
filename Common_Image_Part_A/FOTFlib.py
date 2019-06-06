@@ -163,4 +163,14 @@ def main(serverFolder,clientImg,outputFolder,threshold):
     import numpy as np
 
 
-main("source/3.6.19/1/server","source/3.6.19/1/client/97.jpg","source/3.6.19/1/output",0.25)
+
+#threshhold=0.5
+#threshhold2=0.5
+#for j in range(0,11):
+#	threshhold=(j/10)
+#	threshhold2=threshhold+0.05
+#	threshhold2=float("%.2f" % threshhold2)
+#    main("source/3.6.19/1/server","source/3.6.19/1/client/97.jpg","source/3.6.19/1/output/"+str(threshhold),threshhold)
+#    main("source/3.6.19/1/server", "source/3.6.19/1/client/97.jpg", "source/3.6.19/1/output/"+str(threshhold2), threshhold2)
+#
+
