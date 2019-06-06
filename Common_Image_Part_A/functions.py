@@ -5,7 +5,13 @@ from math import atan2,degrees,sqrt
 #from SURF2 import DB_SCAN
 from scipy.spatial import Delaunay
 
+outputFolder=[]
+
+def getFolder(folder):
+    outputFolder.append(folder)
+    print(outputFolder[0])
 def returnCroppedParts(imagetosend,imagetotakeclustersfrom,dict2,dict):
+
     cnt=0
     l_img = imagetosend
     for i in dict2.keys():
@@ -15,7 +21,7 @@ def returnCroppedParts(imagetosend,imagetotakeclustersfrom,dict2,dict):
             #coor2 = (int(r[1] - (r[3] )), int(r[1] + (r[3] )))
             #if coor1[0]>1 and coor2[0]>1 and coor1[1]>1 and coor2[1]>1:
                 crp=imagetotakeclustersfrom[int(r[0]):int(r[0])+int(r[2]),int(r[1]):int(r[1])+int(r[3])]
-                cv2.imwrite('output/cropt'+str(cnt)+'.jpg',crp)
+                cv2.imwrite(outputFolder[0]+'/cropt'+str(cnt)+'.jpg',crp)
                 #imagetosend[dict2.get(i)]=resize(imagetotakeclustersfrom.dict.get(i))
                 k=dict2.get(i)
                 dim=(k[2],k[3])
@@ -69,7 +75,7 @@ def returnCroppedParts(imagetosend,imagetotakeclustersfrom,dict2,dict):
                     l_img[ y_offset: y_offset + int(smallemala[2]), x_offset:x_offset + int(smallemala[3])] = ss_img
                     #s_img.shape[0]
         cnt = cnt + 1
-    cv2.imwrite('output/profetOmriGOOD.jpg', l_img)
+    cv2.imwrite(outputFolder[0]+'/profetOmriGOOD.jpg', l_img)
     return l_img
 
 def returnCroppedParts2(imagetosend,imagetotakeclustersfrom,dict3,dict):
@@ -82,7 +88,7 @@ def returnCroppedParts2(imagetosend,imagetotakeclustersfrom,dict3,dict):
             #coor2 = (int(r[1] - (r[3] )), int(r[1] + (r[3] )))
             #if coor1[0]>1 and coor2[0]>1 and coor1[1]>1 and coor2[1]>1:
                 crp=imagetotakeclustersfrom[int(r[0]):int(r[0])+int(r[2]),int(r[1]):int(r[1])+int(r[3])]
-                cv2.imwrite('output/bad0'+str(cnt)+'.jpg',crp)
+                cv2.imwrite(outputFolder[0]+'/bad0'+str(cnt)+'.jpg',crp)
                 #imagetosend[dict2.get(i)]=resize(imagetotakeclustersfrom.dict.get(i))
                 k=dict3.get(i)
                 dim=(k[2],k[3])
@@ -136,7 +142,7 @@ def returnCroppedParts2(imagetosend,imagetotakeclustersfrom,dict3,dict):
                     l_img[ y_offset: y_offset + int(smallemala[2]), x_offset:x_offset + int(smallemala[3])] = ss_img
                     #s_img.shape[0]
         cnt = cnt + 1
-    cv2.imwrite('output/profetOmriBAD.jpg', l_img)
+    cv2.imwrite(outputFolder[0]+'/profetOmriBAD.jpg', l_img)
     return l_img
 def returnCroppedParts2try(imagetosend,imagetotakeclustersfrom,dict2,dict):
     arr=[]
@@ -167,7 +173,7 @@ def returnCroppedParts2try(imagetosend,imagetotakeclustersfrom,dict2,dict):
         qh = q[2] * 2
         qw = q[3] * 2
         crp=imagetotakeclustersfrom[int(qtoplefty):int(qtoplefty+qh), int(qtopleftx):int(qtopleftx+qw)]
-        cv2.imwrite('output/croptGGG' + str(cnt) + '.jpg', crp)
+        cv2.imwrite(outputFolder[0]+'/croptGGG' + str(cnt) + '.jpg', crp)
         if dim[0]==0 or dim[1]==0 or crp.shape[0]==0 or crp.shape[1]==0 or crp.shape[2]==0:
             print("something is zero",cnt)
         else:
@@ -175,7 +181,7 @@ def returnCroppedParts2try(imagetosend,imagetotakeclustersfrom,dict2,dict):
             crp=cv2.resize(crp,dim,interpolation=cv2.INTER_AREA)
             print(dim,crp.shape)
             imagetosend[ int(rtopleftx):int(rtopleftx)+rw,int(rtoplefty):int(rtoplefty)+rh]=crp
-            cv2.imwrite('output/cropt' + str(cnt) + '.jpg', crp)
+            cv2.imwrite(outputFolder[0]+'/cropt' + str(cnt) + '.jpg', crp)
         cnt=cnt+1
 def returnCroppedParts3try(imagetosend,imagetotakeclustersfrom,dict2,dict):
     arr=[]
@@ -202,7 +208,7 @@ def returnCroppedParts3try(imagetosend,imagetotakeclustersfrom,dict2,dict):
         qh = q[2]
         qw = q[3]
         crp=imagetotakeclustersfrom[int(qtoplefty):int(qtoplefty+qh), int(qtopleftx):int(qtopleftx+qw)]
-        cv2.imwrite('output/croptSSS' + str(cnt) + '.jpg', crp)
+        cv2.imwrite(outputFolder[0]+'/croptSSS' + str(cnt) + '.jpg', crp)
         if dim[0]==0 or dim[1]==0 or crp.shape[0]==0 or crp.shape[1]==0 or crp.shape[2]==0:
             print("something is zero",cnt)
         else:
@@ -214,7 +220,7 @@ def returnCroppedParts3try(imagetosend,imagetotakeclustersfrom,dict2,dict):
             imagetosend[ int(rtopleftx):int(rtopleftx)+int(rw),int(rtoplefty):int(rtoplefty)+int(rh)]=crp
             cv2.imwrite('output/cropt' + str(cnt) + '.jpg', crp)
         cnt=cnt+1
-        cv2.imwrite('output/profetOmri.jpg', imagetosend)
+        cv2.imwrite(outputFolder[0]+'/profetOmri.jpg', imagetosend)
 def AngleBtw2Points(pointA, pointB):
   changeInX = pointB[0] - pointA[0]
   changeInY = pointB[1] - pointA[1]
@@ -446,10 +452,10 @@ def topleftAndSizes(minY,maxY,minX,maxX):
 
 def imageDeleteParts(Image, partsList):
     test = Image.copy()
-    cv2.imwrite('output/test.jpg', test)
+    cv2.imwrite(outputFolder[0]+'/test.jpg', test)
     for range in partsList:
         test[ int(range[0] - range[3]) : int(range[0] + range[3]),int(range[1] - range[2]) : int(range[1] + range[2]) ] = 0
-    cv2.imwrite('output/test2.jpg', test)
+    cv2.imwrite(outputFolder[0]+'/test2.jpg', test)
     return test
 
 def imageDeleteParts2(Image, partsList):
@@ -457,10 +463,10 @@ def imageDeleteParts2(Image, partsList):
 
     for range in partsList:
         check=Image[int(range[0]):int(range[0])+int(range[2]),int(range[1]):int(range[1])+int(range[3])]
-        cv2.imwrite('output/check'+str(checker)+'.jpg', check)
+        cv2.imwrite(outputFolder[0]+'/check'+str(checker)+'.jpg', check)
         Image[int(range[0]):int(range[0])+int(range[2]),int(range[1]):int(range[1])+int(range[3])] = 0
         checker=checker+1
-    cv2.imwrite('output/imageaftercropped.jpg', Image)
+    cv2.imwrite(outputFolder[0]+'/imageaftercropped.jpg', Image)
     return Image
 
 
@@ -472,7 +478,7 @@ def imageDeleteParts3(Image, partsList):
         #cv2.imwrite('output/check' + str(checker) + '.jpg', check)
         test[int(range[0]):int(range[0]) + int(range[2]), int(range[1]):int(range[1]) + int(range[3])] = 0
         #checker = checker + 1
-    cv2.imwrite('output/imageaftercropped.jpg', test)
+    cv2.imwrite(outputFolder[0]+'/imageaftercropped.jpg', test)
     return test
 
 
@@ -480,10 +486,10 @@ def imageDeleteParts2seconduse(Image, partsList):
     checker=0
     for range in partsList:
         check=Image[int(range[0]):int(range[0])+int(range[2]),int(range[1]):int(range[1])+int(range[3])]
-        cv2.imwrite('output/checkGGG'+str(checker)+'.jpg', check)
+        cv2.imwrite(outputFolder[0]+'/checkGGG'+str(checker)+'.jpg', check)
         Image[int(range[0]):int(range[0])+int(range[2]),int(range[1]):int(range[1])+int(range[3])] = 0
         checker=checker+1
-    cv2.imwrite('output/imageaftercropped.jpg', Image)
+    cv2.imwrite(outputFolder[0]+'/imageaftercropped.jpg', Image)
     return Image
 
 def makeDictforOriginalClusters(clusters): # make dictionary for server image
@@ -522,29 +528,32 @@ def makeDictforBadClusters(arrayOfBadclusters,flagsOfBadClusters):
         print(i,h)
     return dict3
 
-def readImagesToMakeCommonImage():
+def readImagesToMakeCommonImage(arrayServerImgs):
+
+    arrayimg=[]
+    for img in arrayServerImgs:
+        arrayimg.append(cv2.imread(img))
 
     #img3 = cv2.imread("source/Experiment2/186.jpg")
     #img4 = cv2.imread("source/Experiment2/80.jpg")
     #img5 = cv2.imread("source/Experiment2/187.jpg")
     #img6 = cv2.imread("source/Experiment2/196.jpg")
-    img3 = cv2.imread("source/old_pics/100.jpg")
-    img4 = cv2.imread("source/old_pics/101.jpg")
-    img5 = cv2.imread("source/old_pics/102.jpg")
-    img6 = cv2.imread("source/old_pics/103.jpg")
-    arrayimg=[img3,img4,img5,img6]
+    #img3 = cv2.imread("source/old_pics/100.jpg")
+    #img4 = cv2.imread("source/old_pics/101.jpg")
+    #img5 = cv2.imread("source/old_pics/102.jpg")
+    #img6 = cv2.imread("source/old_pics/103.jpg")
+    #arrayimg=[img3,img4,img5,img6]
     '''
     img3 = cv2.imread("source/meitar_pics/test2/1.jpg")
     img4 = cv2.imread("source/meitar_pics/test2/2.jpg")
     img5 = cv2.imread("source/meitar_pics/test2/3.jpg")
     arrayimg=[img3,img4,img5]
     '''
-
     return arrayimg
 def clustersOfCroppedImage(image1):
     #sift = cv2.xfeatures2d.SIFT_create()
 
-    cv2.imwrite('output/imagecheck.jpg', image1)
+    cv2.imwrite(outputFolder[0]+'/imagecheck.jpg', image1)
     surf = cv2.xfeatures2d.SURF_create()
     img1 = np.array(image1)
     kp, des = surf.detectAndCompute(img1, None)
@@ -808,6 +817,7 @@ def makegoodclusters(clusters,dictionary,image,threshold):
     #return arrayOfGoodclusters
 
 def makecroppedimage(arrayOfGoodclusters,image):
+
     sizes=[]
     for cluster in arrayOfGoodclusters:
         minY, maxY, minX, maxX = corMinMax(cluster)
@@ -819,7 +829,7 @@ def makecroppedimage(arrayOfGoodclusters,image):
     print("len of size is 34:", len(sizes))
     #croppedimage= imageDeleteParts2(image,sizes)
     croppedimage= imageDeleteParts3(image,sizes)
-    cv2.imwrite('output/testguy.jpg',croppedimage)
+    cv2.imwrite(outputFolder[0]+'/testguy.jpg',croppedimage)
     return croppedimage
 def makecroppedimageseconduse(arrayOfGoodclusters,image):
     sizes=[]
@@ -832,7 +842,7 @@ def makecroppedimageseconduse(arrayOfGoodclusters,image):
     print("$$$$$$$$$$$")
     print("len of size is ?:", len(sizes))
     croppedimage= imageDeleteParts2seconduse(image,sizes)
-    cv2.imwrite('output/testguy.jpg',croppedimage)
+    cv2.imwrite(outputFolder[0]+'/testguy.jpg',croppedimage)
     return croppedimage
 def sortImageByFeachers(arrayimg):
     newArrayimg = arrayimg

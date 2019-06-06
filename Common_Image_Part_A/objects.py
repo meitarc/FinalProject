@@ -155,7 +155,7 @@ from functions import funcCheck1, funcCheck2
 prototxtPath = 'MobileNetSSD_deploy.prototxt.txt'
 caffemodelPath = 'MobileNetSSD_deploy.caffemodel'
 #opening Image Example
-image1 = cv2.imread('source/115.jpg')
+image1 = cv2.imread('source/old_pics/115.jpg')
 #cv2.imwrite('output/ObjectDetectionsResults/test1.jpg', image1)
 #finding the objects
 objects = findObjectsWithThreshold(image1, prototxtPath, caffemodelPath, 0.1)
