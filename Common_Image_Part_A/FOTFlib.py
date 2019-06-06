@@ -161,16 +161,52 @@ def main(serverFolder,clientImg,outputFolder,threshold):
     '''
     import cv2
     import numpy as np
+    reset()
 
 
 
-#threshhold=0.5
-#threshhold2=0.5
-#for j in range(0,11):
-#	threshhold=(j/10)
-#	threshhold2=threshhold+0.05
-#	threshhold2=float("%.2f" % threshhold2)
-#    main("source/3.6.19/1/server","source/3.6.19/1/client/97.jpg","source/3.6.19/1/output/"+str(threshhold),threshhold)
-#    main("source/3.6.19/1/server", "source/3.6.19/1/client/97.jpg", "source/3.6.19/1/output/"+str(threshhold2), threshhold2)
-#
+
+thresh=[0.05,0.15,0.25,0.35,0.45,0.55,0.65,0.75,0.85,0.95]
+for j in range(0,11):
+    print("round: "+str(j))
+    main("source/3.6.19/1/server","source/3.6.19/1/client/97.jpg","source/3.6.19/1/output/"+str(j/10),j/10)
+    if j<10:
+        main("source/3.6.19/1/server","source/3.6.19/1/client/97.jpg","source/3.6.19/1/output/"+str(thresh[j]),thresh[j])
+
+
+for j in range(0,11):
+    print("round: "+str(j))
+    main("source/3.6.19/2/server","source/3.6.19/2/client/186.jpg","source/3.6.19/2/output/"+str(j/10),j/10)
+    if j<10:
+        main("source/3.6.19/2/server","source/3.6.19/2/client/186.jpg","source/3.6.19/2/output/"+str(thresh[j]),thresh[j])
+
+for j in range(0,11):
+    print("round: "+str(j))
+    main("source/3.6.19/3/server","source/3.6.19/3/client/120.jpg","source/3.6.19/3/output/"+str(j/10),j/10)
+    if j<10:
+        main("source/3.6.19/3/server","source/3.6.19/3/client/120.jpg","source/3.6.19/3/output/"+str(thresh[j]),thresh[j])
+
+for j in range(0,11):
+    print("round: "+str(j))
+    main("source/3.6.19/4/server","source/3.6.19/4/client/6.jpg","source/3.6.19/4/output/"+str(j/10),j/10)
+    if j<10:
+        main("source/3.6.19/4/server","source/3.6.19/4/client/6.jpg","source/3.6.19/4/output/"+str(thresh[j]),thresh[j])
+
+for j in range(0,11):
+    print("round: "+str(j))
+    main("source/3.6.19/5/server","source/3.6.19/5/client/77.jpg","source/3.6.19/5/output/"+str(j/10),j/10)
+    if j<10:
+        main("source/3.6.19/5/server","source/3.6.19/5/client/77.jpg","source/3.6.19/5/output/"+str(thresh[j]),thresh[j])
+
+for j in range(0,11):
+    print("round: "+str(j))
+    main("source/3.6.19/6/server","source/3.6.19/6/client/19.jpg","source/3.6.19/6/output/"+str(j/10),j/10)
+    if j<10:
+        main("source/3.6.19/6/server","source/3.6.19/6/client/19.jpg","source/3.6.19/6/output/"+str(thresh[j]),thresh[j])
+
+for j in range(0,11):
+    print("round: "+str(j))
+    main("source/3.6.19/7/server","source/3.6.19/7/client/121.jpg","source/3.6.19/7/output/"+str(j/10),j/10)
+    if j<10:
+        main("source/3.6.19/7/server","source/3.6.19/7/client/121.jpg","source/3.6.19/7/output/"+str(thresh[j]),thresh[j])
 
