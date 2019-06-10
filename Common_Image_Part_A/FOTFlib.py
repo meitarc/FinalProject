@@ -120,7 +120,7 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):
     imgafterGoodclustersreturn = returnCroppedParts(imagetosend,imagetotakeclustersfrom,dict2,dict)
 
     #imgafterBadclustersreturn = returnCroppedParts2(imgafterGoodclustersreturn,imagetotakeclustersfrom,dict3, dict)
-
+    reset()
     '''
     src = cv2.imread('clusters_to_send.jpg', 1)
     
@@ -146,5 +146,4 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):
     '''
 
 threshhold=0.25
-main("source/3.6.19/4/server", "source/3.6.19/4/client/6.jpg", "source/3.6.19/4/output/" + str(threshhold), threshhold,10)
-
+main("source/pics_for_tests/1/server", "source/pics_for_tests/1/client/6.jpg", "source/pics_for_tests/1/output/" + str(threshhold), threshhold,10)
