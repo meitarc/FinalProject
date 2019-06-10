@@ -994,3 +994,24 @@ def keyOfObject(range_list, kp, des):
         listOfObjects.append(object_tupel)
     return listOfObjects
 
+def divideArrayOfIMG(newSortedArrayimg, threshold2):
+    flag = [1] * len(newSortedArrayimg)
+    allarray = []
+    for i in range(0, len(newSortedArrayimg)):
+        if flag[i] == 1:
+            array = []
+            array.append(newSortedArrayimg[i])
+            for j in range(1, len(newSortedArrayimg)):
+                if flag[j] == 1:
+                    temp, doesnotmatter1, doesnotmatter2 = funcCheck1(newSortedArrayimg[i], newSortedArrayimg[j])
+                    if temp > threshold2:
+                        array.append(newSortedArrayimg[j])
+                        flag[j] = 0
+                    else:
+                        print("nothing")
+
+                else:
+                    print("nothing")
+            allarray.append(array)
+    return allarray
+
