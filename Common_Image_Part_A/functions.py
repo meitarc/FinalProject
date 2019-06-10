@@ -957,3 +957,40 @@ def fourth(indexOne,indexTwo,indexThree):
     b = indexTwo
     c = indexThree
     return a,b,c
+
+def firstFuncCheck(FirstImage):
+    surf = cv2.xfeatures2d.SURF_create()
+    img1 = np.array(FirstImage)
+    kp, des = surf.detectAndCompute(img1, None)
+    return kp,des
+
+def IntersectOfImages2(listOfObjects,newSortedArrayimg):
+    i=0
+    j=0
+    listOfMatches = []
+    for i in range (0,len(listOfObjects)):
+        arraykp = listOfObjects[i][0]
+        arraydes = listOfObjects[i][1]
+        num = len(arraykp)
+        for j in range (1,len(newSortedArrayimg)):
+            x,arraykp,arraydes = funcCheck2(arraykp,arraydes,newSortedArrayimg[j])
+        ratio = x/num
+        matchesTupel = (arraykp,arraydes,ratio)
+        listOfMatches.append(matchesTupel)
+    return listOfMatches
+
+def keyOfObject(range_list, kp, des):
+    listOfObjects = []
+    for i in range(0, len(range_list)):
+        descriptorOfObjects = []
+        keyOfObjects = []
+        for j, k in zip(kp, des):
+            # for cor in array_Kp_pt:
+            if ((j.pt[0] >= range_list[i][2]) and (j.pt[0] <= range_list[i][3])):
+                if ((j.pt[1] >= range_list[i][0]) and (j.pt[1] <= range_list[i][1])):
+                    keyOfObjects.append(j)
+                    descriptorOfObjects.append(k)
+                    object_tupel = (keyOfObjects, descriptorOfObjects)
+        listOfObjects.append(object_tupel)
+    return listOfObjects
+
