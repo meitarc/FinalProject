@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from decimal import *
+
 def findObjects (threshold, imagePath,outputPath):
     CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
     	"bottle", "bus", "car", "cat", "chair", "cow", "diningtable",

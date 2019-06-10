@@ -572,7 +572,7 @@ def readImagesToMakeCommonImage(arrayServerImgs):
     arrayimg=[img3,img4,img5]
     '''
     return arrayimg
-def clustersOfCroppedImage(image1):
+def clustersOfCroppedImage(image1,dbscan_epsilon):
     #sift = cv2.xfeatures2d.SIFT_create()
 
     cv2.imwrite(outputFolder[0]+'/imagecheck.jpg', image1)
@@ -580,7 +580,7 @@ def clustersOfCroppedImage(image1):
     img1 = np.array(image1)
     kp, des = surf.detectAndCompute(img1, None)
     dictionary = CreateDict(kp, des)
-    clusters = DB_SCAN(kp,15)
+    clusters = DB_SCAN(kp,dbscan_epsilon)
 
     return clusters,dictionary,kp,des
 def funcCheck1(image1, image2):

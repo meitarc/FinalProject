@@ -119,7 +119,7 @@ from scipy.spatial import Delaunay
 from testofBoundery import function2
 from scipy.spatial import Delaunay
 
-def main(serverFolder,clientImg,outputFolder,threshold):
+def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):
     import cv2
     getFolder(outputFolder)
     #imports:
@@ -202,7 +202,7 @@ def main(serverFolder,clientImg,outputFolder,threshold):
         for j, k in zip(i[0], i[1]):
             dictionary.update({j.pt: (j, k)})
 
-    clusters = DB_SCAN(kp_1, 10) #clustering the kp according to coords
+    clusters = DB_SCAN(kp_1, dbscan_epsilon) #clustering the kp according to coords
     NClustersWObjects = len(clusters)
     objectS_list = []
     for i in new_listOfMatches:
@@ -250,7 +250,7 @@ def main(serverFolder,clientImg,outputFolder,threshold):
     print("CROPPED ! GO CHECK IT OUT !")
 
 
-    Newclusters,Newdictionary,kp2,des2 = clustersOfCroppedImage(croppedimage) # sift and cluster kp's on client image after crop
+    Newclusters,Newdictionary,kp2,des2 = clustersOfCroppedImage(croppedimage,dbscan_epsilon) # sift and cluster kp's on client image after crop
     secondRange_list = findObjectsUsingYOLO(croppedimage, yoloLabels, yoloWeights, yoloConfig, threshold_ob)
     newListOfObjects = keyOfObject(secondRange_list, kp2, des2)
     new_listOfNumbers = []
@@ -262,7 +262,7 @@ def main(serverFolder,clientImg,outputFolder,threshold):
         new_listOfNumbers.append(i)
 
     #Newclusters2, Newdictionary2, kp3, des3 = clustersOfCroppedImage(new_croped)
-    Newclusters2, Newdictionary2, kp3, des3 = clustersOfCroppedImage(new_cropped)
+    Newclusters2, Newdictionary2, kp3, des3 = clustersOfCroppedImage(new_cropped,dbscan_epsilon)
 
     #take out the new clusters in order to send
     for i in newListOfObjects:
@@ -327,9 +327,8 @@ def main(serverFolder,clientImg,outputFolder,threshold):
     import cv2
     import numpy as np
 
-threshhold=0.25
-main("source/3.6.19/2/server","source/3.6.19/2/client/186.jpg","source/3.6.19/2/output/"+str(threshhold),threshhold)
-
+#threshhold=0.25
+#main("source/3.6.19/1/server", "source/3.6.19/1/client/10.jpg", "source/3.6.19/1/output1/" + str(threshhold), threshhold)
 
 #threshhold2=0.5
 #for j in range(0,11):
