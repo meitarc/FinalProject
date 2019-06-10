@@ -6,7 +6,26 @@ from math import atan2,degrees,sqrt
 from scipy.spatial import Delaunay
 
 outputFolder=[]
+def imageDeleteObject(Image,objectSize):
+    test = Image.copy()
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    print(objectSize," object size ")
+    if len(objectSize)>0:
+        if(type(objectSize[0] is int)):
+            print(objectSize)
+            print('int')
+            #test[int(objectSize[2]):int(objectSize[2]) + (int(objectSize[3]) - int(objectSize[2])),int(objectSize[0]):int(objectSize[0]) + (int(objectSize[1]) - int(objectSize[0]))] = 0
+            test[objectSize[0]:objectSize[1], objectSize[2]:objectSize[3]] = 0
+        else:
+            for range in objectSize:
+                print(objectSize)
+                print('not int')
+                #test[int(range[2]):int(range[2]) + (int(range[3])-int(range[2])), int(range[0]):int(range[0]) + (int(range[1])-int(range[0]))] = 0
+                test[objectSize[0]:objectSize[1], objectSize[2]:objectSize[3]] = 0
 
+
+    cv2.imwrite('output/imageaftercropped.jpg', test)
+    return test
 def getFolder(folder):
     outputFolder.append(folder)
     print(outputFolder[0])
@@ -30,7 +49,7 @@ def returnCroppedParts(imagetosend,imagetotakeclustersfrom,dict2,dict):
                 #print(crp.shape[0])
                 #print(crp.shape[1])
 
-                if (dim[0] > 1 and dim[1]>1 and (crp.shape[0]>0 or crp.shape[1]>0)):
+                if (dim[0] > 1 and dim[1]>1 and (crp.shape[0]>0 and crp.shape[1]>0)):
                     #print(dim)
                     #crp=cv2.resize(crp,dim,interpolation=cv2.INTER_AREA)
                     #print("after")
@@ -560,7 +579,7 @@ def clustersOfCroppedImage(image1):
     dictionary = CreateDict(kp, des)
     clusters = DB_SCAN(kp,15)
 
-    return clusters,dictionary
+    return clusters,dictionary,kp,des
 def funcCheck1(image1, image2):
     # Initiate SIFT detector
     #print("funcheck1")
@@ -784,10 +803,12 @@ def clientFuncCheck(one, two, image2,flag):
 
         # plt.imshow(img3,),plt.show()
         return p, kp1  # returns number of best matches,and all keypoints of first img
-def makegoodclusters(clusters,dictionary,image,threshold):
+def makegoodclusters(clusters,dictionary,image,threshold,NClustersWObjects,listOfNumbers):
     arrayOfGoodclusters=[]
     arrayOfBadclusters=[]
+    newListOfNumbers=[]
     counter=0
+    count_originals=0
     flags=[]
     flags2 = []
     for cluster in clusters:
@@ -803,6 +824,10 @@ def makegoodclusters(clusters,dictionary,image,threshold):
           #print("length of clusters ",y,len(img2coords))
           arrayOfGoodclusters.append(img2coords)
           flags.append(counter)
+          if(counter>=NClustersWObjects):
+              newListOfNumbers.append(listOfNumbers[counter-NClustersWObjects])
+          else:
+                count_originals = count_originals + 1
         else: #option- add a condition , of the number of kp
             if len(getarraykp)>2 and len(img2coords)>2:
                 print(img2coords, "HII")
@@ -813,24 +838,29 @@ def makegoodclusters(clusters,dictionary,image,threshold):
         counter=counter+1
     print("Number of good clusters: ", len(arrayOfGoodclusters))
     print("Number of bad clusters: ", len(arrayOfBadclusters))
-    return arrayOfGoodclusters,flags,arrayOfBadclusters,flags2
+    return arrayOfGoodclusters,flags,arrayOfBadclusters,flags2,newListOfNumbers,count_originals
     #return arrayOfGoodclusters
 
-def makecroppedimage(arrayOfGoodclusters,image):
-
+def makecroppedimage(arrayOfGoodclusters,image,newListOfNumbers,count_originals,range_list):
+    count=0
     sizes=[]
+    range_list_new=[]
     for cluster in arrayOfGoodclusters:
-        minY, maxY, minX, maxX = corMinMax(cluster)
-        #SizeCenter = SizeandCenter(minY, maxY, minX, maxX)
-        SizeCenter=topleftAndSizes(minY, maxY, minX, maxX)
-        #sizes.append(SizeCenter)
-        sizes.append(SizeCenter)
+        if(count<count_originals):
+            minY, maxY, minX, maxX = corMinMax(cluster)
+            #SizeCenter = SizeandCenter(minY, maxY, minX, maxX)
+            SizeCenter=topleftAndSizes(minY, maxY, minX, maxX)
+            #sizes.append(SizeCenter)
+            sizes.append(SizeCenter)
+        else:
+            range_list_new.append(range_list[newListOfNumbers[count-count_originals]])
     print("$$$$$$$$$$$")
     print("len of size is 34:", len(sizes))
     #croppedimage= imageDeleteParts2(image,sizes)
-    croppedimage= imageDeleteParts3(image,sizes)
-    cv2.imwrite(outputFolder[0]+'/testguy.jpg',croppedimage)
-    return croppedimage
+    croppedimage = imageDeleteParts3(image,sizes)######maybe we should swap with the line below
+    croppedimage_new = imageDeleteObject(croppedimage, range_list_new)
+    cv2.imwrite(outputFolder[0]+'/testguy.jpg',croppedimage_new)
+    return croppedimage_new
 def makecroppedimageseconduse(arrayOfGoodclusters,image):
     sizes=[]
     for cluster in arrayOfGoodclusters:

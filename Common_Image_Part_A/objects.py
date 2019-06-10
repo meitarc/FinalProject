@@ -67,64 +67,64 @@ def findObjectsWithThreshold(image, prototxtPath, caffemodelPath, threshold):
 
     # function to get the output layer names
     # in the architecture
-    def get_output_layers(net):
+def get_output_layers(net):
 
-        layer_names = net.getLayerNames()
+    layer_names = net.getLayerNames()
 
-        output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+    output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
-        return output_layers
+    return output_layers
 
-    def findObjectsUsingYOLO(imagePath, yoloLabels, yoloWeights, yoloConfig, threshold):
-        return findObjectsUsingYOLOWithScale(imagePath, yoloLabels, yoloWeights, yoloConfig, 0.00392, threshold)
+def findObjectsUsingYOLO(imagePath, yoloLabels, yoloWeights, yoloConfig, threshold):
+    return findObjectsUsingYOLOWithScale(imagePath, yoloLabels, yoloWeights, yoloConfig, 0.00392, threshold)
 
-    def findObjectsUsingYOLOWithScale(imagePath, yoloLabels, yoloWeights, yoloConfig, scale, threshold):
-        image = cv2.imread(imagePath)
+def findObjectsUsingYOLOWithScale(imagePath, yoloLabels, yoloWeights, yoloConfig, scale, threshold):
+    #image = cv2.imread(imagePath)
+    image = imagePath
+    Width = image.shape[1]
+    Height = image.shape[0]
 
-        Width = image.shape[1]
-        Height = image.shape[0]
+    # read class names from text file
+    classes = None
+    with open(yoloLabels, 'r') as f:
+        classes = [line.strip() for line in f.readlines()]
+    net = cv2.dnn.readNet(yoloWeights, yoloConfig)
+    blob = cv2.dnn.blobFromImage(image, scale, (416, 416), (0, 0, 0), True, crop=False)
+    net.setInput(blob)
 
-        # read class names from text file
-        classes = None
-        with open(yoloLabels, 'r') as f:
-            classes = [line.strip() for line in f.readlines()]
-        net = cv2.dnn.readNet(yoloWeights, yoloConfig)
-        blob = cv2.dnn.blobFromImage(image, scale, (416, 416), (0, 0, 0), True, crop=False)
-        net.setInput(blob)
+    outs = net.forward(get_output_layers(net))
 
-        outs = net.forward(get_output_layers(net))
+    # initialization
+    class_ids = []
+    confidences = []
+    boxes = []
+    conf_threshold = 0.5
+    nms_threshold = 0.4
+    detectionList = []
 
-        # initialization
-        class_ids = []
-        confidences = []
-        boxes = []
-        conf_threshold = 0.5
-        nms_threshold = 0.4
-        detectionList = []
+    # for each detetion from each output layer
+    # get the confidence, class id, bounding box params
+    # and ignore weak detections (confidence < 0.5)
+    for out in outs:
+        for detection in out:
+            scores = detection[5:]
+            class_id = np.argmax(scores)
+            confidence = scores[class_id]
+            if confidence > threshold:
+                center_x = int(detection[0] * Width)
+                center_y = int(detection[1] * Height)
+                w = int(detection[2] * Width)
+                h = int(detection[3] * Height)
+                x = center_x - w / 2
+                y = center_y - h / 2
 
-        # for each detetion from each output layer
-        # get the confidence, class id, bounding box params
-        # and ignore weak detections (confidence < 0.5)
-        for out in outs:
-            for detection in out:
-                scores = detection[5:]
-                class_id = np.argmax(scores)
-                confidence = scores[class_id]
-                if confidence > threshold:
-                    center_x = int(detection[0] * Width)
-                    center_y = int(detection[1] * Height)
-                    w = int(detection[2] * Width)
-                    h = int(detection[3] * Height)
-                    x = center_x - w / 2
-                    y = center_y - h / 2
-
-                    startY = (int)(y)
-                    endY = (int)(y + h)
-                    startX = (int)(x)
-                    endX = (int)(x + w)
-                    range = (startY, endY, startX, endX)
-                    detectionList.append(range)
-        return detectionList
+                startY = (int)(y)
+                endY = (int)(y + h)
+                startX = (int)(x)
+                endX = (int)(x + w)
+                range = (startY, endY, startX, endX)
+                detectionList.append(range)
+    return detectionList
 
 
 ######## YOLO END ##########

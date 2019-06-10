@@ -23,6 +23,96 @@
 '''
 from functions import *
 outputFolder=''
+from objects import *
+
+
+'''
+from objects import *
+
+prototxtPath = 'MobileNetSSD_deploy.prototxt.txt'
+caffemodelPath = 'MobileNetSSD_deploy.caffemodel'
+
+arrayimg=readImagesToMakeCommonImage()
+newSortedArrayimg=sortImageByFeachers(arrayimg)
+i=0
+range_list=findObject(newSortedArrayimg[0], prototxtPath, caffemodelPath)#list of ranges
+'''
+def firstFuncCheck(FirstImage):
+    surf = cv2.xfeatures2d.SURF_create()
+    img1 = np.array(FirstImage)
+    kp, des = surf.detectAndCompute(img1, None)
+    return kp,des
+'''
+kp,des = firstFuncCheck(newSortedArrayimg[0])
+
+listOfObjects=[]
+for i in range(range_list):
+    descriptorOfObjects = []
+    keyOfObjects = []
+    for j,k in zip(kp, des):
+    #for cor in array_Kp_pt:
+        if ((j.pt[0]>=range_list[i][2]) and (j.pt[0]<= range_list[i][3])):
+            if ((j.pt[1]>=range_list[i][0]) and (j.pt[1]<= range_list[i][1])):
+                keyOfObjects.append(j)
+                descriptorOfObjects.append(k)
+                object_tupel = (keyOfObjects,descriptorOfObjects)
+    listOfObjects.append(object_tupel)
+'''
+def IntersectOfImages2(listOfObjects,newSortedArrayimg):
+    i=0
+    j=0
+    listOfMatches = []
+    for i in range (0,len(listOfObjects)):
+        arraykp = listOfObjects[i][0]
+        arraydes = listOfObjects[i][1]
+        num = len(arraykp)
+        for j in range (1,len(newSortedArrayimg)):
+            x,arraykp,arraydes = funcCheck2(arraykp,arraydes,newSortedArrayimg[j])
+        ratio = x/num
+        matchesTupel = (arraykp,arraydes,ratio)
+        listOfMatches.append(matchesTupel)
+    return listOfMatches
+#listOfMatches = IntersectOfImages2(listOfObjects,newSortedArrayimg)
+
+
+
+'''
+croped=newSortedArrayimg[0]
+for i in range(0,len(listOfMatches)):
+    if(listOfMatches[i][2]>0.8):
+        croped=imageDeleteObject(croped,range_list[i])
+newSortedArrayimg[0] = croped
+
+
+kp_1,des_1 = IntersectOfImages(newSortedArrayimg)
+dictionary = CreateDict(kp_1,des_1)
+for i in listOfMatches:
+    for j,k in zip(i[0],i[1]):
+        dictionary.update({j.pt:(j,k)})
+clusters = DB_SCAN(kp_1,25)
+objectS_list = []
+for i in listOfMatches:
+    for j in i[0]:
+        objectS_list.append(j.pt)
+    clusters.append(objectS_list)
+'''
+
+
+def keyOfObject(range_list, kp, des):
+    listOfObjects = []
+    for i in range(0, len(range_list)):
+        descriptorOfObjects = []
+        keyOfObjects = []
+        for j, k in zip(kp, des):
+            # for cor in array_Kp_pt:
+            if ((j.pt[0] >= range_list[i][2]) and (j.pt[0] <= range_list[i][3])):
+                if ((j.pt[1] >= range_list[i][0]) and (j.pt[1] <= range_list[i][1])):
+                    keyOfObjects.append(j)
+                    descriptorOfObjects.append(k)
+                    object_tupel = (keyOfObjects, descriptorOfObjects)
+        listOfObjects.append(object_tupel)
+    return listOfObjects
+
 
 from matplotlib.pyplot import *
 from scipy.spatial import Delaunay
@@ -57,8 +147,6 @@ def main(serverFolder,clientImg,outputFolder,threshold):
     clusters = DB_SCAN(kp,100)
     print("finish showing clusterts to boris")
     '''
-
-
     ###
     #MAIN
     #threshold=threshold # precentege of matches in order to consider good cluster
@@ -68,11 +156,61 @@ def main(serverFolder,clientImg,outputFolder,threshold):
     for filename in os.listdir(folderPath):
         arrayServerImgs.append(folderPath + "/" + filename)
 
+
+
+
+    prototxtPath = 'MobileNetSSD_deploy.prototxt.txt'
+    caffemodelPath = 'MobileNetSSD_deploy.caffemodel'
+
+    i = 0
     arrayimg=readImagesToMakeCommonImage(arrayServerImgs)
     newSortedArrayimg=sortImageByFeachers(arrayimg) # sort images by number of features:
-    kp,des = IntersectOfImages(newSortedArrayimg) # find inersect of features on all images:
-    dictionary = CreateDict(kp,des) #dictionary between coordinates and keypoints+descriptors:
-    clusters = DB_SCAN(kp,25) #clustering the kp according to coords
+    yoloLabels = 'yoloLabels.txt'
+    yoloWeights = 'yolov3.weights'
+    yoloConfig = 'yolov3.cfg'
+    threshold_ob = 0.5
+
+    range_list = findObjectsUsingYOLO(newSortedArrayimg[0],yoloLabels,yoloWeights,yoloConfig,threshold_ob)
+    print(len(range_list), "len range list")
+    #range_list = findObject(newSortedArrayimg[0], prototxtPath, caffemodelPath)  # list of ranges
+    kp, des = firstFuncCheck(newSortedArrayimg[0])
+    listOfObjects=keyOfObject(range_list,kp,des)
+    print(len(listOfObjects),"list of object")
+    listOfMatches = IntersectOfImages2(listOfObjects, newSortedArrayimg)
+    print(len(listOfMatches),"list of matches")
+    print(listOfMatches)
+    croped = newSortedArrayimg[0]
+
+    new_listOfMatches=[]
+    listOfNumbers=[]
+    for i in range(0, len(listOfMatches)):
+        #print(listOfMatches[i][2])
+        if (listOfMatches[i][2] > 0.4):
+            croped = imageDeleteObject(croped, range_list[i])
+            cv2.imwrite(outputFolder + '/croppedBoris'+str(i)+'.jpg', croped)
+            listOfNumbers.append(i)
+            t_list = (listOfMatches[i][0],listOfMatches[i][1])
+            new_listOfMatches.append(t_list)
+    newSortedArrayimg[0] = croped
+
+    cv2.imwrite(outputFolder + '/croppedBoris.jpg', newSortedArrayimg[0])
+    print("go check boris")
+    kp_1, des_1 = IntersectOfImages(newSortedArrayimg)# find inersect of features on all images:
+    dictionary = CreateDict(kp_1, des_1) #dictionary between coordinates and keypoints+descriptors:
+
+    for i in new_listOfMatches:
+        for j, k in zip(i[0], i[1]):
+            dictionary.update({j.pt: (j, k)})
+
+    clusters = DB_SCAN(kp_1, 10) #clustering the kp according to coords
+    NClustersWObjects = len(clusters)
+    objectS_list = []
+    for i in new_listOfMatches:
+        for j in i[0]:
+            objectS_list.append(j.pt)
+        clusters.append(objectS_list)
+
+
     # low value mean more clusters, 10-100 most likely, now we are on 20.
     dict=makeDictforOriginalClusters(clusters)
     print("Number of original clusters: ",len(clusters))
@@ -92,7 +230,7 @@ def main(serverFolder,clientImg,outputFolder,threshold):
     #imReg, h = alignImages(image,newSortedArrayimg[len(newSortedArrayimg)-1])
     #for each cluster, if found in camera image, take it off from cameras image:
     image=cv2.imread(clientImg) # read client image
-    arrayOfGoodclusters,flagsOfGoodClusters,arrayOfBadclusters,flagsOfBadClusters = makegoodclusters(clusters,dictionary,image,threshold) #find good clusters and bad clusters
+    arrayOfGoodclusters,flagsOfGoodClusters,arrayOfBadclusters,flagsOfBadClusters,newListOfNumbers,count_originals = makegoodclusters(clusters,dictionary,image,threshold,NClustersWObjects,listOfNumbers) #find good clusters and bad clusters
 
     dict2=makeDictforGoodClusters(arrayOfGoodclusters,flagsOfGoodClusters)
     dict3=makeDictforBadClusters(arrayOfBadclusters,flagsOfBadClusters)
@@ -106,15 +244,41 @@ def main(serverFolder,clientImg,outputFolder,threshold):
     #arrayOfGoodclusters=makegoodclusters(clusters,dictionary,image,threshold)
 
     # drop the areas of clusters found in the client image that match the server image
-    croppedimage = makecroppedimage(arrayOfGoodclusters,image) #crop good clusters from client image
+    croppedimage = makecroppedimage(arrayOfGoodclusters,image,newListOfNumbers,count_originals,range_list) #crop good clusters from client image
     cv2.imwrite(outputFolder+'/cropped2.jpg', croppedimage)
     #returnCroppedParts(croppedimage,newSortedArrayimg[len(newSortedArrayimg)-1],dict2,dict)
     print("CROPPED ! GO CHECK IT OUT !")
-    Newclusters,Newdictionary = clustersOfCroppedImage(croppedimage) # sift and cluster kp's on client image after crop
-    #take out the new clusters in order to send
 
+
+    Newclusters,Newdictionary,kp2,des2 = clustersOfCroppedImage(croppedimage) # sift and cluster kp's on client image after crop
+    secondRange_list = findObjectsUsingYOLO(croppedimage, yoloLabels, yoloWeights, yoloConfig, threshold_ob)
+    newListOfObjects = keyOfObject(secondRange_list, kp2, des2)
+    new_listOfNumbers = []
+    new_cropped=croppedimage
+    #new_cropped = imageDeleteObject(croppedimage, secondRange_list[0])
+    #new_listOfNumbers.append(0)
+    for i in range(0,len(secondRange_list)):
+        new_cropped = imageDeleteObject(new_cropped, secondRange_list[i])
+        new_listOfNumbers.append(i)
+
+    #Newclusters2, Newdictionary2, kp3, des3 = clustersOfCroppedImage(new_croped)
+    Newclusters2, Newdictionary2, kp3, des3 = clustersOfCroppedImage(new_cropped)
+
+    #take out the new clusters in order to send
+    for i in newListOfObjects:
+        for j, k in zip(i[0], i[1]):
+            Newdictionary2.update({j.pt: (j, k)})
+
+    NClustersWObjects2 = len(Newclusters2)
+    NobjectS_list = []
+    for i in new_listOfMatches:
+        for j in i[0]:
+            NobjectS_list.append(j.pt)
+        Newclusters2.append(objectS_list)
+
+    #######################################################################################
     #newimage=makecroppedimageseconduse(Newclusters,croppedimage)
-    newimage=makecroppedimage(Newclusters,croppedimage) # newimage is the cropped image after cropping sift clusters from it
+    newimage=makecroppedimage(Newclusters,new_cropped,new_listOfNumbers,NClustersWObjects2,secondRange_list) # newimage is the cropped image after cropping sift clusters from it
     #newimage=croppedmatchingareas(croppedimage,Newclusters)
     cv2.imwrite(outputFolder+'/clusters_of_cropped2.jpg', newimage)
     imagetosend=croppedimage-newimage  # the negetivity in order to send to. makes it that we send just the clusters we found after first cropped
@@ -122,8 +286,9 @@ def main(serverFolder,clientImg,outputFolder,threshold):
 
     #for better understanding of image, on server side, return parts of good clusters and bad clsuters:
     imagetotakeclustersfrom = newSortedArrayimg[len(newSortedArrayimg)-1]
-    imgafterGoodclustersreturn = returnCroppedParts(imagetosend,newSortedArrayimg[len(newSortedArrayimg)-1],dict2,dict)
-    imgafterBadclustersreturn = returnCroppedParts2(imgafterGoodclustersreturn,newSortedArrayimg[len(newSortedArrayimg)-1],dict3, dict)
+    imgafterGoodclustersreturn = returnCroppedParts(imagetosend,imagetotakeclustersfrom,dict2,dict)
+
+    #imgafterBadclustersreturn = returnCroppedParts2(imgafterGoodclustersreturn,imagetotakeclustersfrom,dict3, dict)
 
     #func3()
 
@@ -162,15 +327,16 @@ def main(serverFolder,clientImg,outputFolder,threshold):
     import cv2
     import numpy as np
 
+threshhold=0.25
+main("source/3.6.19/2/server","source/3.6.19/2/client/186.jpg","source/3.6.19/2/output/"+str(threshhold),threshhold)
 
 
-#threshhold=0.5
 #threshhold2=0.5
 #for j in range(0,11):
 #	threshhold=(j/10)
 #	threshhold2=threshhold+0.05
 #	threshhold2=float("%.2f" % threshhold2)
 #    main("source/3.6.19/1/server","source/3.6.19/1/client/97.jpg","source/3.6.19/1/output/"+str(threshhold),threshhold)
-#    main("source/3.6.19/1/server", "source/3.6.19/1/client/97.jpg", "source/3.6.19/1/output/"+str(threshhold2), threshhold2)
+#    main("source/3.6.19/6/server", "source/3.6.19/6/client/19.jpg", "source/3.6.19/6/output/"+str(threshhold2), threshhold2)
 #
 
