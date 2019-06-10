@@ -133,15 +133,3 @@ Save_Keypoint(img1)
 x = funcCheck(img1, img2)
 print(x)
 
-from PIL import Image
-
-
-
-def FetureCount(image1):
-    images = np.array(image1)
-    img1 = cv2.cvtColor(images, cv2.COLOR_BGR2GRAY)
-    # Initiate SIFT detector
-    sift = cv2.xfeatures2d.SIFT_create()
-    # find the keypoints and descriptors with SIFT
-    kp1, des1 = sift.detectAndCompute(img1, None)
-    return len(kp1)

@@ -152,8 +152,8 @@ def returnSubImage( image, startY, endY, startX, endX):
 #MAIN TEST
 from functions import funcCheck1, funcCheck2
 
-prototxtPath = 'MobileNetSSD_deploy.prototxt.txt'
-caffemodelPath = 'MobileNetSSD_deploy.caffemodel'
+prototxtPath = 'ObjectDalgorithm/MobileNetSSD_deploy.prototxt.txt'
+caffemodelPath = 'ObjectDalgorithm/MobileNetSSD_deploy.caffemodel'
 #opening Image Example
 image1 = cv2.imread('source/old_pics/115.jpg')
 #cv2.imwrite('output/ObjectDetectionsResults/test1.jpg', image1)

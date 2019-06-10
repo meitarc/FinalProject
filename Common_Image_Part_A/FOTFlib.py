@@ -49,9 +49,36 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):
 
     arrayimg=readImagesToMakeCommonImage(arrayServerImgs)
     newSortedArrayimg=sortImageByFeachers(arrayimg) # sort images by number of features:
-    yoloLabels = 'yoloLabels.txt'
-    yoloWeights = 'yolov3.weights'
-    yoloConfig = 'yolov3.cfg'
+
+    threshold2 = 0.01
+    flag = [1] * len(newSortedArrayimg)
+    allarray = []
+    for i in range(0, len(newSortedArrayimg)):
+        if flag[i]==1:
+            array = []
+            array.append(newSortedArrayimg[i])
+            for j in range(1, len(newSortedArrayimg)):
+                if flag[j] == 1:
+                    temp, doesnotmatter1, doesnotmatter2 = funcCheck1(newSortedArrayimg[i], newSortedArrayimg[j])
+                    if temp > threshold2:
+                        array.append(newSortedArrayimg[j])
+                        flag[j] = 0
+                    else:
+                        print("nothing")
+
+                else:
+                    print("nothing")
+            allarray.append(array)
+
+    print("check new")
+    for i in allarray:
+        print(len(i))
+    newSortedArrayimg=allarray[0]
+
+
+    yoloLabels = 'ObjectDalgorithm/yoloLabels.txt'
+    yoloWeights = 'ObjectDalgorithm/yolov3.weights'
+    yoloConfig = 'ObjectDalgorithm/yolov3.cfg'
     threshold_ob = 0.5
 
     range_list = findObjectsUsingYOLO(newSortedArrayimg[0],yoloLabels,yoloWeights,yoloConfig,threshold_ob)
@@ -62,7 +89,7 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):
     print(len(listOfObjects),"list of object")
     listOfMatches = IntersectOfImages2(listOfObjects, newSortedArrayimg)
     print(len(listOfMatches),"list of matches")
-    print(listOfMatches)
+    #print(listOfMatches)
     croped = newSortedArrayimg[0]
 
     new_listOfMatches=[]

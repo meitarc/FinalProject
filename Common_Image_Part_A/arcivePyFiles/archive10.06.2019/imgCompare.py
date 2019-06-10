@@ -1,5 +1,5 @@
 from SURF import funcCheck
-from SURF import FetureCount
+from functions import*
 from PIL import Image
 import image_slicer
 from image_slicer import join
