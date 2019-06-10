@@ -22,3 +22,4 @@ def getFramesFromVideo(videoInputPath, outputFolderPath, milliSeconds):
 #main
 for i in range(1, 10):
     getFramesFromVideo("input/"+str(i)+".MP4",str(i)+"/",500)
+
