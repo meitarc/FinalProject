@@ -556,21 +556,6 @@ def readImagesToMakeCommonImage(arrayServerImgs):
     for img in arrayServerImgs:
         arrayimg.append(cv2.imread(img))
 
-    #img3 = cv2.imread("source/Experiment2/186.jpg")
-    #img4 = cv2.imread("source/Experiment2/80.jpg")
-    #img5 = cv2.imread("source/Experiment2/187.jpg")
-    #img6 = cv2.imread("source/Experiment2/196.jpg")
-    #img3 = cv2.imread("source/old_pics/100.jpg")
-    #img4 = cv2.imread("source/old_pics/101.jpg")
-    #img5 = cv2.imread("source/old_pics/102.jpg")
-    #img6 = cv2.imread("source/old_pics/103.jpg")
-    #arrayimg=[img3,img4,img5,img6]
-    '''
-    img3 = cv2.imread("source/meitar_pics/test2/1.jpg")
-    img4 = cv2.imread("source/meitar_pics/test2/2.jpg")
-    img5 = cv2.imread("source/meitar_pics/test2/3.jpg")
-    arrayimg=[img3,img4,img5]
-    '''
     return arrayimg
 def clustersOfCroppedImage(image1,dbscan_epsilon):
     #sift = cv2.xfeatures2d.SIFT_create()
@@ -1015,3 +1000,40 @@ def divideArrayOfIMG(newSortedArrayimg, threshold2):
             allarray.append(array)
     return allarray
 
+def matchedObjects(listOfMatches, range_list, croped):
+    new_listOfMatches = []
+    listOfNumbers = []
+    for i in range(0, len(listOfMatches)):
+        if (listOfMatches[i][2] > 0.4):
+            croped = imageDeleteObject(croped, range_list[i])
+            # cv2.imwrite(outputFolder + '/croppedBoris'+str(i)+'.jpg', croped)
+            listOfNumbers.append(i)
+            t_list = (listOfMatches[i][0], listOfMatches[i][1])
+            new_listOfMatches.append(t_list)
+    return croped, new_listOfMatches, listOfNumbers
+
+def updateDict(dictionary,new_listOfMatches):
+    for i in new_listOfMatches:
+        for j, k in zip(i[0], i[1]):
+            dictionary.update({j.pt: (j, k)})
+    return dictionary
+
+def updateCluster(kp_1,dbscan_epsilon,new_listOfMatches):
+    clusters = DB_SCAN(kp_1, dbscan_epsilon) #clustering the kp according to coords
+    NClustersWObjects = len(clusters)
+    objectS_list = []
+    for i in new_listOfMatches:
+        for j in i[0]:
+            objectS_list.append(j.pt)
+    clusters.append(objectS_list)
+    return clusters,NClustersWObjects
+
+def updateCluster2(kp_1,Newclusters2,new_listOfMatches):
+    #clustering the kp according to coords
+    NClustersWObjects = len(Newclusters2)
+    objectS_list = []
+    for i in new_listOfMatches:
+        for j in i[0]:
+            objectS_list.append(j.pt)
+    Newclusters2.append(objectS_list)
+    return Newclusters2,NClustersWObjects
