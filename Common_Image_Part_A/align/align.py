@@ -1,3 +1,10 @@
+from sympy import solve
+from sympy.abc import x
+
+a= (solve([x - 3], x))
+
+print(a.get(x))
+'''
 from __future__ import print_function
 import cv2
 import numpy as np
@@ -77,3 +84,5 @@ if __name__ == '__main__':
 
     # Print estimated homography
     print("Estimated homography : \n", h)
+
+'''

@@ -1,9 +1,8 @@
 import cv2
 import numpy as np
+import os
 from sklearn.cluster import DBSCAN
 from math import atan2,degrees,sqrt
-#from SURF2 import DB_SCAN
-from scipy.spatial import Delaunay
 
 outputFolder=[]
 def imageDeleteObject(Image,objectSize):
@@ -29,7 +28,17 @@ def imageDeleteObject(Image,objectSize):
 def getFolder(folder):
     outputFolder.append(folder)
     print(outputFolder[0])
-
+def buildaArrayImages(serverFolder):
+    arrayServerImgs=[]
+    folderPath=serverFolder
+    for filename in os.listdir(folderPath):
+        arrayServerImgs.append(folderPath + "/" + filename)
+    arrayimg=readImagesToMakeCommonImage(arrayServerImgs)
+    newSortedArrayimg=sortImageByFeachers(arrayimg) # sort images by number of features:
+    #If we have an array with many pictures, we divide the pictures to many, different arrays of images.
+    allarray=divideArrayOfIMG(newSortedArrayimg, threshold2=0.01)
+    newSortedArrayimg=allarray[0] #  for the moment just 1 array
+    return newSortedArrayimg
 def reset():
     outputFolder.clear()
 def returnCroppedParts(imagetosend,imagetotakeclustersfrom,dict2,dict):
@@ -99,7 +108,6 @@ def returnCroppedParts(imagetosend,imagetotakeclustersfrom,dict2,dict):
         cnt = cnt + 1
     cv2.imwrite(outputFolder[0]+'/profetOmriGOOD.jpg', l_img)
     return l_img
-
 def returnCroppedParts2(imagetosend,imagetotakeclustersfrom,dict3,dict):
     cnt=0
     l_img = imagetosend
@@ -166,83 +174,6 @@ def returnCroppedParts2(imagetosend,imagetotakeclustersfrom,dict3,dict):
         cnt = cnt + 1
     cv2.imwrite(outputFolder[0]+'/profetOmriBAD.jpg', l_img)
     return l_img
-def returnCroppedParts2try(imagetosend,imagetotakeclustersfrom,dict2,dict):
-    arr=[]
-    for i in dict2.keys():
-        r=dict2.get(i)
-        q=dict.get(i)
-        if r[2]==0 or r[3] ==0 or q[2]==0 or q[3] ==0:
-          arr.append(i)
-    for i in arr:
-        dict2.pop(i)
-        dict.pop(i)
-    for i in dict2.keys():
-        r = dict2.get(i)
-        q = dict.get(i)
-        #print(i,r,"   ",q)
-    cnt=0
-    for i in dict2.keys():
-        r = dict2.get(i)
-        q = dict.get(i)
-        #print(i,r,"   ",q)
-        dim = (r[2]*2, r[3]*2)
-        rtopleftx=r[0]-r[2]
-        rtoplefty=r[1]-r[3]
-        rh=r[2]*2
-        rw=r[3]*2
-        qtopleftx = q[0] - q[2]
-        qtoplefty = q[1] - q[3]
-        qh = q[2] * 2
-        qw = q[3] * 2
-        crp=imagetotakeclustersfrom[int(qtoplefty):int(qtoplefty+qh), int(qtopleftx):int(qtopleftx+qw)]
-        cv2.imwrite(outputFolder[0]+'/croptGGG' + str(cnt) + '.jpg', crp)
-        if dim[0]==0 or dim[1]==0 or crp.shape[0]==0 or crp.shape[1]==0 or crp.shape[2]==0:
-            print("something is zero",cnt)
-        else:
-            print(crp.shape)
-            crp=cv2.resize(crp,dim,interpolation=cv2.INTER_AREA)
-            print(dim,crp.shape)
-            imagetosend[ int(rtopleftx):int(rtopleftx)+rw,int(rtoplefty):int(rtoplefty)+rh]=crp
-            cv2.imwrite(outputFolder[0]+'/cropt' + str(cnt) + '.jpg', crp)
-        cnt=cnt+1
-def returnCroppedParts3try(imagetosend,imagetotakeclustersfrom,dict2,dict):
-    arr=[]
-    for i in dict2.keys():
-        r=dict2.get(i)
-        q=dict.get(i)
-        if r[2]==0 or r[3] ==0 or q[2]==0 or q[3] ==0:
-          arr.append(i)
-    for i in arr:
-        dict2.pop(i)
-        dict.pop(i)
-    cnt=0
-    for i in dict2.keys():
-        r = dict2.get(i)
-        q = dict.get(i)
-        #print(i,r,"   ",q)
-        dim = (int(r[2]), int(r[3]))
-        rtopleftx=r[0]
-        rtoplefty=r[1]
-        rh=r[2]
-        rw=r[3]
-        qtopleftx = q[0]
-        qtoplefty = q[1]
-        qh = q[2]
-        qw = q[3]
-        crp=imagetotakeclustersfrom[int(qtoplefty):int(qtoplefty+qh), int(qtopleftx):int(qtopleftx+qw)]
-        cv2.imwrite(outputFolder[0]+'/croptSSS' + str(cnt) + '.jpg', crp)
-        if dim[0]==0 or dim[1]==0 or crp.shape[0]==0 or crp.shape[1]==0 or crp.shape[2]==0:
-            print("something is zero",cnt)
-        else:
-            print(crp.shape)
-            crp=cv2.resize(crp,dim,interpolation=cv2.INTER_AREA)
-            print(dim,crp.shape)
-            print("rh ", rh,"rw ",rw, "shape ",crp.shape[0],crp.shape[1])
-            print("after cast ",int(rw),int(rh))
-            imagetosend[ int(rtopleftx):int(rtopleftx)+int(rw),int(rtoplefty):int(rtoplefty)+int(rh)]=crp
-            cv2.imwrite('output/cropt' + str(cnt) + '.jpg', crp)
-        cnt=cnt+1
-        cv2.imwrite(outputFolder[0]+'/profetOmri.jpg', imagetosend)
 def AngleBtw2Points(pointA, pointB):
   changeInX = pointB[0] - pointA[0]
   changeInY = pointB[1] - pointA[1]
@@ -267,84 +198,6 @@ def distanceAndAngle(arrayOfClusters):
         tupletoAdd=(i,smallArray,centers[i])
         arrayOfDistanceAndAngle.append(tupletoAdd)
     return arrayOfDistanceAndAngle
-def alpha_shape(points, alpha, only_outer=True):
-    """
-    Compute the alpha shape (concave hull) of a set of points.
-    :param points: np.array of shape (n,2) points.
-    :param alpha: alpha value.
-    :param only_outer: boolean value to specify if we keep only the outer border
-    or also inner edges.
-    :return: set of (i,j) pairs representing edges of the alpha-shape. (i,j) are
-    the indices in the points array.
-    """
-    assert points.shape[0] > 3, "Need at least four points"
-
-    def add_edge(edges, i, j):
-        """
-        Add an edge between the i-th and j-th points,
-        if not in the list already
-        """
-        if (i, j) in edges or (j, i) in edges:
-            # already added
-            assert (j, i) in edges, "Can't go twice over same directed edge right?"
-            if only_outer:
-                # if both neighboring triangles are in shape, it's not a boundary edge
-                edges.remove((j, i))
-            return
-        edges.add((i, j))
-
-    tri = Delaunay(points)
-    edges = set()
-    # Loop over triangles:
-    # ia, ib, ic = indices of corner points of the triangle
-    for ia, ib, ic in tri.vertices:
-        pa = points[ia]
-        pb = points[ib]
-        pc = points[ic]
-        # Computing radius of triangle circumcircle
-        # www.mathalino.com/reviewer/derivation-of-formulas/derivation-of-formula-for-radius-of-circumcircle
-        a = np.sqrt((pa[0] - pb[0]) ** 2 + (pa[1] - pb[1]) ** 2)
-        b = np.sqrt((pb[0] - pc[0]) ** 2 + (pb[1] - pc[1]) ** 2)
-        c = np.sqrt((pc[0] - pa[0]) ** 2 + (pc[1] - pa[1]) ** 2)
-        s = (a + b + c) / 2.0
-        area = np.sqrt(s * (s - a) * (s - b) * (s - c))
-        circum_r = a * b * c / (4.0 * area)
-        if circum_r < alpha:
-            add_edge(edges, ia, ib)
-            add_edge(edges, ib, ic)
-            add_edge(edges, ic, ia)
-    return edges
-def find_edges_with(i, edge_set):
-    i_first = [j for (x,j) in edge_set if x==i]
-    i_second = [j for (j,x) in edge_set if x==i]
-    return i_first,i_second
-def croppedmatchingareas(clientimagepath, goodclustersarray):
-    #image = cv2.imread(clientimagepath)
-    image = clientimagepath
-
-    # create a mask with white pixels
-    mask = np.ones(image.shape, dtype=np.uint8)
-    mask.fill(255)
-    Newclusters = []
-    for i in goodclustersarray:
-        for j in i:
-            Newclusters.append(j)
-
-    arrays = np.array(Newclusters)
-    # points to be cropped
-    roi_corners = np.array([arrays], dtype=np.int32)
-    # fill the ROI into the mask
-    cv2.fillPoly(mask, roi_corners, 0)
-
-    # The mask image
-    cv2.imwrite('image_masked.jpg', mask)
-
-    # applying th mask to original image
-    masked_image = cv2.bitwise_or(image, mask)
-
-    # The resultant image
-    cv2.imwrite('newcropped.jpg', masked_image)
-    return masked_image
 def extractKeyPt(kp1):
     array_Kp_pt = []
     for kp in kp1:
@@ -439,7 +292,6 @@ def corMinMax(cluster):
     maxX = 0
     maxY = 0
     #print(cluster)
-
     minX = cluster[0][0]
     minY = cluster[0][1]
     for cor in cluster:
@@ -463,35 +315,6 @@ def topleftAndSizes(minY,maxY,minX,maxX):
     sizes=(maxY-minY,maxX-minX)
     print(TopLeft,sizes)
     return(TopLeft[0],TopLeft[1],sizes[0],sizes[1])
-# imageDeleteParts
-# Arguments:
-#    Image - an image, as defined by cv2.imgread()
-#    partsList - a list of tuples, that describe:
-#                x, y, xradius, yradius values:
-#                  x,y - location of the middle pixel.
-#                  xradius, yradius - the radius around the x and y axis.
-#The function returns the original image, after deleting the surrounding area given around the x,y.
-
-def imageDeleteParts(Image, partsList):
-    test = Image.copy()
-    cv2.imwrite(outputFolder[0]+'/test.jpg', test)
-    for range in partsList:
-        test[ int(range[0] - range[3]) : int(range[0] + range[3]),int(range[1] - range[2]) : int(range[1] + range[2]) ] = 0
-    cv2.imwrite(outputFolder[0]+'/test2.jpg', test)
-    return test
-
-def imageDeleteParts2(Image, partsList):
-    checker=0
-
-    for range in partsList:
-        check=Image[int(range[0]):int(range[0])+int(range[2]),int(range[1]):int(range[1])+int(range[3])]
-        cv2.imwrite(outputFolder[0]+'/check'+str(checker)+'.jpg', check)
-        Image[int(range[0]):int(range[0])+int(range[2]),int(range[1]):int(range[1])+int(range[3])] = 0
-        checker=checker+1
-    cv2.imwrite(outputFolder[0]+'/imageaftercropped.jpg', Image)
-    return Image
-
-
 def imageDeleteParts3(Image, partsList):
     test = Image.copy()
     #checker = 0
@@ -502,8 +325,6 @@ def imageDeleteParts3(Image, partsList):
         #checker = checker + 1
     cv2.imwrite(outputFolder[0]+'/imageaftercropped.jpg', test)
     return test
-
-
 def imageDeleteParts2seconduse(Image, partsList):
     checker=0
     for range in partsList:
@@ -513,7 +334,6 @@ def imageDeleteParts2seconduse(Image, partsList):
         checker=checker+1
     cv2.imwrite(outputFolder[0]+'/imageaftercropped.jpg', Image)
     return Image
-
 def makeDictforOriginalClusters(clusters): # make dictionary for server image
     dict={}#dict of dictionary and flag, for first photo
     for i in range(0,len(clusters)):
@@ -522,10 +342,9 @@ def makeDictforOriginalClusters(clusters): # make dictionary for server image
         SizeCenter = topleftAndSizes(minY, maxY, minX, maxX)
         dict.update({i:(SizeCenter)})
     return dict
-
 def makeDictforGoodClusters(arrayOfGoodclusters,flagsOfGoodClusters): # make dictionary for Good clusters
     dict2 = {}
-    print("flags")
+    print("flags, make dict 2")
     # create dict2 for client image
     for i in range(0, len(arrayOfGoodclusters)):
         minY, maxY, minX, maxX = corMinMax(arrayOfGoodclusters[i])
@@ -533,12 +352,11 @@ def makeDictforGoodClusters(arrayOfGoodclusters,flagsOfGoodClusters): # make dic
         SizeCenter = topleftAndSizes(minY, maxY, minX, maxX)
         z = flagsOfGoodClusters[i]
         dict2.update({z: SizeCenter})
-        print(i, z)
+        #print(i, z)
     return dict2
-
 def makeDictforBadClusters(arrayOfBadclusters,flagsOfBadClusters):
     dict3={}
-    print("Badflags")
+    print("Badflags make dict 3")
     #create dict2 for client image
     print("bad clusters are: ",arrayOfBadclusters)
     for i in range (0,len(arrayOfBadclusters)):
@@ -547,9 +365,8 @@ def makeDictforBadClusters(arrayOfBadclusters,flagsOfBadClusters):
         SizeCenter=topleftAndSizes(minY, maxY, minX, maxX)
         h=flagsOfBadClusters[i]
         dict3.update({h:SizeCenter})
-        print(i,h)
+        #print(i,h)
     return dict3
-
 def readImagesToMakeCommonImage(arrayServerImgs):
 
     arrayimg=[]
@@ -828,7 +645,6 @@ def makegoodclusters(clusters,dictionary,image,threshold,NClustersWObjects,listO
     print("Number of bad clusters: ", len(arrayOfBadclusters))
     return arrayOfGoodclusters,flags,arrayOfBadclusters,flags2,newListOfNumbers,count_originals
     #return arrayOfGoodclusters
-
 def makecroppedimage(arrayOfGoodclusters,image,newListOfNumbers,count_originals,range_list):
     count=0
     sizes=[]
@@ -849,19 +665,6 @@ def makecroppedimage(arrayOfGoodclusters,image,newListOfNumbers,count_originals,
     croppedimage_new = imageDeleteObject(croppedimage, range_list_new)
     cv2.imwrite(outputFolder[0]+'/testguy.jpg',croppedimage_new)
     return croppedimage_new
-def makecroppedimageseconduse(arrayOfGoodclusters,image):
-    sizes=[]
-    for cluster in arrayOfGoodclusters:
-        minY, maxY, minX, maxX = corMinMax(cluster)
-        #SizeCenter = SizeandCenter(minY, maxY, minX, maxX)
-        SizeCenter=topleftAndSizes(minY, maxY, minX, maxX)
-        #sizes.append(SizeCenter)
-        sizes.append(SizeCenter)
-    print("$$$$$$$$$$$")
-    print("len of size is ?:", len(sizes))
-    croppedimage= imageDeleteParts2seconduse(image,sizes)
-    cv2.imwrite(outputFolder[0]+'/testguy.jpg',croppedimage)
-    return croppedimage
 def sortImageByFeachers(arrayimg):
     newArrayimg = arrayimg
     list=[]
@@ -884,25 +687,16 @@ def FetureCount(image1):
     # find the keypoints and descriptors with SIFT
     kp1, des1 = surf.detectAndCompute(img1, None)
     return len(kp1)
-'''
-def tryit(image):
-    images = np.array(image)
-    img1 = cv2.cvtColor(images, cv2.COLOR_BGR2GRAY)
-    # Initiate SIFT detector
-    sift = cv2.xfeatures2d.SIFT_create()
-    # find the keypoints and descriptors with SIFT
-    kp1, des1 = sift.detectAndCompute(img1, None)
-    from matplotlib import pyplot as plt
-    img = np.array(img1)
-    for i in kp1:
-        # print(type(i))
-        cv2.circle(img, (int(i.pt[0]), int(i.pt[1])), 10, (255, 0, 255), -1)
-    plt.imshow(img, ), plt.show()
-'''
-
-import cv2
-import numpy as np
-from scipy.optimize import fsolve
+def findcenterForOneCluster(cluster):
+    centers=[]
+    #print("clusteRSSSSS: ")
+    if len(cluster)>0:
+            minY, maxY, minX, maxX=corMinMax(cluster)
+            center=(int((minX+maxX)/2),int((minY+maxY)/2))
+            centers.append(center)
+    else:
+            centers.append(center)#patch
+    return centers
 def findcenters(clusters):
     centers=[]
     print("clusteRSSSSS: ")
@@ -914,8 +708,8 @@ def findcenters(clusters):
         else:
             centers.append(center)#patch
     return centers
-def findextremeclusteres(badclusters,indexes):
-    centers=findcenters(badclusters)
+def findextremeclusteres(goodclusters,indexes):
+    centers=findcenters(goodclusters)
     minX=centers[0][0]
     maxX=0
     minY=centers[0][1]
@@ -925,30 +719,23 @@ def findextremeclusteres(badclusters,indexes):
     for j,index in zip(centers,indexes):
         #print("centers")
         #print(j[0])
-        if j[0]>maxX:
+        if j[0]>maxX and len(j)>1:
             indexmaxX=index
             maxX=j[0]
         else:
-            if j[0]<minX:
+            if j[0]<minX and len(j)>1:
                 indexminX = index
                 minX = j[0]
-        if j[1]<minY:
+        if j[1]<minY and len(j)>1:
             indexminY = index
             minY = j[1]
 
     return indexminX,indexmaxX,indexminY
-def fourth(indexOne,indexTwo,indexThree):
-    a= indexOne
-    b = indexTwo
-    c = indexThree
-    return a,b,c
-
 def firstFuncCheck(FirstImage):
     surf = cv2.xfeatures2d.SURF_create()
     img1 = np.array(FirstImage)
     kp, des = surf.detectAndCompute(img1, None)
     return kp,des
-
 def IntersectOfImages2(listOfObjects,newSortedArrayimg):
     i=0
     j=0
@@ -963,7 +750,6 @@ def IntersectOfImages2(listOfObjects,newSortedArrayimg):
         matchesTupel = (arraykp,arraydes,ratio)
         listOfMatches.append(matchesTupel)
     return listOfMatches
-
 def keyOfObject(range_list, kp, des):
     listOfObjects = []
     for i in range(0, len(range_list)):
@@ -978,7 +764,6 @@ def keyOfObject(range_list, kp, des):
                     object_tupel = (keyOfObjects, descriptorOfObjects)
         listOfObjects.append(object_tupel)
     return listOfObjects
-
 def divideArrayOfIMG(newSortedArrayimg, threshold2):
     flag = [1] * len(newSortedArrayimg)
     allarray = []
@@ -999,7 +784,6 @@ def divideArrayOfIMG(newSortedArrayimg, threshold2):
                     print("nothing")
             allarray.append(array)
     return allarray
-
 def matchedObjects(listOfMatches, range_list, croped):
     new_listOfMatches = []
     listOfNumbers = []
@@ -1011,13 +795,11 @@ def matchedObjects(listOfMatches, range_list, croped):
             t_list = (listOfMatches[i][0], listOfMatches[i][1])
             new_listOfMatches.append(t_list)
     return croped, new_listOfMatches, listOfNumbers
-
 def updateDict(dictionary,new_listOfMatches):
     for i in new_listOfMatches:
         for j, k in zip(i[0], i[1]):
             dictionary.update({j.pt: (j, k)})
     return dictionary
-
 def updateCluster(kp_1,dbscan_epsilon,new_listOfMatches):
     clusters = DB_SCAN(kp_1, dbscan_epsilon) #clustering the kp according to coords
     NClustersWObjects = len(clusters)
@@ -1027,7 +809,6 @@ def updateCluster(kp_1,dbscan_epsilon,new_listOfMatches):
             objectS_list.append(j.pt)
     clusters.append(objectS_list)
     return clusters,NClustersWObjects
-
 def updateCluster2(kp_1,Newclusters2,new_listOfMatches):
     #clustering the kp according to coords
     NClustersWObjects = len(Newclusters2)
@@ -1037,3 +818,268 @@ def updateCluster2(kp_1,Newclusters2,new_listOfMatches):
             objectS_list.append(j.pt)
     Newclusters2.append(objectS_list)
     return Newclusters2,NClustersWObjects
+
+
+# imageDeleteParts
+# Arguments:
+#    Image - an image, as defined by cv2.imgread()
+#    partsList - a list of tuples, that describe:
+#                x, y, xradius, yradius values:
+#                  x,y - location of the middle pixel.
+#                  xradius, yradius - the radius around the x and y axis.
+#The function returns the original image, after deleting the surrounding area given around the x,y.
+'''
+not using
+def imageDeleteParts(Image, partsList):
+    test = Image.copy()
+    cv2.imwrite(outputFolder[0]+'/test.jpg', test)
+    for range in partsList:
+        test[ int(range[0] - range[3]) : int(range[0] + range[3]),int(range[1] - range[2]) : int(range[1] + range[2]) ] = 0
+    cv2.imwrite(outputFolder[0]+'/test2.jpg', test)
+    return test
+'''
+'''
+not using
+def imageDeleteParts2(Image, partsList):
+    checker=0
+
+    for range in partsList:
+        check=Image[int(range[0]):int(range[0])+int(range[2]),int(range[1]):int(range[1])+int(range[3])]
+        cv2.imwrite(outputFolder[0]+'/check'+str(checker)+'.jpg', check)
+        Image[int(range[0]):int(range[0])+int(range[2]),int(range[1]):int(range[1])+int(range[3])] = 0
+        checker=checker+1
+    cv2.imwrite(outputFolder[0]+'/imageaftercropped.jpg', Image)
+    return Image
+'''
+'''
+not using
+def alpha_shape(points, alpha, only_outer=True):
+    """
+    Compute the alpha shape (concave hull) of a set of points.
+    :param points: np.array of shape (n,2) points.
+    :param alpha: alpha value.
+    :param only_outer: boolean value to specify if we keep only the outer border
+    or also inner edges.
+    :return: set of (i,j) pairs representing edges of the alpha-shape. (i,j) are
+    the indices in the points array.
+    """
+    assert points.shape[0] > 3, "Need at least four points"
+
+    def add_edge(edges, i, j):
+        """
+        Add an edge between the i-th and j-th points,
+        if not in the list already
+        """
+        if (i, j) in edges or (j, i) in edges:
+            # already added
+            assert (j, i) in edges, "Can't go twice over same directed edge right?"
+            if only_outer:
+                # if both neighboring triangles are in shape, it's not a boundary edge
+                edges.remove((j, i))
+            return
+        edges.add((i, j))
+
+    tri = Delaunay(points)
+    edges = set()
+    # Loop over triangles:
+    # ia, ib, ic = indices of corner points of the triangle
+    for ia, ib, ic in tri.vertices:
+        pa = points[ia]
+        pb = points[ib]
+        pc = points[ic]
+        # Computing radius of triangle circumcircle
+        # www.mathalino.com/reviewer/derivation-of-formulas/derivation-of-formula-for-radius-of-circumcircle
+        a = np.sqrt((pa[0] - pb[0]) ** 2 + (pa[1] - pb[1]) ** 2)
+        b = np.sqrt((pb[0] - pc[0]) ** 2 + (pb[1] - pc[1]) ** 2)
+        c = np.sqrt((pc[0] - pa[0]) ** 2 + (pc[1] - pa[1]) ** 2)
+        s = (a + b + c) / 2.0
+        area = np.sqrt(s * (s - a) * (s - b) * (s - c))
+        circum_r = a * b * c / (4.0 * area)
+        if circum_r < alpha:
+            add_edge(edges, ia, ib)
+            add_edge(edges, ib, ic)
+            add_edge(edges, ic, ia)
+    return edges
+'''
+'''not using
+def find_edges_with(i, edge_set):
+    i_first = [j for (x,j) in edge_set if x==i]
+    i_second = [j for (j,x) in edge_set if x==i]
+    return i_first,i_second
+'''
+'''
+not using
+def croppedmatchingareas(clientimagepath, goodclustersarray):
+    #image = cv2.imread(clientimagepath)
+    image = clientimagepath
+
+    # create a mask with white pixels
+    mask = np.ones(image.shape, dtype=np.uint8)
+    mask.fill(255)
+    Newclusters = []
+    for i in goodclustersarray:
+        for j in i:
+            Newclusters.append(j)
+
+    arrays = np.array(Newclusters)
+    # points to be cropped
+    roi_corners = np.array([arrays], dtype=np.int32)
+    # fill the ROI into the mask
+    cv2.fillPoly(mask, roi_corners, 0)
+
+    # The mask image
+    cv2.imwrite('image_masked.jpg', mask)
+
+    # applying th mask to original image
+    masked_image = cv2.bitwise_or(image, mask)
+
+    # The resultant image
+    cv2.imwrite('newcropped.jpg', masked_image)
+    return masked_image
+'''
+'''
+not using
+def returnCroppedParts2try(imagetosend,imagetotakeclustersfrom,dict2,dict):
+    arr=[]
+    for i in dict2.keys():
+        r=dict2.get(i)
+        q=dict.get(i)
+        if r[2]==0 or r[3] ==0 or q[2]==0 or q[3] ==0:
+          arr.append(i)
+    for i in arr:
+        dict2.pop(i)
+        dict.pop(i)
+    for i in dict2.keys():
+        r = dict2.get(i)
+        q = dict.get(i)
+        #print(i,r,"   ",q)
+    cnt=0
+    for i in dict2.keys():
+        r = dict2.get(i)
+        q = dict.get(i)
+        #print(i,r,"   ",q)
+        dim = (r[2]*2, r[3]*2)
+        rtopleftx=r[0]-r[2]
+        rtoplefty=r[1]-r[3]
+        rh=r[2]*2
+        rw=r[3]*2
+        qtopleftx = q[0] - q[2]
+        qtoplefty = q[1] - q[3]
+        qh = q[2] * 2
+        qw = q[3] * 2
+        crp=imagetotakeclustersfrom[int(qtoplefty):int(qtoplefty+qh), int(qtopleftx):int(qtopleftx+qw)]
+        cv2.imwrite(outputFolder[0]+'/croptGGG' + str(cnt) + '.jpg', crp)
+        if dim[0]==0 or dim[1]==0 or crp.shape[0]==0 or crp.shape[1]==0 or crp.shape[2]==0:
+            print("something is zero",cnt)
+        else:
+            print(crp.shape)
+            crp=cv2.resize(crp,dim,interpolation=cv2.INTER_AREA)
+            print(dim,crp.shape)
+            imagetosend[ int(rtopleftx):int(rtopleftx)+rw,int(rtoplefty):int(rtoplefty)+rh]=crp
+            cv2.imwrite(outputFolder[0]+'/cropt' + str(cnt) + '.jpg', crp)
+        cnt=cnt+1
+'''
+'''
+not using
+def returnCroppedParts3try(imagetosend,imagetotakeclustersfrom,dict2,dict):
+    arr=[]
+    for i in dict2.keys():
+        r=dict2.get(i)
+        q=dict.get(i)
+        if r[2]==0 or r[3] ==0 or q[2]==0 or q[3] ==0:
+          arr.append(i)
+    for i in arr:
+        dict2.pop(i)
+        dict.pop(i)
+    cnt=0
+    for i in dict2.keys():
+        r = dict2.get(i)
+        q = dict.get(i)
+        #print(i,r,"   ",q)
+        dim = (int(r[2]), int(r[3]))
+        rtopleftx=r[0]
+        rtoplefty=r[1]
+        rh=r[2]
+        rw=r[3]
+        qtopleftx = q[0]
+        qtoplefty = q[1]
+        qh = q[2]
+        qw = q[3]
+        crp=imagetotakeclustersfrom[int(qtoplefty):int(qtoplefty+qh), int(qtopleftx):int(qtopleftx+qw)]
+        cv2.imwrite(outputFolder[0]+'/croptSSS' + str(cnt) + '.jpg', crp)
+        if dim[0]==0 or dim[1]==0 or crp.shape[0]==0 or crp.shape[1]==0 or crp.shape[2]==0:
+            print("something is zero",cnt)
+        else:
+            print(crp.shape)
+            crp=cv2.resize(crp,dim,interpolation=cv2.INTER_AREA)
+            print(dim,crp.shape)
+            print("rh ", rh,"rw ",rw, "shape ",crp.shape[0],crp.shape[1])
+            print("after cast ",int(rw),int(rh))
+            imagetosend[ int(rtopleftx):int(rtopleftx)+int(rw),int(rtoplefty):int(rtoplefty)+int(rh)]=crp
+            cv2.imwrite('output/cropt' + str(cnt) + '.jpg', crp)
+        cnt=cnt+1
+        cv2.imwrite(outputFolder[0]+'/profetOmri.jpg', imagetosend)
+'''
+'''
+not using
+def findnewCenterOfBadCluster(clusters, arrayOfGoodclusters,flagsOfGoodClusters,flagsOfBadClusters):
+    DistanceArray = distanceAndAngle(clusters)
+    indexOne, indexTwo, indexThree = findextremeclusteres(arrayOfGoodclusters, flagsOfGoodClusters)
+    if indexOne!=-1 and indexTwo!=-1 and indexThree!=-1:
+        from sympy.abc import x ,y ,z ,t
+        #centerOne= findcenterForOneCluster(clusters[indexOne])
+        #centerTwo = findcenterForOneCluster(clusters[indexTwo])
+        #centerThree = findcenterForOneCluster(clusters[indexThree])
+        print("lets see ",DistanceArray[indexOne])
+        print("lets see ", DistanceArray[indexOne][2])
+        centerOne = DistanceArray[indexOne][2]
+        centerTwo = DistanceArray[indexTwo][2]
+        centerThree = DistanceArray[indexThree][2]
+        from sympy import solve
+        BadClustersCentersToReturn=[]
+        if len(flagsOfBadClusters)>0 :
+            for b in flagsOfBadClusters:
+                d1 = DistanceArray[b][1][indexOne][2]
+                d2 = DistanceArray[b][1][indexTwo][2]
+                d3 = DistanceArray[b][1][indexThree][2]
+                A= solve([((centerOne[0]-x)**2+(centerOne[1]-y)**2)**0.5-d1,((centerTwo[0]-x)**2+(centerTwo[1]-y)**2)**0.5 - d2 ],x,y)
+                #,((centerThree[0]-x)** 2+(centerThree[1]-y)**2)**0.5-d3
+                #A = solve((float(sqrt(x + 5*y)) - 2, -3*x + 6*y - 15), x, y)
+                x1=A[0][0]
+                y1=A[0][1]
+                x2 = A[1][0]
+                y2 = A[1][1]
+                B = solve([((centerThree[0]-x1)**2+(centerThree[1]-y1)**2)**0.5-z],z)
+                C = solve([((centerThree[0]-x2)**2+(centerThree[1]-y2)**2)**0.5-t],t)
+                BadClustersCentersToReturn.append(C)
+                #printim
+                # print("centers")
+                # print(centerOne)
+                # print(centerTwo)
+                # print(centerThree)
+                # print("d",d1)
+                # print("d",d2)
+                # print("d",d3)
+                # print(A)
+                # print("num of cluster ",b)
+                #print("B",B)
+                #print("C", C)
+                #C is suppose to be the new center of this bad cluster!
+    return BadClustersCentersToReturn
+'''
+'''
+not using
+def makecroppedimageseconduse(arrayOfGoodclusters,image):
+    sizes=[]
+    for cluster in arrayOfGoodclusters:
+        minY, maxY, minX, maxX = corMinMax(cluster)
+        #SizeCenter = SizeandCenter(minY, maxY, minX, maxX)
+        SizeCenter=topleftAndSizes(minY, maxY, minX, maxX)
+        #sizes.append(SizeCenter)
+        sizes.append(SizeCenter)
+    print("$$$$$$$$$$$")
+    print("len of size is ?:", len(sizes))
+    croppedimage= imageDeleteParts2seconduse(image,sizes)
+    cv2.imwrite(outputFolder[0]+'/testguy.jpg',croppedimage)
+    return croppedimage
+'''
