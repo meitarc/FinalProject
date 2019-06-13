@@ -251,16 +251,16 @@ def DB_SCAN(keypointsArray,epsilon):
                 y = cor[1]
                 t = (x, y)
                 new_list.append(t)
-        #plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
-        #         markeredgecolor='k', markersize=14)
+        plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
+                 markeredgecolor='k', markersize=14)
         xy = AKP[class_member_mask & ~core_samples_mask]
         counter = counter + (len(xy))
-        #plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
-        #         markeredgecolor='k', markersize=6)
+        plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
+                 markeredgecolor='k', markersize=6)
         if (k != -1):
             biglist.append(new_list)
     plt.title('Estimated number of clusters: %d' % n_clusters_)
-    #plt.show()
+    plt.show()
     return biglist
 def IntersectOfImages(arrayOfimages):
     x, arraykp, arraydes = funcCheck1(arrayOfimages[0], arrayOfimages[1])
@@ -687,16 +687,6 @@ def FetureCount(image1):
     # find the keypoints and descriptors with SIFT
     kp1, des1 = surf.detectAndCompute(img1, None)
     return len(kp1)
-def findcenterForOneCluster(cluster):
-    centers=[]
-    #print("clusteRSSSSS: ")
-    if len(cluster)>0:
-            minY, maxY, minX, maxX=corMinMax(cluster)
-            center=(int((minX+maxX)/2),int((minY+maxY)/2))
-            centers.append(center)
-    else:
-            centers.append(center)#patch
-    return centers
 def findcenters(clusters):
     centers=[]
     print("clusteRSSSSS: ")
@@ -790,7 +780,7 @@ def matchedObjects(listOfMatches, range_list, croped):
     for i in range(0, len(listOfMatches)):
         if (listOfMatches[i][2] > 0.4):
             croped = imageDeleteObject(croped, range_list[i])
-            # cv2.imwrite(outputFolder + '/croppedBoris'+str(i)+'.jpg', croped)
+            cv2.imwrite(outputFolder[0] + "/croppedBoris"+str(i)+".jpg", croped)
             listOfNumbers.append(i)
             t_list = (listOfMatches[i][0], listOfMatches[i][1])
             new_listOfMatches.append(t_list)
@@ -801,6 +791,7 @@ def updateDict(dictionary,new_listOfMatches):
             dictionary.update({j.pt: (j, k)})
     return dictionary
 def updateCluster(kp_1,dbscan_epsilon,new_listOfMatches):
+    print("first plot")
     clusters = DB_SCAN(kp_1, dbscan_epsilon) #clustering the kp according to coords
     NClustersWObjects = len(clusters)
     objectS_list = []
@@ -1082,4 +1073,15 @@ def makecroppedimageseconduse(arrayOfGoodclusters,image):
     croppedimage= imageDeleteParts2seconduse(image,sizes)
     cv2.imwrite(outputFolder[0]+'/testguy.jpg',croppedimage)
     return croppedimage
+'''
+'''
+not using
+def findcenterForOneCluster(cluster):
+    centers=[]
+    #print("clusteRSSSSS: ")
+    if len(cluster)>2:
+            minY, maxY, minX, maxX=corMinMax(cluster)
+            center=(int((minX+maxX)/2),int((minY+maxY)/2))
+            centers.append(center)
+    return centers
 '''

@@ -50,6 +50,7 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
     croped = SortedArrayimg[0]
     croped, new_listOfMatches, listOfNumbers = matchedObjects(listOfMatches, range_list, croped)  #remove constant objects from first image
     SortedArrayimg[0] = croped
+    cv2.imwrite(outputFolder+'/after_objects_off.jpg', croped)
     kp_1, des_1 = IntersectOfImages(SortedArrayimg)# find inersect of features on all images:
     dictionary = CreateDict(kp_1, des_1) #dictionary between coordinates and keypoints+descriptors:
     dictionary=updateDict(dictionary,new_listOfMatches)
@@ -69,7 +70,7 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
     cv2.imwrite(outputFolder+'/cropped2.jpg', croppedimage)
     print("CROPPED ! GO CHECK IT OUT !")
 
-
+    print("SECOND PLOT")
     Newclusters,Newdictionary,kp2,des2 = clustersOfCroppedImage(croppedimage,dbscan_epsilon) # sift and cluster kp's on client image after crop
     secondRange_list = findObjectsUsingYOLO(croppedimage, yoloLabels, yoloWeights, yoloConfig, threshold_ob)
     newListOfObjects = keyOfObject(secondRange_list, kp2, des2)
@@ -78,8 +79,10 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
     for i in range(0,len(secondRange_list)):
         new_cropped = imageDeleteObject(new_cropped, secondRange_list[i])
         new_listOfNumbers.append(i)
+    print("third PLOT")
     Newclusters2, Newdictionary2, kp3, des3 = clustersOfCroppedImage(new_cropped,dbscan_epsilon)    #take out the new clusters in order to send
-    Newdictionary2=updateDict(Newdictionary2,newListOfObjects)
+    #Newdictionary2=updateDict(Newdictionary2,newListOfObjects)
+    #
     Newclusters2, NClustersWObjects2=updateCluster2(kp3,Newclusters2,new_listOfMatches)
 
     newimage=makecroppedimage(Newclusters2,new_cropped,new_listOfNumbers,NClustersWObjects2,secondRange_list) # newimage is the cropped image after cropping sift clusters from it
@@ -118,4 +121,4 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
 
 
 threshhold=0.25
-main("source/pics_for_tests/1/server", "source/pics_for_tests/1/client/6.jpg", "source/pics_for_tests/1/output/" + str(threshhold), threshhold,10)
+main("source/pics_for_tests/5/server", "source/pics_for_tests/5/client/115.jpg", "source/pics_for_tests/5/output/" + str(threshhold), threshhold,10)
