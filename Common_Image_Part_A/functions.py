@@ -10,7 +10,8 @@ def imageDeleteObject(Image,objectSize):
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     print(objectSize," object size ")
     if len(objectSize)>0:
-        if(type(objectSize[0] is int)):
+        if(type(objectSize[0]) is int):
+            print(type(objectSize[0]))
             print(objectSize)
             print('int')
             #test[int(objectSize[2]):int(objectSize[2]) + (int(objectSize[3]) - int(objectSize[2])),int(objectSize[0]):int(objectSize[0]) + (int(objectSize[1]) - int(objectSize[0]))] = 0
@@ -20,9 +21,7 @@ def imageDeleteObject(Image,objectSize):
                 print(objectSize)
                 print('not int')
                 #test[int(range[2]):int(range[2]) + (int(range[3])-int(range[2])), int(range[0]):int(range[0]) + (int(range[1])-int(range[0]))] = 0
-                test[objectSize[0]:objectSize[1], objectSize[2]:objectSize[3]] = 0
-
-
+                test[range[0]:range[1], range[2]:range[3]] = 0
     cv2.imwrite('output/imageaftercropped.jpg', test)
     return test
 def getFolder(folder):
@@ -72,18 +71,8 @@ def returnCroppedParts(imagetosend,imagetotakeclustersfrom,dict2,dict):
                     x_offset=int(smallemala[1])
                     y_offset=int(smallemala[0])
                     #s_img=crp
-                    print("small lemala", smallemala)
-                    print("s_img.shape 0",crp.shape[0])
-                    print("s_img.shape[1]",crp.shape[1])
                     ss_img=cv2.resize(crp, (int(smallemala[3]), int(smallemala[2])),interpolation=cv2.INTER_AREA)
-                    #print(cnt)
-                    print("x_offset ",x_offset)
-                    print("y_offset ",y_offset)
-                    print("s_img.shape[0] ",ss_img.shape[0])
-                    print("s_img.shape[1] ",ss_img.shape[1])
-                    print()
-                    print("l_img.shape[0] ",l_img.shape[0])
-                    print("l_img.shape[1] ",l_img.shape[1])
+
                     #print(imagetosend.shape[0])
                     #print(l_img.shape[1])
                     '''
@@ -418,7 +407,7 @@ def funcCheck1(image1, image2):
     odes=[]
 
     for i, (m, n) in enumerate(matches):
-        if m.distance < 0.7 * n.distance:
+        if m.distance < 0.95 * n.distance:
             #print(i,m,n)
             #print(m.trainIdx)
             matchesMask[i] = [1, 0]
@@ -541,7 +530,7 @@ def clientFuncCheck(one, two, image2,flag):
 
         for i, (m, n) in enumerate(matches):
 
-            if m.distance < 0.95 * n.distance:
+            if m.distance < 0.7 * n.distance:
                 matchesMask[i] = [1, 0]
                 ## Notice: How to get the index
                 p = p + 1
@@ -630,6 +619,7 @@ def makegoodclusters(clusters,dictionary,image,threshold,NClustersWObjects,listO
           arrayOfGoodclusters.append(img2coords)
           flags.append(counter)
           if(counter>=NClustersWObjects):
+              print("the counter is ",counter,"the counter is " ,NClustersWObjects)
               newListOfNumbers.append(listOfNumbers[counter-NClustersWObjects])
           else:
                 count_originals = count_originals + 1
@@ -657,7 +647,8 @@ def makecroppedimage(arrayOfGoodclusters,image,newListOfNumbers,count_originals,
             #sizes.append(SizeCenter)
             sizes.append(SizeCenter)
         else:
-            range_list_new.append(range_list[newListOfNumbers[count-count_originals]])
+            range_list_new.append(range_list[newListOfNumbers[count-count_originals-1]])
+        count=count+1
     print("$$$$$$$$$$$")
     print("len of size is :", len(sizes))
     print("the len of range_list_new",len(range_list_new))
@@ -797,21 +788,21 @@ def updateCluster(kp_1,dbscan_epsilon,new_listOfMatches):
     clusters = DB_SCAN(kp_1, dbscan_epsilon) #clustering the kp according to coords
     NClustersWObjects = len(clusters)
     print(NClustersWObjects,"@@@@@@@@@@@@@@@@@@@@@NClustersWObjects@@@@@")
-    objectS_list = []
     for i in new_listOfMatches:
+        objectS_list=[]
         for j in i[0]:
             objectS_list.append(j.pt)
         clusters.append(objectS_list)
     print(len(clusters), "@@@@@@@@@@@@@@@@@@@@@clusterssssssssssssall@@@@@")
     return clusters,NClustersWObjects
-def updateCluster2(kp_1,Newclusters2,new_listOfMatches):
+def updateCluster2(Newclusters2,new_listOfMatches):
     #clustering the kp according to coords
     NClustersWObjects = len(Newclusters2)
-    objectS_list = []
     for i in new_listOfMatches:
+        objectS_list=[]
         for j in i[0]:
             objectS_list.append(j.pt)
-    Newclusters2.append(objectS_list)
+        Newclusters2.append(objectS_list)
     return Newclusters2,NClustersWObjects
 
 

@@ -62,18 +62,6 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
     clusters,NClustersWObjects=updateCluster(kp_1,dbscan_epsilon,new_listOfMatches)
     print(NClustersWObjects," number of cluster without objects")
     print(len(clusters),"all the clusters")
-    '''
-    col=[0,0,0,1]
-    for i in clusters:
-        print(i)
-        print(type(i))
-        print(type(i[0]))
-        for j in clusters[i]:
-            print(j)
-            plt.plot(j[:, 0], j[:, 1], 'o', markerfacecolor=tuple(col),
-                 markeredgecolor='k', markersize=14)
-    plt.show()
-    '''
 
     dict=makeDictforOriginalClusters(clusters)
     print("Number of original clusters: ",len(clusters))
@@ -84,9 +72,10 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
     ClientImage=cv2.imread(clientImg) # read client image
     arrayOfGoodclusters,flagsOfGoodClusters,arrayOfBadclusters,flagsOfBadClusters,newListOfNumbers,count_originals = makegoodclusters(clusters,dictionary,ClientImage,threshold,NClustersWObjects,listOfNumbers) #find good clusters and bad clusters
     print(count_originals,"the number of regular clusers that are good")
+    print(len(newListOfNumbers),"the number of good objects")
     dict2=makeDictforGoodClusters(arrayOfGoodclusters,flagsOfGoodClusters)
     #dict3=makeDictforBadClusters(arrayOfBadclusters,flagsOfBadClusters)
-    #
+    print(len(arrayOfGoodclusters),"array of good clusters")
     croppedimage = makecroppedimage(arrayOfGoodclusters,ClientImage,newListOfNumbers,count_originals,range_list) # drop the areas of clusters found in the client image that match the server image
     cv2.imwrite(outputFolder+'/cropped2.jpg', croppedimage)
     print("CROPPED ! GO CHECK IT OUT !")
@@ -104,7 +93,7 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
     Newclusters2, Newdictionary2, kp3, des3 = clustersOfCroppedImage(new_cropped,dbscan_epsilon)    #take out the new clusters in order to send
     #Newdictionary2=updateDict(Newdictionary2,newListOfObjects)
     #
-    Newclusters2, NClustersWObjects2=updateCluster2(kp3,Newclusters2,new_listOfMatches)
+    Newclusters2, NClustersWObjects2=updateCluster2(Newclusters2,new_listOfMatches)
 
     newimage=makecroppedimage(Newclusters2,new_cropped,new_listOfNumbers,NClustersWObjects2,secondRange_list) # newimage is the cropped image after cropping sift clusters from it
     cv2.imwrite(outputFolder+'/clusters_of_cropped2.jpg', newimage)
