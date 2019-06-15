@@ -81,21 +81,21 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
     print("CROPPED ! GO CHECK IT OUT !")
 
     print("SECOND PLOT")
-    Newclusters,Newdictionary,kp2,des2 = clustersOfCroppedImage(croppedimage,dbscan_epsilon) # sift and cluster kp's on client image after crop
+    #Newclusters,Newdictionary,kp2,des2 = clustersOfCroppedImage(croppedimage,dbscan_epsilon) # sift and cluster kp's on client image after crop
     secondRange_list = findObjectsUsingYOLO(croppedimage, yoloLabels, yoloWeights, yoloConfig, threshold_ob)
-    newListOfObjects = keyOfObject(secondRange_list, kp2, des2)
-    new_listOfNumbers = []
+    print(len(secondRange_list),"objectssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+    #newListOfObjects = keyOfObject(secondRange_list, kp2, des2)
+    #new_listOfNumbers = []
     new_cropped=croppedimage
     for i in range(0,len(secondRange_list)):
         new_cropped = imageDeleteObject(new_cropped, secondRange_list[i])
-        new_listOfNumbers.append(i)
+        #new_listOfNumbers.append(i)
     print("third PLOT")
     Newclusters2, Newdictionary2, kp3, des3 = clustersOfCroppedImage(new_cropped,dbscan_epsilon)    #take out the new clusters in order to send
     #Newdictionary2=updateDict(Newdictionary2,newListOfObjects)
-    #
-    Newclusters2, NClustersWObjects2=updateCluster2(Newclusters2,new_listOfMatches)
+    #Newclusters2, NClustersWObjects2=updateCluster2(Newclusters2,new_listOfMatches)
 
-    newimage=makecroppedimage(Newclusters2,new_cropped,new_listOfNumbers,NClustersWObjects2,secondRange_list) # newimage is the cropped image after cropping sift clusters from it
+    newimage=makecroppedimage2(Newclusters2,new_cropped) # newimage is the cropped image after cropping sift clusters from it
     cv2.imwrite(outputFolder+'/clusters_of_cropped2.jpg', newimage)
     cv2.imwrite(outputFolder+'/clusters_to_send2.jpg', croppedimage-newimage) # the negetivity in order to send to. makes it that we send just the clusters we found after first cropped
     imagetosend =croppedimage-newimage

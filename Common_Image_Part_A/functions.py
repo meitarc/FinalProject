@@ -657,6 +657,16 @@ def makecroppedimage(arrayOfGoodclusters,image,newListOfNumbers,count_originals,
     croppedimage_new = imageDeleteObject(croppedimage, range_list_new)
     cv2.imwrite(outputFolder[0]+'/testguy.jpg',croppedimage_new)
     return croppedimage_new
+def makecroppedimage2(arrayOfGoodclusters,image):
+    sizes=[]
+    for cluster in arrayOfGoodclusters:
+            minY, maxY, minX, maxX = corMinMax(cluster)
+            SizeCenter=topleftAndSizes(minY, maxY, minX, maxX)
+            sizes.append(SizeCenter)
+    print("len of size is :", len(sizes))
+    croppedimage = imageDeleteParts3(image,sizes)######maybe we should swap with the line below
+    cv2.imwrite(outputFolder[0]+'/testguy.jpg',croppedimage)
+    return croppedimage
 def sortImageByFeachers(arrayimg):
     newArrayimg = arrayimg
     list=[]
