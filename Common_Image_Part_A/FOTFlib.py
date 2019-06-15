@@ -25,7 +25,7 @@ from functions import *
 outputFolder=''
 from objects import *
 import cv2
-
+import matplotlib.pyplot as plt
 #creating paths and basic information for the YOLO object detection algorithm.
 yoloLabels = 'ObjectDalgorithm/yoloLabels.txt'
 yoloWeights = 'ObjectDalgorithm/yolov3.weights'
@@ -41,20 +41,40 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
     ###
     #Object detection section:
     range_list = findObjectsUsingYOLO(SortedArrayimg[0],yoloLabels,yoloWeights,yoloConfig,threshold_ob)
+    print(len(range_list),"the len of all objects")
     kp, des = firstFuncCheck(SortedArrayimg[0])
-    listOfObjects=keyOfObject(range_list,kp,des)
+    listOfObjects = keyOfObject(range_list,kp,des)
+    print(len(listOfObjects),"should be 7")
     listOfMatches = IntersectOfImages2(listOfObjects, SortedArrayimg)
     #print(len(range_list), "len range list, number of objects")
     #print(len(listOfObjects), "list of object")
     #print(len(listOfMatches),"list of matches")
     croped = SortedArrayimg[0]
     croped, new_listOfMatches, listOfNumbers = matchedObjects(listOfMatches, range_list, croped)  #remove constant objects from first image
+    print(len(new_listOfMatches),"list of objects match in all pictures")
+    print(len(listOfNumbers), "list of objects match in all pictures")
     SortedArrayimg[0] = croped
     cv2.imwrite(outputFolder+'/after_objects_off.jpg', croped)
     kp_1, des_1 = IntersectOfImages(SortedArrayimg)# find inersect of features on all images:
     dictionary = CreateDict(kp_1, des_1) #dictionary between coordinates and keypoints+descriptors:
     dictionary=updateDict(dictionary,new_listOfMatches)
+    print(len(dictionary))
     clusters,NClustersWObjects=updateCluster(kp_1,dbscan_epsilon,new_listOfMatches)
+    print(NClustersWObjects," number of cluster without objects")
+    print(len(clusters),"all the clusters")
+    '''
+    col=[0,0,0,1]
+    for i in clusters:
+        print(i)
+        print(type(i))
+        print(type(i[0]))
+        for j in clusters[i]:
+            print(j)
+            plt.plot(j[:, 0], j[:, 1], 'o', markerfacecolor=tuple(col),
+                 markeredgecolor='k', markersize=14)
+    plt.show()
+    '''
+
     dict=makeDictforOriginalClusters(clusters)
     print("Number of original clusters: ",len(clusters))
 
@@ -63,6 +83,7 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
     #CLIENT
     ClientImage=cv2.imread(clientImg) # read client image
     arrayOfGoodclusters,flagsOfGoodClusters,arrayOfBadclusters,flagsOfBadClusters,newListOfNumbers,count_originals = makegoodclusters(clusters,dictionary,ClientImage,threshold,NClustersWObjects,listOfNumbers) #find good clusters and bad clusters
+    print(count_originals,"the number of regular clusers that are good")
     dict2=makeDictforGoodClusters(arrayOfGoodclusters,flagsOfGoodClusters)
     #dict3=makeDictforBadClusters(arrayOfBadclusters,flagsOfBadClusters)
     #

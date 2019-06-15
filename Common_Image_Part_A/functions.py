@@ -255,8 +255,8 @@ def DB_SCAN(keypointsArray,epsilon):
                  markeredgecolor='k', markersize=14)
         xy = AKP[class_member_mask & ~core_samples_mask]
         counter = counter + (len(xy))
-        plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
-                 markeredgecolor='k', markersize=6)
+        #plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
+                 #markeredgecolor='k', markersize=6)
         if (k != -1):
             biglist.append(new_list)
     plt.title('Estimated number of clusters: %d' % n_clusters_)
@@ -418,7 +418,7 @@ def funcCheck1(image1, image2):
     odes=[]
 
     for i, (m, n) in enumerate(matches):
-        if m.distance < 0.95 * n.distance:
+        if m.distance < 0.7 * n.distance:
             #print(i,m,n)
             #print(m.trainIdx)
             matchesMask[i] = [1, 0]
@@ -541,7 +541,7 @@ def clientFuncCheck(one, two, image2,flag):
 
         for i, (m, n) in enumerate(matches):
 
-            if m.distance < 0.7 * n.distance:
+            if m.distance < 0.95 * n.distance:
                 matchesMask[i] = [1, 0]
                 ## Notice: How to get the index
                 p = p + 1
@@ -659,7 +659,8 @@ def makecroppedimage(arrayOfGoodclusters,image,newListOfNumbers,count_originals,
         else:
             range_list_new.append(range_list[newListOfNumbers[count-count_originals]])
     print("$$$$$$$$$$$")
-    print("len of size is 34:", len(sizes))
+    print("len of size is :", len(sizes))
+    print("the len of range_list_new",len(range_list_new))
     #croppedimage= imageDeleteParts2(image,sizes)
     croppedimage = imageDeleteParts3(image,sizes)######maybe we should swap with the line below
     croppedimage_new = imageDeleteObject(croppedimage, range_list_new)
@@ -737,6 +738,7 @@ def IntersectOfImages2(listOfObjects,newSortedArrayimg):
         for j in range (1,len(newSortedArrayimg)):
             x,arraykp,arraydes = funcCheck2(arraykp,arraydes,newSortedArrayimg[j])
         ratio = x/num
+        print(ratio,"ratiooooooooooooooooooooooo")
         matchesTupel = (arraykp,arraydes,ratio)
         listOfMatches.append(matchesTupel)
     return listOfMatches
@@ -751,7 +753,7 @@ def keyOfObject(range_list, kp, des):
                 if ((j.pt[1] >= range_list[i][0]) and (j.pt[1] <= range_list[i][1])):
                     keyOfObjects.append(j)
                     descriptorOfObjects.append(k)
-                    object_tupel = (keyOfObjects, descriptorOfObjects)
+        object_tupel = (keyOfObjects, descriptorOfObjects)
         listOfObjects.append(object_tupel)
     return listOfObjects
 def divideArrayOfIMG(newSortedArrayimg, threshold2):
@@ -794,11 +796,13 @@ def updateCluster(kp_1,dbscan_epsilon,new_listOfMatches):
     print("first plot")
     clusters = DB_SCAN(kp_1, dbscan_epsilon) #clustering the kp according to coords
     NClustersWObjects = len(clusters)
+    print(NClustersWObjects,"@@@@@@@@@@@@@@@@@@@@@NClustersWObjects@@@@@")
     objectS_list = []
     for i in new_listOfMatches:
         for j in i[0]:
             objectS_list.append(j.pt)
-    clusters.append(objectS_list)
+        clusters.append(objectS_list)
+    print(len(clusters), "@@@@@@@@@@@@@@@@@@@@@clusterssssssssssssall@@@@@")
     return clusters,NClustersWObjects
 def updateCluster2(kp_1,Newclusters2,new_listOfMatches):
     #clustering the kp according to coords
