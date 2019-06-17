@@ -129,26 +129,12 @@ def findObjectsUsingYOLOWithScale(imagePath, yoloLabels, yoloWeights, yoloConfig
 
 ######## YOLO END ##########
 
-#example input:
-#imagePath = 'images/carTest.jpg'
-#imageFile = cv2.imread(imagePath)
-#threshold = 0.6
-#prototxtPath = 'MobileNetSSD_deploy.prototxt.txt'
-#caffemodelPath = 'MobileNetSSD_deploy.caffemodel'
-#
-#example output use:
-#list = findObjects(imageFile, prototxtPath, caffemodelPath, 0.6)
-#
-#output:
-#list = [(606, 854, 1037, 1482), (524, 807, 596, 976)] #an exmaple output
-#cv2.imwrite('test.jpg', imageFile[524:807, 596:976]) #an example saving specific object into a unique image
-
 ######### returnSubImage( image, startY, endY, startX, endX) #########
 def returnSubImage( image, startY, endY, startX, endX):
     temp = image.copy()
     temp = temp[startY:endY, startX:endX]
     return temp
-
+'''
 #MAIN TEST
 from functions import funcCheck1, funcCheck2
 
@@ -178,5 +164,4 @@ cv2.imwrite('output/ObjectDetectionsResults/found object.jpg', image2)
 cv2.imwrite('output/ObjectDetectionsResults/found object3.jpg', image3)
 cv2.imwrite('output/ObjectDetectionsResults/found object4.jpg', image4)
 cv2.imwrite('output/ObjectDetectionsResults/found object5.jpg', image5)
-
-#cv2.imwrite('output/ObjectDetectionsResults/kps.jpg', img2)
+#cv2.imwrite('output/ObjectDetectionsResults/kps.jpg', img2)'''
