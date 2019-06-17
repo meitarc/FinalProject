@@ -25,9 +25,30 @@ def get_output_layers(net):
 
     return output_layers
 
+############ findObjectsUsingYOLO ############
+#   Gets - imagePath - an image as defined by cv2.imgread()
+#          yoloLabels - the labels the algorithm uses to define each object. used for testing.
+#          yoloWeights - weights the neural network that was trained by Joseph Chet Redmon.
+#          yoloConfid - the file that saves the vectors to be extracted from each picture and
+#                   converts between the findings of YOLO and their labels.
+#          threshold - the threshold that we accept from the yolo's confident.
+#
+#
 def findObjectsUsingYOLO(imagePath, yoloLabels, yoloWeights, yoloConfig, threshold):
     return findObjectsUsingYOLOWithScale(imagePath, yoloLabels, yoloWeights, yoloConfig, 0.00392, threshold)
 
+
+############ findObjectsUsingYOLOWithScale ############
+#   Gets - imagePath - an image as defined by cv2.imgread()
+#          yoloLabels - the labels the algorithm uses to define each object. used for testing.
+#          yoloWeights - weights the neural network that was trained by Joseph Chet Redmon.
+#          yoloConfid - the file that saves the vectors to be extracted from each picture and
+#                   converts between the findings of YOLO and their labels.
+#          scale - the scale of the YOLO algorithem is using to convert each envierment's lightning values.
+#                   the default value should be 0.00392 for a normal sunny day setting.
+#          threshold - the threshold that we accept from the yolo's confident.
+#
+#
 def findObjectsUsingYOLOWithScale(imagePath, yoloLabels, yoloWeights, yoloConfig, scale, threshold):
     #image = cv2.imread(imagePath)
     image = imagePath
@@ -52,7 +73,7 @@ def findObjectsUsingYOLOWithScale(imagePath, yoloLabels, yoloWeights, yoloConfig
     nms_threshold = 0.4
     detectionList = []
 
-    # for each detetion from each output layer
+    # for each detection from each output layer
     # get the confidence, class id, bounding box params
     # and ignore weak detections (confidence < 0.5)
     for out in outs:
