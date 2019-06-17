@@ -226,5 +226,6 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):
     import numpy as np
 
 threshhold=0.25
-main("source/3.6.19/1/server", "source/3.6.19/1/client/97.jpg", "source/3.6.19/1/output/" + str(threshhold), threshhold,15)
+#main("source/3.6.19/1/server", "source/3.6.19/1/client/97.jpg", "source/3.6.19/1/output/" + str(threshhold), threshhold,15)
 
+main("source/pics_for_tests/5/server", "source/pics_for_tests/5/client/115.jpg", "source/pics_for_tests/5/output/" + str(threshhold), threshhold,10)
