@@ -1,69 +1,19 @@
 import cv2
 import numpy as np
 
-######### findObjects #########
-#Gets:  image - an image as defined by cv2.imgread().
-#       prototxtPath, caffemodelPath - the path to the prototxt and caffemodel files needed for the object detection.
-#       threshold - the threshold to decide if an object is recognized or not, default should be 0.6
-#Returns: a list of (startX, startY, endX, endY) ranges of the objects found.
 
-def findObject(image, prototxtPath, caffemodelPath):
-    return findObjectsWithThreshold(image, prototxtPath, caffemodelPath, 0.6)
+######## YOLO CODE ##########
 
-######### findObjectsWithThreshold #########
-# like the findObjects, with the option to define the threshold.
-def findObjectsWithThreshold(image, prototxtPath, caffemodelPath, threshold):
-    CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train", "tvmonitor"]
-    # load our serialized model from disk
-    net = cv2.dnn.readNetFromCaffe(prototxtPath, caffemodelPath)
-    # load the input image and construct an input blob for the image
-    # by resizing to a fixed 300x300 pixels and then normalizing it
-    # (note: normalization is done via the authors of the MobileNet SSD implementation)
-    (h, w) = image.shape[:2]
-    blob = cv2.dnn.blobFromImage(cv2.resize(image, (300, 300)), 0.007843, (300, 300), 127.5)
-    #print(blob.shape)
-    # pass the blob through the network and obtain the detections and predictions
-    #print('blob')
-    #print(blob[0][0][0][0])
-    net.setInput(blob)
-    detections = net.forward()
-    #print(detections.shape)
-    detectionList = []
-    # loop over the detections
-    for i in np.arange(0, detections.shape[2]):
-        # extract the confidence (i.e., probability) associated with the
-        # prediction
-        confidence = detections[0, 0, i, 2]
-        #print('confidence:')
-        #print(confidence)
-        # filter out weak detections by ensuring the `confidence` is
-        # greater than the minimum confidence
-        if confidence >= threshold:
-            # extract the index of the class label from the `detections`,
-            # then compute the (x, y)-coordinates of the bounding box for the object
-            idx = int(detections[0, 0, i, 1])
-            box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-            (startX, startY, endX, endY) = box.astype("int")
-            y = startY - 15 if startY - 15 > 15 else startY + 15
-            temp = (startY, endY, startX, endX)
-            detectionList.append(temp)
-
-    #print('test: ')
-    #print(detectionList)
-    return detectionList
-
-    ######## YOLO CODE ##########
-
-    ''' example input:
-
-        imagePath = 'images/208.jpg'
-        imageFile = cv2.imread(imagePath)
-        threshold = 0.6
-        yoloConfig = 'yolov3.cfg'
-        yoloWeights = 'yolov3.weights'
-        yoloLabels = 'yoloLabels.txt'
-        scale = 0.00392
-    '''
+'''
+    example input:
+    imagePath = 'images/208.jpg'
+    imageFile = cv2.imread(imagePath)
+    threshold = 0.6
+    yoloConfig = 'yolov3.cfg'
+    yoloWeights = 'yolov3.weights'
+    yoloLabels = 'yoloLabels.txt'
+    scale = 0.00392
+'''
 
     # function to get the output layer names
     # in the architecture
