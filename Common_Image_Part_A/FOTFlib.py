@@ -37,7 +37,12 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
 
     #SERVER:
     #preprocessing, load, sort and divide images
-    SortedArrayimg=buildaArrayImages(serverFolder)
+    serverImgArrayWithSameGps = find_imgs_same_gps(clientImg,serverFolder)
+    print(serverImgArrayWithSameGps)
+
+    SortedArrayimg=buildaArrayImages(serverImgArrayWithSameGps)
+    #SortedArrayimg=buildaArrayImages(serverFolder)
+
     ###
     #Object detection section: returns ranges(yStart,yEnd,xStart,xEnd) of each object
     range_list = findObjectsUsingYOLO(SortedArrayimg[0],yoloLabels,yoloWeights,yoloConfig,threshold_ob)
@@ -152,7 +157,6 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
 
     #imgafterBadclustersreturn = returnCroppedParts2(imgafterGoodclustersreturn,imagetotakeclustersfrom,dict3, dict)
     #
-    reset()
     '''
     src = cv2.imread('clusters_to_send.jpg', 1)
     
@@ -210,3 +214,5 @@ main("source/pics_for_tests/11/server", "source/pics_for_tests/11/client/204.jpg
 #main("source/pics_for_tests/14/server", "source/pics_for_tests/14/client/20190602_172914.jpg", "source/pics_for_tests/14/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/15/server", "source/pics_for_tests/15/client/11.jpg", "source/pics_for_tests/15/output/" + str(threshhold), threshhold,dbscan)
 
+#gps example
+#main("GPS/pics_for_gps", "GPS/pics_for_gps/20190603_172000.jpg", "output/" + str(threshhold), threshhold,dbscan)
