@@ -597,7 +597,7 @@ def clientFuncCheck(one, two, image2,flag):
 
         # plt.imshow(img3,),plt.show()
         return p, kp1  # returns number of best matches,and all keypoints of first img
-def makegoodclusters(clusters,dictionary,image,threshold,NClustersWObjects,listOfNumbers):
+def makegoodclusters(clusters,dictionary,image,threshold,NClustersWObjects,listOfNumbers,newIndexArray):
     arrayOfGoodclusters=[]
     arrayOfBadclusters=[]
     newListOfNumbers=[]
@@ -605,10 +605,18 @@ def makegoodclusters(clusters,dictionary,image,threshold,NClustersWObjects,listO
     count_originals=0
     flags=[]
     flags2 = []
+    goodFromRangeList=[]
     for cluster in clusters:
         #print("cluster is: ", cluster)
         print("cluster Number: ",counter)
         y,img2coords,getarraykp=checkCluster(cluster,dictionary,image)
+        ###
+        if counter>=NClustersWObjects:
+            print("sizes ",counter,NClustersWObjects)
+            print("counter ",counter," flags of objects ",newIndexArray)
+            if y>threshold:
+                newIndexArray[counter-NClustersWObjects]=1
+        ###
         print("grade of cluster: ",y)
         #addp2 instead of cluster
         print("size of cluster ",len(getarraykp))
@@ -633,7 +641,7 @@ def makegoodclusters(clusters,dictionary,image,threshold,NClustersWObjects,listO
         counter=counter+1
     print("Number of good clusters: ", len(arrayOfGoodclusters))
     print("Number of bad clusters: ", len(arrayOfBadclusters))
-    return arrayOfGoodclusters,flags,arrayOfBadclusters,flags2,newListOfNumbers,count_originals
+    return arrayOfGoodclusters,flags,arrayOfBadclusters,flags2,newListOfNumbers,count_originals,newIndexArray
     #return arrayOfGoodclusters
 def makecroppedimage(arrayOfGoodclusters,image,newListOfNumbers,count_originals,range_list):
     count=0
@@ -777,17 +785,49 @@ def divideArrayOfIMG(newSortedArrayimg, threshold2):
                     print("nothing")
             allarray.append(array)
     return allarray
-def matchedObjects(listOfMatches, range_list, croped):
+
+def returnobjects(imagetosend,imagetotakeclustersfrom,newIndexArray,range_list,outputFolder,newArray):
+    ClientImage=imagetosend
+    counter = 0
+    for i in newIndexArray:
+        if i == 1:
+            print("111111111", i)
+            #test = ClientImage.copy()
+            tester=newArray[counter]
+            print(range_list[tester], " object size ")
+            if len(range_list[tester]) > 0:
+                if (type(range_list[tester][0]) is int):
+                    print(type(range_list[tester][0]))
+                    print(range_list[tester])
+                    print('int')
+                    # test[int(objectSize[2]):int(objectSize[2]) + (int(objectSize[3]) - int(objectSize[2])),int(objectSize[0]):int(objectSize[0]) + (int(objectSize[1]) - int(objectSize[0]))] = 0
+                    ClientImage[range_list[tester][0]:range_list[tester][1], range_list[tester][2]:range_list[tester][3]]=imagetotakeclustersfrom[range_list[tester][0]:range_list[tester][1], range_list[tester][2]:range_list[tester][3]]
+                    cv2.imwrite(outputFolder + "/croppedOmriClient" + str(tester) + ".jpg", ClientImage)
+                else:
+                    for j in range_list[counter]:
+                        print(range_list[counter])
+                        print(range_list[counter])
+                        print('not int')
+                        ClientImage=imagetotakeclustersfrom[range_list[counter][0]:range_list[counter][1], range_list[counter][2]:range_list[counter][3]]
+                        cv2.imwrite(outputFolder + "/croppedOmriClient" + str(counter) + ".jpg", ClientImage)
+        else:
+            print("00000", i)
+        counter = counter + 1
+    cv2.imwrite(outputFolder + "/croppedOmriClient000" + str(counter) + ".jpg", ClientImage)
+
+
+def matchedObjects(listOfMatches, range_list, croped,flagArray):
     new_listOfMatches = []
     listOfNumbers = []
     for i in range(0, len(listOfMatches)):
         if (listOfMatches[i][2] > 0.4):
+            flagArray[i]=1
             croped = imageDeleteObject(croped, range_list[i])
             cv2.imwrite(outputFolder[0] + "/croppedBoris"+str(i)+".jpg", croped)
             listOfNumbers.append(i)
             t_list = (listOfMatches[i][0], listOfMatches[i][1])
             new_listOfMatches.append(t_list)
-    return croped, new_listOfMatches, listOfNumbers
+    return croped, new_listOfMatches, listOfNumbers,flagArray
 def updateDict(dictionary,new_listOfMatches):
     for i in new_listOfMatches:
         for j, k in zip(i[0], i[1]):
