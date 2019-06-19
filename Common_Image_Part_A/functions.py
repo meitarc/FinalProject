@@ -60,7 +60,7 @@ def buildaArrayImages(serverFolder):
     #folderPath=serverFolder
     #for filename in os.listdir(folderPath):
     #    arrayServerImgs.append(folderPath + "/" + filename)
-#
+
     #arrayimg=readImagesToMakeCommonImage(arrayServerImgs)
     arrayimg=readImagesToMakeCommonImage(serverFolder)
 
