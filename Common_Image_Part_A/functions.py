@@ -426,6 +426,10 @@ def funcCheck1old(image1, image2):
     #print()
     #print(des1)
     #print()
+
+    #FLANN - Fast Library for Approximate Nearest Neighbors
+    #FLANN is a collection of algorithms optimized for fast nearest neighbor search in large datasets and for high dimensional features.
+
     # FLANN parameters
     FLANN_INDEX_KDTREE = 0
     index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
