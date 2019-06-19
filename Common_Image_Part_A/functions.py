@@ -279,7 +279,7 @@ def DB_SCAN(keypointsArray,epsilon):
         if (k != -1):
             biglist.append(new_list)
     plt.title('Estimated number of clusters: %d' % n_clusters_)
-    plt.show()
+    #plt.show()
     return biglist
 def IntersectOfImages(arrayOfimages):
     x, arraykp, arraydes = funcCheck1(arrayOfimages[0], arrayOfimages[1])
@@ -411,7 +411,7 @@ def funcCheck1(image1, image2):
     kp1, des1 = surf.detectAndCompute(img1, None)
     return funcCheck2(kp1,des1,image2)
 '''
-def funcCheck1old(image1, image2):
+def funcCheck1(image1, image2):
     # Initiate SIFT detector
     #print("funcheck1")
     surf = cv2.xfeatures2d.SURF_create()
@@ -855,7 +855,7 @@ def returnobjects(imagetosend,imagetotakeclustersfrom,newIndexArray,range_list,o
         else:
             print("00000", i)
         counter = counter + 1
-    cv2.imwrite(outputFolder + "/croppedOmriClient000" + str(counter) + ".jpg", ClientImage)
+    cv2.imwrite(outputFolder + "/croppedOmriClient000.jpg", ClientImage)
 
 
 def matchedObjects(listOfMatches, range_list, croped,flagArray):
