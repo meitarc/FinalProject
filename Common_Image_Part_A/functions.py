@@ -5,6 +5,33 @@ from sklearn.cluster import DBSCAN
 from math import atan2,degrees,sqrt
 
 outputFolder=[]
+def find_imgs_same_gps(imgSource, folderPath):
+    import exifread
+    firstImg={}
+    imgArray={}
+    sameGpsPics=[]
+    def first(img):
+        tags = exifread.process_file(open(img, 'rb'))
+        geo = {i:tags[i] for i in tags.keys() if i=='GPS GPSLatitude' or i=='GPS GPSLongitude' or i=='GPS GPSAltitude'}
+        firstImg["first"]=geo
+
+    def addImag(img):
+        tags = exifread.process_file(open(img, 'rb'))
+        geo = {i:tags[i] for i in tags.keys() if i=='GPS GPSLatitude' or i=='GPS GPSLongitude' or i=='GPS GPSAltitude'}
+        imgArray[img]=geo
+
+    first(imgSource)
+
+    import os
+    for filename in os.listdir(folderPath):
+        addImag(folderPath+"/"+filename)
+
+    for key, value in zip(imgArray,imgArray.values()):
+        if str(imgArray[key].values()) == str(firstImg["first"].values()):
+            sameGpsPics.append(key)
+
+    return sameGpsPics
+
 def imageDeleteObject(Image,objectSize):
     test = Image.copy()
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
@@ -25,21 +52,24 @@ def imageDeleteObject(Image,objectSize):
     cv2.imwrite('output/imageaftercropped.jpg', test)
     return test
 def getFolder(folder):
+    outputFolder.clear()
     outputFolder.append(folder)
     print(outputFolder[0])
 def buildaArrayImages(serverFolder):
-    arrayServerImgs=[]
-    folderPath=serverFolder
-    for filename in os.listdir(folderPath):
-        arrayServerImgs.append(folderPath + "/" + filename)
-    arrayimg=readImagesToMakeCommonImage(arrayServerImgs)
+    #arrayServerImgs=[]
+    #folderPath=serverFolder
+    #for filename in os.listdir(folderPath):
+    #    arrayServerImgs.append(folderPath + "/" + filename)
+#
+    #arrayimg=readImagesToMakeCommonImage(arrayServerImgs)
+    arrayimg=readImagesToMakeCommonImage(serverFolder)
+
     newSortedArrayimg=sortImageByFeachers(arrayimg) # sort images by number of features:
     #If we have an array with many pictures, we divide the pictures to many, different arrays of images.
     allarray=divideArrayOfIMG(newSortedArrayimg, threshold2=0.01)
     newSortedArrayimg=allarray[0] #  for the moment just 1 array
     return newSortedArrayimg
-def reset():
-    outputFolder.clear()
+
 def returnCroppedParts(imagetosend,imagetotakeclustersfrom,dict2,dict):
 
     cnt=0
@@ -374,7 +404,14 @@ def clustersOfCroppedImage(image1,dbscan_epsilon):
     clusters = DB_SCAN(kp,dbscan_epsilon)
 
     return clusters,dictionary,kp,des
+
 def funcCheck1(image1, image2):
+    surf = cv2.xfeatures2d.SURF_create()
+    img1 = np.array(image1)
+    kp1, des1 = surf.detectAndCompute(img1, None)
+    return funcCheck2(kp1,des1,image2)
+'''
+def funcCheck1old(image1, image2):
     # Initiate SIFT detector
     #print("funcheck1")
     surf = cv2.xfeatures2d.SURF_create()
@@ -438,6 +475,7 @@ def funcCheck1(image1, image2):
     #print(odes)
     #print("funccheck1 ,matches,number of kp first image",p, " ",len(kp1))
     return p,okp,odes  # returns number of best matches,and all keypoints of first img
+'''
 def funcCheck2(kp,des, image2):
     #print("funccheck 2")
     # Initiate SIFT detector
