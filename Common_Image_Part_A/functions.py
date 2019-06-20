@@ -279,7 +279,7 @@ def DB_SCAN(keypointsArray,epsilon):
         if (k != -1):
             biglist.append(new_list)
     plt.title('Estimated number of clusters: %d' % n_clusters_)
-    #plt.show()
+    plt.show()
     return biglist
 def IntersectOfImages(arrayOfimages):
     x, arraykp, arraydes = funcCheck1(arrayOfimages[0], arrayOfimages[1])
@@ -410,6 +410,7 @@ def funcCheck1(image1, image2):
     img1 = np.array(image1)
     kp1, des1 = surf.detectAndCompute(img1, None)
     return funcCheck2(kp1,des1,image2)
+
 '''
 def funcCheck1(image1, image2):
     # Initiate SIFT detector
@@ -493,6 +494,7 @@ def funcCheck2(kp,des, image2):
     kp1, des1 = kp,des
 
     kp2, des2 = surf.detectAndCompute(img2, None)
+    #print(len(kp2))
     #print(kp1)
     #print()
     #print(des1)
@@ -542,7 +544,9 @@ def funcCheck2(kp,des, image2):
 
     # plt.imshow(img3,),plt.show()
     #print("funccheck2 results ",p,len(kp1))
-    return p,okp,odes
+    return p,okp,odes#, len(kp2), len(kp1)
+
+
 def clientFuncCheck(one, two, image2,flag):
     #print("my funcCheck 2, for each cluster:")
     if flag==1:

@@ -187,9 +187,7 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
 threshhold=0.25
 dbscan=10
 
-'''
-'''
-main("source/pics_for_tests/1/server", "source/pics_for_tests/1/client/6.jpg", "source/pics_for_tests/1/output/" + str(threshhold), threshhold,dbscan)
+#main("source/pics_for_tests/1/server", "source/pics_for_tests/1/client/6.jpg", "source/pics_for_tests/1/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/1/server", "source/pics_for_tests/1/client/10.jpg", "source/pics_for_tests/1/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/1/server", "source/pics_for_tests/1/client/13.jpg", "source/pics_for_tests/1/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/3/server", "source/pics_for_tests/3/client/19.jpg", "source/pics_for_tests/3/output/" + str(threshhold), threshhold,dbscan)
@@ -199,20 +197,20 @@ main("source/pics_for_tests/1/server", "source/pics_for_tests/1/client/6.jpg", "
 #main("source/pics_for_tests/4/server", "source/pics_for_tests/4/client/121.jpg", "source/pics_for_tests/4/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/4/server", "source/pics_for_tests/4/client/183.jpg", "source/pics_for_tests/4/output/" + str(threshhold), threshhold,dbscan)
 main("source/pics_for_tests/5/server", "source/pics_for_tests/5/client/115.jpg", "source/pics_for_tests/5/output/" + str(threshhold), threshhold,dbscan)
-main("source/pics_for_tests/6/server", "source/pics_for_tests/6/client/97.jpg", "source/pics_for_tests/6/output/" + str(threshhold), threshhold,dbscan)
-main("source/pics_for_tests/7/server", "source/pics_for_tests/7/client/186.jpg", "source/pics_for_tests/7/output/" + str(threshhold), threshhold,dbscan)
-main("source/pics_for_tests/8/server", "source/pics_for_tests/8/client/120.jpg", "source/pics_for_tests/8/output/" + str(threshhold), threshhold,dbscan)
+#main("source/pics_for_tests/6/server", "source/pics_for_tests/6/client/97.jpg", "source/pics_for_tests/6/output/" + str(threshhold), threshhold,dbscan)
+#main("source/pics_for_tests/7/server", "source/pics_for_tests/7/client/186.jpg", "source/pics_for_tests/7/output/" + str(threshhold), threshhold,dbscan)
+#main("source/pics_for_tests/8/server", "source/pics_for_tests/8/client/120.jpg", "source/pics_for_tests/8/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/9/server", "source/pics_for_tests/9/client/73.jpg", "source/pics_for_tests/9/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/9/server", "source/pics_for_tests/9/client/77.jpg", "source/pics_for_tests/9/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/10/server", "source/pics_for_tests/10/client/115.jpg", "source/pics_for_tests/10/output/" + str(threshhold), threshhold,dbscan)
-main("source/pics_for_tests/11/server", "source/pics_for_tests/11/client/204.jpg", "source/pics_for_tests/11/output/" + str(threshhold), threshhold,10)
+#main("source/pics_for_tests/11/server", "source/pics_for_tests/11/client/204.jpg", "source/pics_for_tests/11/output/" + str(threshhold), threshhold,10)
 #main("source/pics_for_tests/12/server", "source/pics_for_tests/12/client/87.jpg", "source/pics_for_tests/12/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/12/server", "source/pics_for_tests/12/client/88.jpg", "source/pics_for_tests/12/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/12/server", "source/pics_for_tests/12/client/113.jpg", "source/pics_for_tests/12/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/12/server", "source/pics_for_tests/12/client/115.jpg", "source/pics_for_tests/12/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/12/server", "source/pics_for_tests/12/client/117.jpg", "source/pics_for_tests/12/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/12/server", "source/pics_for_tests/12/client/122.jpg", "source/pics_for_tests/12/output/" + str(threshhold), threshhold,dbscan)
-main("source/pics_for_tests/12/server", "source/pics_for_tests/12/client/127.jpg", "source/pics_for_tests/12/output/" + str(threshhold), threshhold,dbscan)
+#main("source/pics_for_tests/12/server", "source/pics_for_tests/12/client/127.jpg", "source/pics_for_tests/12/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/13/server", "source/pics_for_tests/13/client/20190602_172935(0).jpg", "source/pics_for_tests/13/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/14/server", "source/pics_for_tests/14/client/4.jpg", "source/pics_for_tests/14/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/14/server", "source/pics_for_tests/14/client/20190602_172914.jpg", "source/pics_for_tests/14/output/" + str(threshhold), threshhold,dbscan)
@@ -221,20 +219,43 @@ main("source/pics_for_tests/12/server", "source/pics_for_tests/12/client/127.jpg
 #gps example
 #main("GPS/pics_for_gps", "GPS/pics_for_gps/20190603_172000.jpg", "output/" + str(threshhold), threshhold,dbscan)
 
-'''
-client=cv2.imread("source/pics_for_tests/6/client/97.jpg")
-paste=cv2.imread("source/pics_for_tests/6/output/0.25/croppedOmriClient0007.jpg")
-p,okp,odes=funcCheck1(client,paste)
-print("p/okp client-paste")
-print(p,len(okp))
-print(p/len(okp))
 
-p,okp,odes=funcCheck1(paste, client)
+
+
+
+'''
+main("source/pics_for_tests/1/server", "source/pics_for_tests/1/client/6.jpg", "source/pics_for_tests/1/output/" + str(threshhold), threshhold,dbscan)
+main("source/pics_for_tests/5/server", "source/pics_for_tests/5/client/115.jpg", "source/pics_for_tests/5/output/" + str(threshhold), threshhold,dbscan)
+main("source/pics_for_tests/6/server", "source/pics_for_tests/6/client/97.jpg", "source/pics_for_tests/6/output/" + str(threshhold), threshhold,dbscan)
+main("source/pics_for_tests/7/server", "source/pics_for_tests/7/client/186.jpg", "source/pics_for_tests/7/output/" + str(threshhold), threshhold,dbscan)
+main("source/pics_for_tests/8/server", "source/pics_for_tests/8/client/120.jpg", "source/pics_for_tests/8/output/" + str(threshhold), threshhold,dbscan)
+main("source/pics_for_tests/11/server", "source/pics_for_tests/11/client/204.jpg", "source/pics_for_tests/11/output/" + str(threshhold), threshhold,10)
+main("source/pics_for_tests/12/server", "source/pics_for_tests/12/client/127.jpg", "source/pics_for_tests/12/output/" + str(threshhold), threshhold,dbscan)
+'''
+
+#Reliability check
+'''
+client=cv2.imread("source/pics_for_tests/12/client/127.jpg")
+paste=cv2.imread("source/pics_for_tests/12/output/0.25/croppedOmriClient000.jpg")
+p,okp,odes,lenKp2,lenKp1=funcCheck1(client,paste)
+
+print("p/okp client-paste")
+print(p,lenKp2,lenKp1)
+#print(p/lenKp2)
+print((lenKp1+lenKp2)/(2*p))
+
+p,okp,odes,lenKp2,lenKp1=funcCheck1(paste, client)
 print("p/okp paste-client")
-print(p/len(okp))
+print(p,lenKp2,lenKp1)
+
+#print(p/lenKp2)
+print((lenKp1+lenKp2)/(2*p))
+
+
 
 print("objects client")
 print(len(findObjectsUsingYOLO(client,yoloLabels,yoloWeights,yoloConfig,threshold_ob)))
 print("objects paste")
 print(len(findObjectsUsingYOLO(paste,yoloLabels,yoloWeights,yoloConfig,threshold_ob)))
+
 '''
