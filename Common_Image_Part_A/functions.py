@@ -5,6 +5,9 @@ from sklearn.cluster import DBSCAN
 from math import atan2,degrees,sqrt
 
 outputFolder=[]
+
+
+
 def find_imgs_same_gps(imgSource, folderPath):
     import exifread
     firstImg={}
@@ -31,6 +34,21 @@ def find_imgs_same_gps(imgSource, folderPath):
             sameGpsPics.append(key)
 
     return sameGpsPics
+
+def initIndexObjectarray(flagarrayOfObjects):
+    counter = 0
+    newArray = []
+    newIndexarray = []
+    for i in flagarrayOfObjects:
+        if i == 1:
+            newArray.append(counter)
+            newIndexarray.append(0)
+            flagarrayOfObjects[counter] = 0  # initialize the array
+        else:
+            print("not")
+        counter = counter + 1
+    return newArray, newIndexarray
+
 
 def imageDeleteObject(Image,objectSize):
     test = Image.copy()
@@ -846,7 +864,7 @@ def returnobjects(imagetosend,imagetotakeclustersfrom,newIndexArray,range_list,o
                     ClientImage[range_list[tester][0]:range_list[tester][1], range_list[tester][2]:range_list[tester][3]]=imagetotakeclustersfrom[range_list[tester][0]:range_list[tester][1], range_list[tester][2]:range_list[tester][3]]
                     cv2.imwrite(outputFolder + "/croppedOmriClient" + str(tester) + ".jpg", ClientImage)
                 else:
-                    for j in range_list[counter]:
+                    for range in range_list[counter]:
                         print(range_list[counter])
                         print(range_list[counter])
                         print('not int')

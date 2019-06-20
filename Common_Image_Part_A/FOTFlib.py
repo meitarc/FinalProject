@@ -41,16 +41,14 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
     print(serverImgArrayWithSameGps)
 
     SortedArrayimg=buildaArrayImages(serverImgArrayWithSameGps)
+    temp=SortedArrayimg[0]
     #SortedArrayimg=buildaArrayImages(serverFolder)
 
     ###
     #Object detection section: returns ranges(yStart,yEnd,xStart,xEnd) of each object
     range_list = findObjectsUsingYOLO(SortedArrayimg[0],yoloLabels,yoloWeights,yoloConfig,threshold_ob)
 
-    flagarrayOfObjects=[]
-    for i in range_list:
-        flagarrayOfObjects.append(0)
-
+    flagarrayOfObjects=[0]*(len(range_list))
     print("FLAGS ARE ",flagarrayOfObjects)
     print(len(range_list),"the len of all objects")
     #get the key,des of the first picture with the most features
@@ -69,26 +67,9 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
     croped, new_listOfMatches, listOfNumbers,flagarrayOfObjects = matchedObjects(listOfMatches, range_list, croped,flagarrayOfObjects)
     print(len(new_listOfMatches),"list of objects match in all pictures")
     print(len(listOfNumbers), "list of objects match in all pictures")
-    serverimg = SortedArrayimg[0]
+    newArray, newIndexarray=initIndexObjectarray(flagarrayOfObjects)
 
-    counter=0
-    print("FLAGS ARE ", flagarrayOfObjects)
-    newArray=[]
-    newIndexarray=[]
-    for i in flagarrayOfObjects:
-        if i==1:
-            print(i)
-            print(range_list[counter])
-            newArray.append(counter)
-            newIndexarray.append(0)
-            serverimg = imageDeleteObject(serverimg, range_list[counter])
-            cv2.imwrite(outputFolder + "/croppedOmriServer" + str(counter) + ".jpg", serverimg)
-            flagarrayOfObjects[counter]=0 #initialize the array
-        else:
-            print("NOTTTT ",i)
-        counter = counter + 1
-    print(newArray)
-    print(newIndexarray)
+
     #overwrite the first picture with the croped
     SortedArrayimg[0] = croped
     cv2.imwrite(outputFolder+'/after_objects_off.jpg', croped)
@@ -110,13 +91,11 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
     #CLIENT
     ClientImage=cv2.imread(clientImg) # read client image
 
-
-
-
-    ClientImage=cv2.imread(clientImg) # read client image
     #good clusters-matched clusters between the server and client
 
     arrayOfGoodclusters,flagsOfGoodClusters,arrayOfBadclusters,flagsOfBadClusters,newListOfNumbers,count_originals,newIndexarray = makegoodclusters(clusters,dictionary,ClientImage,threshold,NClustersWObjects,listOfNumbers,newIndexarray) #find good clusters and bad clusters
+
+
     print("new index array after change ",newIndexarray)
     print(count_originals,"the number of regular clusers that are good")
     print(len(newListOfNumbers),"the number of good objects")
@@ -153,7 +132,7 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
     imagetosend =croppedimage-newimage
     imagetotakeclustersfrom = SortedArrayimg[len(SortedArrayimg)-1]
     imagetosend=returnCroppedParts(imagetosend,imagetotakeclustersfrom,dict2,dict) #for better understanding of image, on server side, return parts of good clusters and bad clsuters:
-    returnobjects(imagetosend,SortedArrayimg[0],newIndexarray,range_list,outputFolder,newArray)
+    returnobjects(imagetosend,temp,newIndexarray,range_list,outputFolder,newArray)
 
     #imgafterBadclustersreturn = returnCroppedParts2(imgafterGoodclustersreturn,imagetotakeclustersfrom,dict3, dict)
     #
@@ -194,14 +173,14 @@ dbscan=10
 #main("source/pics_for_tests/4/server", "source/pics_for_tests/4/client/115.jpg", "source/pics_for_tests/4/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/4/server", "source/pics_for_tests/4/client/121.jpg", "source/pics_for_tests/4/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/4/server", "source/pics_for_tests/4/client/183.jpg", "source/pics_for_tests/4/output/" + str(threshhold), threshhold,dbscan)
-#main("source/pics_for_tests/5/server", "source/pics_for_tests/5/client/115.jpg", "source/pics_for_tests/5/output/" + str(threshhold), threshhold,dbscan)
+main("source/pics_for_tests/5/server", "source/pics_for_tests/5/client/115.jpg", "source/pics_for_tests/5/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/6/server", "source/pics_for_tests/6/client/97.jpg", "source/pics_for_tests/6/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/7/server", "source/pics_for_tests/7/client/186.jpg", "source/pics_for_tests/7/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/8/server", "source/pics_for_tests/8/client/120.jpg", "source/pics_for_tests/8/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/9/server", "source/pics_for_tests/9/client/73.jpg", "source/pics_for_tests/9/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/9/server", "source/pics_for_tests/9/client/77.jpg", "source/pics_for_tests/9/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/10/server", "source/pics_for_tests/10/client/115.jpg", "source/pics_for_tests/10/output/" + str(threshhold), threshhold,dbscan)
-main("source/pics_for_tests/11/server", "source/pics_for_tests/11/client/204.jpg", "source/pics_for_tests/11/output/" + str(threshhold), threshhold,10)
+#main("source/pics_for_tests/11/server", "source/pics_for_tests/11/client/204.jpg", "source/pics_for_tests/11/output/" + str(threshhold), threshhold,10)
 #main("source/pics_for_tests/12/server", "source/pics_for_tests/12/client/87.jpg", "source/pics_for_tests/12/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/12/server", "source/pics_for_tests/12/client/88.jpg", "source/pics_for_tests/12/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/12/server", "source/pics_for_tests/12/client/113.jpg", "source/pics_for_tests/12/output/" + str(threshhold), threshhold,dbscan)
