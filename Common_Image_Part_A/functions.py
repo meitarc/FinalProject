@@ -78,7 +78,7 @@ def buildaArrayImages(serverFolder):
     #folderPath=serverFolder
     #for filename in os.listdir(folderPath):
     #    arrayServerImgs.append(folderPath + "/" + filename)
-#
+
     #arrayimg=readImagesToMakeCommonImage(arrayServerImgs)
     arrayimg=readImagesToMakeCommonImage(serverFolder)
 
@@ -428,8 +428,9 @@ def funcCheck1(image1, image2):
     img1 = np.array(image1)
     kp1, des1 = surf.detectAndCompute(img1, None)
     return funcCheck2(kp1,des1,image2)
+
 '''
-def funcCheck1old(image1, image2):
+def funcCheck1(image1, image2):
     # Initiate SIFT detector
     #print("funcheck1")
     surf = cv2.xfeatures2d.SURF_create()
@@ -511,6 +512,7 @@ def funcCheck2(kp,des, image2):
     kp1, des1 = kp,des
 
     kp2, des2 = surf.detectAndCompute(img2, None)
+    #print(len(kp2))
     #print(kp1)
     #print()
     #print(des1)
@@ -560,7 +562,9 @@ def funcCheck2(kp,des, image2):
 
     # plt.imshow(img3,),plt.show()
     #print("funccheck2 results ",p,len(kp1))
-    return p,okp,odes
+    return p,okp,odes#, len(kp2), len(kp1)
+
+
 def clientFuncCheck(one, two, image2,flag):
     #print("my funcCheck 2, for each cluster:")
     if flag==1:
@@ -873,7 +877,7 @@ def returnobjects(imagetosend,imagetotakeclustersfrom,newIndexArray,range_list,o
         else:
             print("00000", i)
         counter = counter + 1
-    cv2.imwrite(outputFolder + "/croppedOmriClient000" + str(counter) + ".jpg", ClientImage)
+    cv2.imwrite(outputFolder + "/croppedOmriClient000.jpg", ClientImage)
 
 
 def matchedObjects(listOfMatches, range_list, croped,flagArray):
