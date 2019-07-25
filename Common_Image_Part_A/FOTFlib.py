@@ -54,10 +54,10 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
     #get the key,des of the first picture with the most features
     kp, des = firstFuncCheck(SortedArrayimg[0])
     #list of tupels(key,des) of each object
-    listOfObjects = keyOfObject(range_list,kp,des)
+    listOfObjects = keyOfObject(range_list,kp,des)#Comparing the objects and keypoints
     print(len(listOfObjects),"should be 7")
     #list of matched objects from all the pictures
-    listOfMatches = IntersectOfImages2(listOfObjects, SortedArrayimg)
+    listOfMatches = IntersectOfImages2(listOfObjects, SortedArrayimg)#check if the objects is in the other imags
     #print(len(range_list), "len range list, number of objects")
     #print(len(listOfObjects), "list of object")
     #print(len(listOfMatches),"list of matches")
@@ -65,9 +65,10 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
     croped = SortedArrayimg[0]
     #remove the best matched objects with high ration from the first picture
     croped, new_listOfMatches, listOfNumbers,flagarrayOfObjects = matchedObjects(listOfMatches, range_list, croped,flagarrayOfObjects)
+    #build the remove array of objects
     print(len(new_listOfMatches),"list of objects match in all pictures")
     print(len(listOfNumbers), "list of objects match in all pictures")
-    newArray, newIndexarray=initIndexObjectarray(flagarrayOfObjects)
+    newArray, newIndexarray=initIndexObjectarray(flagarrayOfObjects)#array to paste objects
 
 
     #overwrite the first picture with the croped

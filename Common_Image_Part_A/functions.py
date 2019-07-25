@@ -84,7 +84,7 @@ def buildaArrayImages(serverFolder):
 
     newSortedArrayimg=sortImageByFeachers(arrayimg) # sort images by number of features:
     #If we have an array with many pictures, we divide the pictures to many, different arrays of images.
-    allarray=divideArrayOfIMG(newSortedArrayimg, threshold2=0.01)
+    allarray=divideArrayOfIMG(newSortedArrayimg, threshold2=0.01)#return array of arrays of similar imags
     newSortedArrayimg=allarray[0] #  for the moment just 1 array
     return newSortedArrayimg
 
