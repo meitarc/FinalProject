@@ -20,6 +20,12 @@ def getFramesFromVideo(videoInputPath, outputFolderPath, milliSeconds):
 
 
 #main
-for i in range(1, 10):
-    getFramesFromVideo("input/"+str(i)+".MP4",str(i)+"/",500)
+
+import os
+for filename in os.listdir("video_for_tests_4.8.19/input"):
+    print (filename)
+    getFramesFromVideo("video_for_tests_4.8.19/input/"+filename, "video_for_tests_4.8.19/output/"+filename, 500)
+    #for i in range(1, 10):
+        #getFramesFromVideo("input/"+str(i)+".MP4",str(i)+"/",500)
+
 

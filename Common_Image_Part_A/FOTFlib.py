@@ -165,6 +165,12 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
 
 threshhold=0.25
 dbscan=10
+#main("source/test_4.8.19/1/server1", "source/test_4.8.19/1/client1/1.jpg", "source/test_4.8.19/1/output", threshhold,dbscan)
+#main("source/test_4.8.19/2/server2", "source/test_4.8.19/2/client2/2.jpg", "source/test_4.8.19/2/output", threshhold,dbscan)
+#main("source/test_4.8.19/3/server2", "source/test_4.8.19/3/client3/3.jpg", "source/test_4.8.19/3/output", threshhold,dbscan)
+main("source/test_4.8.19/4/server", "source/test_4.8.19/4/client/220.jpg", "source/test_4.8.19/4/output", threshhold,dbscan)
+
+
 
 #main("source/pics_for_tests/1/server", "source/pics_for_tests/1/client/6.jpg", "source/pics_for_tests/1/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/1/server", "source/pics_for_tests/1/client/10.jpg", "source/pics_for_tests/1/output/" + str(threshhold), threshhold,dbscan)
@@ -175,7 +181,7 @@ dbscan=10
 #main("source/pics_for_tests/4/server", "source/pics_for_tests/4/client/115.jpg", "source/pics_for_tests/4/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/4/server", "source/pics_for_tests/4/client/121.jpg", "source/pics_for_tests/4/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/4/server", "source/pics_for_tests/4/client/183.jpg", "source/pics_for_tests/4/output/" + str(threshhold), threshhold,dbscan)
-main("source/pics_for_tests/5/server", "source/pics_for_tests/5/client/115.jpg", "source/pics_for_tests/5/output/" + str(threshhold), threshhold,dbscan)
+#main("source/pics_for_tests/5/server", "source/pics_for_tests/5/client/115.jpg", "source/pics_for_tests/5/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/6/server", "source/pics_for_tests/6/client/97.jpg", "source/pics_for_tests/6/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/7/server", "source/pics_for_tests/7/client/186.jpg", "source/pics_for_tests/7/output/" + str(threshhold), threshhold,dbscan)
 #main("source/pics_for_tests/8/server", "source/pics_for_tests/8/client/120.jpg", "source/pics_for_tests/8/output/" + str(threshhold), threshhold,dbscan)
