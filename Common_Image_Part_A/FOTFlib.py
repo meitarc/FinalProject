@@ -1,12 +1,28 @@
-#Comments:
+#Description:
 '''
-    1. Description of the project
-    2. imports
-    3. main functions
-        Phase A, creating common image
+    1. Overview:
+        The following code is our final project algorithm for proofing a new concept of video compression.
+        The final product will be in a client-server format, here we are just simulating with all of the code in one project, but the functions are independent. We can switch to client server format at any time.
+
+        The product has 2 phases, the first will be preprocessing where the server learn the information is needs beforehand. And the second which will happen in a live stream of information.
+        Here we will demonstrate the 2 phases in one run of the Main- the server is given images to learn the road, and later he uses what he learns at the second phase.
+        Let us explain the process:
+        The server is given a set of images (the images are from the same GPS location)
+        The server calculates and learn the constants in the Images it’s given and saves them in memory, later to be used.
+•	    In the final product the outcome of the calculation will be saved at a Database under a key of which is the GPS location.
+        Then the algorithm is given another image, which is the “client’s” image, it is just a different image from the same GPS location. This will simulate a driver driving in this location.
+        The server will send its outcome that was send in the DB to the client according to the key (GPS location).
+        The client’s algorithm will compare the image and the data from the server.
+        Then the client will send to the server the outcome of its calculations.
+        The server then can paste back parts of the images and make more visible and understandable image.
+
+
+    2. walktrough:
+        one main function at the buttom that operate all of the following functions:
+        Phase A, creating "common image"- the constants of all the images it's given
         3.1.1 getting an array of images and splitting it to diffrent arrays according to image similarity
         3.1.2 for each array, find the intersect of keypoints
-        3.1.3 cluster the keypoints using dbscan and save
+        3.1.3 cluster the keypoints using dbscan and save.
         Phase B
         3.2.1  when given GPS, send the clusters and it's location in the image to the client
         Phase C - client side
@@ -19,7 +35,10 @@
         Phase D - Server Side
         3.4.1 gets the non-matching parts.
         3.4.2 joining the clusters and new parts into an image.
-    4. helpful functions
+    * the main function receives a :
+    source folder which contains the images which the server should learn from,
+    location of a client's image,
+    wanted folder for the algorithm outputs.
 '''
 from functions import *
 outputFolder=''
@@ -165,6 +184,10 @@ def main(serverFolder,clientImg,outputFolder,threshold,dbscan_epsilon):#threshol
 
 threshhold=0.25
 dbscan=10
+'''
+main receives the following information which some you can change:
+ 1. source folder dir, 2. client image location, 3. output folder dir ,threshold- do not change, dbscan- do not change : 
+'''
 #main("source/test_4.8.19/1/server1", "source/test_4.8.19/1/client1/1.jpg", "source/test_4.8.19/1/output", threshhold,dbscan)
 #main("source/test_4.8.19/2/server2", "source/test_4.8.19/2/client2/2.jpg", "source/test_4.8.19/2/output", threshhold,dbscan)
 #main("source/test_4.8.19/3/server2", "source/test_4.8.19/3/client3/3.jpg", "source/test_4.8.19/3/output", threshhold,dbscan)
